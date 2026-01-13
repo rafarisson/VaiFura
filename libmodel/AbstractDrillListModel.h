@@ -31,16 +31,12 @@ public:
         beginResetModel();
         model_ = model;
         endResetModel();
-        emit modelChanged();
     }
 
 protected:
     int rowCount(const QModelIndex &index) const override {
         return size();
     }
-
-signals:
-    void modelChanged();
 
 private:
     const DrillModel* model_ = nullptr;
