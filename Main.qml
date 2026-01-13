@@ -54,8 +54,10 @@ Window {
                     model: VaiFura.toolListModel
 
                     delegate: Text {
+                        // Assigned by the model
                         required property int id
                         required property double diameter
+
                         text: id + ": (" + diameter + ")"
                     }
                 }
@@ -72,48 +74,115 @@ Window {
                     model: VaiFura.drillListModel
 
                     delegate: Text {
+                        // Assigned by the model
                         required property int index
                         required property int toolId
                         required property double posX
                         required property double posY
+
                         text: index + ": (" + posX + "," + posY +") T" + toolId
                     }
                 }
+            }
 
-                // TreeView {
-                //     Layout.fillWidth: true
-                //     Layout.fillHeight: true
-                //     model: toolsTreeModel
-                //     delegate: CheckBox {
-                //         required property string label
-                //         text: label
-                //     }
+            TreeView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 100
+                Layout.preferredHeight: 300
 
+                clip: true
+                model: VaiFura.drillTreeModel
+                selectionMode: TreeView.SingleSelection
 
-                //     // delegate: Item {
-                //     //     id: aaa
+                delegate: Row {
+                    id: itemDelegate
 
-                //     //     required property bool checked
-                //     //     required property string label
+                    readonly property real indentation: 20
 
-                //     //     width: TreeView.view.width
-                //     //     height: 28
+                    // Assigned by the model
+                    required property int itemType
+                    required property real diameter
+                    required property real posX
+                    required property real posY
+                    required property int childCount
 
-                //     //     Row {
-                //     //         spacing: 6
+                    // Assigned to by TreeView:
+                    required property TreeView treeView
+                    required property bool isTreeNode
+                    required property bool expanded
+                    required property int hasChildren
+                    required property int depth
+                    required property int row
+                    required property int column
+                    required property bool current
 
-                //     //         CheckBox {
-                //     //             checked: aaa.checked
-                //     //             onToggled: aaa.checked = checked
-                //     //         }
+                    // implicitWidth: treeView.width
+                    // implicitHeight: checkBox.implicitHeight
 
-                //     //         Text {
-                //     //             text: aaa.label
-                //     //         }
-                //     //     }
-                //     // }
-                // }
+                    // Item {
+                    //     width: l.width
+                    //     height: 1
+                    // }
 
+                    // Label {
+                    //     id: l
+                    //     visible: itemDelegate.hasChildren
+                    //     text: itemDelegate.expanded ? "+++" : "---"
+                    //     TapHandler {
+                    //         onSingleTapped: itemDelegate.treeView.toggleExpanded(itemDelegate.row)
+                    //     }
+                    // }
+
+                    // CheckBox {
+                    //     tristate: true
+                    //     text: itemDelegate.itemType == DrillTreeModel.ToolType
+                    //           ? `Tool ${itemDelegate.diameter}mm [${itemDelegate.childCount}]`
+                    //           : `Drill (${itemDelegate.posX},${itemDelegate.posY})`
+                    // }
+
+                    // property Animation indicatorAnimation: NumberAnimation {
+                    //     target: indicator
+                    //     property: "rotation"
+                    //     from: itemDelegate.expanded ? 0 : 90
+                    //     to: itemDelegate.expanded ? 90 : 0
+                    //     duration: 100
+                    //     easing.type: Easing.OutQuart
+                    // }
+                    // TableView.onPooled: indicatorAnimation.complete()
+                    // TableView.onReused: if (current) indicatorAnimation.start()
+                    // onExpandedChanged: indicator.rotation = expanded ? 90 : 0
+
+                    Label {
+                        id: indicator
+
+                        visible: itemDelegate.isTreeNode && itemDelegate.hasChildren
+                        text: ">"
+
+                        TapHandler {
+                            onSingleTapped: {
+                                // let index = itemDelegate.treeView.index(itemDelegate.row, itemDelegate.column)
+                                // treeView.selectionModel.setCurrentIndex(index, ItemSelectionModel.NoUpdate)
+                                itemDelegate.treeView.toggleExpanded(itemDelegate.row)
+                            }
+                        }
+                    }
+
+                    Item {
+                        visible: itemDelegate.depth
+                        // width: indicator.implicitWidth * 1.2
+                        width: itemDelegate.indentation * itemDelegate.depth + itemDelegate.spacing
+                        height: 1
+                    }
+
+                    CheckBox {
+                        id: checkBox
+                        anchors.leftMargin: itemDelegate.depth  * 20
+                        text: itemDelegate.itemType == DrillTreeModel.ToolType
+                              ? `Tool ${itemDelegate.diameter}mm [${itemDelegate.childCount}]`
+                              : `Drill (${itemDelegate.posX},${itemDelegate.posY})`
+                    }
+                }
             }
         }
     }

@@ -7,6 +7,7 @@
 #include "DrillDocument.h"
 #include "ToolListModel.h"
 #include "DrillListModel.h"
+#include "DrillTreeModel.h"
 
 class VaiFuraSingleton : public QObject
 {
@@ -17,6 +18,7 @@ class VaiFuraSingleton : public QObject
     Q_PROPERTY(DrillDocument* drillDoc READ drillDoc CONSTANT FINAL)
     Q_PROPERTY(ToolListModel *toolListModel READ toolListModel CONSTANT FINAL)
     Q_PROPERTY(DrillListModel *drillListModel READ drillListModel CONSTANT FINAL)
+    Q_PROPERTY(DrillTreeModel *drillTreeModel READ drillTreeModel CONSTANT FINAL)
 
 public:
     explicit VaiFuraSingleton(QObject *parent = nullptr);
@@ -24,6 +26,7 @@ public:
     DrillDocument* drillDoc() const { return drillDoc_; }
     ToolListModel* toolListModel() const { return toolListModel_; }
     DrillListModel* drillListModel() const { return drillListModel_; }
+    DrillTreeModel* drillTreeModel() const { return drillTreeModel_; }
 
 signals:
 
@@ -31,6 +34,7 @@ private:
     DrillDocument *drillDoc_ = nullptr;
     ToolListModel *toolListModel_ = nullptr;
     DrillListModel *drillListModel_ = nullptr;
+    DrillTreeModel *drillTreeModel_ = nullptr;
 };
 
 #endif // VAIFURASINGLETON_H
