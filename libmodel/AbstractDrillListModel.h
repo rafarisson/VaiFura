@@ -7,15 +7,15 @@
 
 #include "DrillModel.h"
 
-class AbstractExcellonListModel : public QAbstractListModel
+class AbstractDrillListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
-    explicit AbstractExcellonListModel(QObject* parent = nullptr)
+    explicit AbstractDrillListModel(QObject* parent = nullptr)
         : QAbstractListModel{parent}
     {}
-    virtual ~AbstractExcellonListModel() = default;
+    virtual ~AbstractDrillListModel() = default;
 
     bool isValid() const {
         return model_ != nullptr;

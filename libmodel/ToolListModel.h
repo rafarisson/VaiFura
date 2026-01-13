@@ -3,7 +3,7 @@
 
 #include "AbstractDrillListModel.h"
 
-class ToolListModel : public AbstractExcellonListModel
+class ToolListModel : public AbstractDrillListModel
 {
     Q_OBJECT
     QML_ELEMENT
@@ -15,7 +15,7 @@ public:
     };
 
     explicit ToolListModel(QObject* parent = nullptr)
-        : AbstractExcellonListModel{parent}
+        : AbstractDrillListModel{parent}
     {}
 
     int size() const override;
