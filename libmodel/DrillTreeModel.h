@@ -5,8 +5,8 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
-class DrillDocument;
-class DrillTreeItem;
+class DrillTreeNode;
+class DrillTreeDocument;
 
 class DrillTreeModel : public QAbstractItemModel
 {
@@ -25,15 +25,16 @@ public:
         DiameterRole,
         XRole,
         YRole,
-        ChildCountRole
+        ChildCountRole,
+        IsCheckedRole
     };
 
     explicit DrillTreeModel(QObject *parent = nullptr);
-    ~DrillTreeModel();
-    void setModel(const DrillDocument *model);
+    void setDocument(const DrillTreeDocument *doc);
 
 private:
-    DrillTreeItem *itemAt(const QModelIndex &index) const;
+    DrillTreeNode *itemAt(const QModelIndex &index) const;
+    // QModelIndex indexFromNode(DrillTreeNode *node) const;
 
 protected:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -41,11 +42,11 @@ protected:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role) const override;
-    // QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    DrillTreeItem *rootItem_;
+    const DrillTreeDocument *treeDoc_;
 };
 
 #endif // DRILLTREEMODEL_H

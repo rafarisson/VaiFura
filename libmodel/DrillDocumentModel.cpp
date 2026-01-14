@@ -1,8 +1,10 @@
 #include <QFile>
 #include <QTextStream>
 #include "DrillParser.h"
+#include "DrillDocument.h"
 #include "DrillDocumentModel.h"
 #include "DrillDocumentBuilder.h"
+#include "DrillTreeDocumentBuilder.h"
 
 DrillDocumentModel::DrillDocumentModel(QObject *parent)
     : QObject{parent}
@@ -23,7 +25,7 @@ void DrillDocumentModel::setParser(DrillParser *parser)
 
 void DrillDocumentModel::loadFile(const QString &path)
 {
-    doc_.clear();
+    doc_.reset();
 
     if (parser_) {
         QFile f(path);
@@ -36,6 +38,9 @@ void DrillDocumentModel::loadFile(const QString &path)
             f.close();
         }
     }
+
+    DrillTreeDocumentBuilder treeBuilder;
+    treeBuilder.build(treeDoc_, doc_);
 
     emit changed();
 }

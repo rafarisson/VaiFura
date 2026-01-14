@@ -12,7 +12,7 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     connect(documentModel_, &DrillDocumentModel::changed, this, [=]() {
         toolsModel_->setDocument(documentModel_->document());
         holesModel_->setDocument(documentModel_->document());
-        drillTreeModel_->setModel(documentModel_->document());
+        drillTreeModel_->setDocument(documentModel_->treeDocument());
     });
 }
 

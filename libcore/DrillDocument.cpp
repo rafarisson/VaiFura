@@ -6,7 +6,7 @@ DrillDocument::DrillDocument(const QVector<Tool> &t, const QVector<Hole> &h)
     holes_ = h;
 }
 
-void DrillDocument::clear()
+void DrillDocument::reset()
 {
     tools_.clear();
     holes_.clear();

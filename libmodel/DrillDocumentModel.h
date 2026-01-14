@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QObject>
 #include "DrillDocument.h"
+#include "DrillTreeDocument.h"
 
 class DrillParser;
 
@@ -25,6 +26,7 @@ public:
     void setParser(DrillParser *parser);
     void loadFile(const QString &path);
     const DrillDocument *document() const { return &doc_; }
+    const DrillTreeDocument *treeDocument() const { return &treeDoc_; }
 
 signals:
     void changed();
@@ -33,6 +35,7 @@ signals:
 private:
     DrillParser *parser_ = nullptr;
     DrillDocument doc_;
+    DrillTreeDocument treeDoc_;
     QPointF offset_{0, 0};
 };
 

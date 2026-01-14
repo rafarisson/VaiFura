@@ -24,7 +24,7 @@ public:
     const QVector<Tool>& tools() const { return tools_; }
     const QVector<Hole>& holes() const { return holes_; }
 
-    void clear();
+    void reset();
 
 private:
     friend class DrillDocumentBuilder;

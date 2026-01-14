@@ -1,3 +1,5 @@
+// pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
@@ -94,6 +96,7 @@ Window {
                 clip: true
                 model: VaiFura.drillsModel
                 selectionMode: TreeView.SingleSelection
+                reuseItems: false
 
                 delegate: Row {
                     id: itemDelegate
@@ -101,11 +104,12 @@ Window {
                     readonly property real indentation: 20
 
                     // Assigned by the model
-                    required property int itemType
+                    required property int type
                     required property real diameter
                     required property real posX
                     required property real posY
                     required property int childCount
+                    required property bool isChecked
 
                     // Assigned to by TreeView:
                     required property TreeView treeView
@@ -117,42 +121,6 @@ Window {
                     required property int column
                     required property bool current
 
-                    // implicitWidth: treeView.width
-                    // implicitHeight: checkBox.implicitHeight
-
-                    // Item {
-                    //     width: l.width
-                    //     height: 1
-                    // }
-
-                    // Label {
-                    //     id: l
-                    //     visible: itemDelegate.hasChildren
-                    //     text: itemDelegate.expanded ? "+++" : "---"
-                    //     TapHandler {
-                    //         onSingleTapped: itemDelegate.treeView.toggleExpanded(itemDelegate.row)
-                    //     }
-                    // }
-
-                    // CheckBox {
-                    //     tristate: true
-                    //     text: itemDelegate.itemType == DrillTreeModel.ToolType
-                    //           ? `Tool ${itemDelegate.diameter}mm [${itemDelegate.childCount}]`
-                    //           : `Drill (${itemDelegate.posX},${itemDelegate.posY})`
-                    // }
-
-                    // property Animation indicatorAnimation: NumberAnimation {
-                    //     target: indicator
-                    //     property: "rotation"
-                    //     from: itemDelegate.expanded ? 0 : 90
-                    //     to: itemDelegate.expanded ? 90 : 0
-                    //     duration: 100
-                    //     easing.type: Easing.OutQuart
-                    // }
-                    // TableView.onPooled: indicatorAnimation.complete()
-                    // TableView.onReused: if (current) indicatorAnimation.start()
-                    // onExpandedChanged: indicator.rotation = expanded ? 90 : 0
-
                     Label {
                         id: indicator
 
@@ -162,7 +130,7 @@ Window {
                         TapHandler {
                             onSingleTapped: {
                                 // let index = itemDelegate.treeView.index(itemDelegate.row, itemDelegate.column)
-                                // treeView.selectionModel.setCurrentIndex(index, ItemSelectionModel.NoUpdate)
+                                // itemDelegate.treeView.selectionModel.setCurrentIndex(index, ItemSelectionModel.NoUpdate)
                                 itemDelegate.treeView.toggleExpanded(itemDelegate.row)
                             }
                         }
@@ -178,11 +146,19 @@ Window {
                     CheckBox {
                         id: checkBox
                         anchors.leftMargin: itemDelegate.depth  * 20
-                        text: itemDelegate.itemType == DrillTreeModel.ToolType
+                        text: itemDelegate.type == DrillTreeModel.ToolType
                               ? `Tool ${itemDelegate.diameter}mm [${itemDelegate.childCount}]`
                               : `Drill (${itemDelegate.posX},${itemDelegate.posY})`
+                        checked: itemDelegate.isChecked
+                        onToggled: {
+                            let old = itemDelegate.isChecked
+                            itemDelegate.isChecked = checkBox.checked
+                            console.log("toggle", old, itemDelegate.isChecked, checkBox.checked)
+                        }
                     }
                 }
+
+                Component.onCompleted: Qt.callLater(expandRecursively)
             }
         }
     }

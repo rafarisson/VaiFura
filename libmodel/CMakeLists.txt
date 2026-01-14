@@ -11,9 +11,8 @@ qt_add_qml_module(VaiFuraModel
         AbstractToolHoleListModel.h
         ToolListModel.h ToolListModel.cpp
         HoleListModel.h HoleListModel.cpp
-        DrillDocumentModel.h DrillDocumentModel.cpp
-        DrillTreeItem.h DrillTreeItem.cpp
         DrillTreeModel.h DrillTreeModel.cpp
+        DrillDocumentModel.h DrillDocumentModel.cpp
 )
 
 target_link_libraries(VaiFuraModel PRIVATE

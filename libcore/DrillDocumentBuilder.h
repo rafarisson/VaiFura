@@ -17,7 +17,11 @@ public:
     }
 
     DrillDocument build() {
-        return std::move(doc_);
+        return doc_;
+    }
+
+    void reset() {
+        doc_.reset();
     }
 
 private:
