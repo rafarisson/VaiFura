@@ -4,10 +4,12 @@
 #include <QObject>
 #include <QQmlEngine>
 
-#include "DrillDocument.h"
+#include "DrillDocumentModel.h"
 #include "ToolListModel.h"
-#include "DrillListModel.h"
+#include "HoleListModel.h"
 #include "DrillTreeModel.h"
+
+#include "ExcellonDrillParser.h"
 
 class VaiFuraSingleton : public QObject
 {
@@ -15,25 +17,33 @@ class VaiFuraSingleton : public QObject
     QML_SINGLETON
     QML_NAMED_ELEMENT(VaiFura)
 
-    Q_PROPERTY(DrillDocument* drillDoc READ drillDoc CONSTANT FINAL)
-    Q_PROPERTY(ToolListModel *toolListModel READ toolListModel CONSTANT FINAL)
-    Q_PROPERTY(DrillListModel *drillListModel READ drillListModel CONSTANT FINAL)
-    Q_PROPERTY(DrillTreeModel *drillTreeModel READ drillTreeModel CONSTANT FINAL)
+    Q_PROPERTY(QString documentPath READ documentPath WRITE setDocumentPath NOTIFY documentPathChanged)
+    Q_PROPERTY(DrillDocumentModel* model READ model CONSTANT FINAL)
+    Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
+    Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)
+    Q_PROPERTY(DrillTreeModel *drillsModel READ drillsModel CONSTANT FINAL)
 
 public:
     explicit VaiFuraSingleton(QObject *parent = nullptr);
 
-    DrillDocument* drillDoc() const { return drillDoc_; }
-    ToolListModel* toolListModel() const { return toolListModel_; }
-    DrillListModel* drillListModel() const { return drillListModel_; }
-    DrillTreeModel* drillTreeModel() const { return drillTreeModel_; }
+    QString documentPath() const { return documentPath_; }
+    void setDocumentPath(const QString &path);
+
+    DrillDocumentModel* model() const { return documentModel_; }
+    ToolListModel* toolsModel() const { return toolsModel_; }
+    HoleListModel* holesModel() const { return holesModel_; }
+    DrillTreeModel* drillsModel() const { return drillTreeModel_; }
 
 signals:
+    void documentPathChanged();
 
 private:
-    DrillDocument *drillDoc_ = nullptr;
-    ToolListModel *toolListModel_ = nullptr;
-    DrillListModel *drillListModel_ = nullptr;
+    ExcellonDrillParser excellonParser_;
+    QString documentPath_;
+
+    DrillDocumentModel *documentModel_ = nullptr;
+    ToolListModel *toolsModel_ = nullptr;
+    HoleListModel *holesModel_ = nullptr;
     DrillTreeModel *drillTreeModel_ = nullptr;
 };
 

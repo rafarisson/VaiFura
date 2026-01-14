@@ -1,19 +1,23 @@
-#include "DrillListModel.h"
-#include "DrillModel.h"
+#include "HoleListModel.h"
+#include "DrillDocument.h"
 
-int DrillListModel::size() const
+HoleListModel::HoleListModel(QObject *parent)
+    : AbstractToolHoleListModel{parent}
+{}
+
+int HoleListModel::size() const
 {
-    return isValid() ? model()->drills().size() : 0;
+    return isValid() ? document()->holes().size() : 0;
 }
 
-QVariant DrillListModel::data(const QModelIndex &index, int role) const
+QVariant HoleListModel::data(const QModelIndex &index, int role) const
 {
     if (!isValid())
         return {};
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return {};
 
-    const auto &d = model()->drills()[index.row()];
+    const auto &d = document()->holes()[index.row()];
 
     switch (role) {
     case XRole: return d.x;
@@ -24,7 +28,7 @@ QVariant DrillListModel::data(const QModelIndex &index, int role) const
     return {};
 }
 
-QHash<int, QByteArray> DrillListModel::roleNames() const
+QHash<int, QByteArray> HoleListModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[XRole] = "posX";

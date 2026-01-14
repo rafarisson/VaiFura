@@ -1,9 +1,13 @@
 #include "ToolListModel.h"
-#include "DrillModel.h"
+#include "DrillDocument.h"
+
+ToolListModel::ToolListModel(QObject *parent)
+    : AbstractToolHoleListModel{parent}
+{}
 
 int ToolListModel::size() const
 {
-    return isValid() ? model()->tools().size() : 0;
+    return isValid() ? document()->tools().size() : 0;
 }
 
 QVariant ToolListModel::data(const QModelIndex &index, int role) const
@@ -13,7 +17,7 @@ QVariant ToolListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return {};
 
-    const auto &t = model()->tools()[index.row()];
+    const auto &t = document()->tools()[index.row()];
 
     switch (role) {
     case IdRole: return t.id;

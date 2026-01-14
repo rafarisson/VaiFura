@@ -27,6 +27,9 @@ qt_add_qml_module(appVaiFura
         Main.qml
     SOURCES
         VaiFuraSingleton.h VaiFuraSingleton.cpp
+    DEPENDENCIES
+        libmodel
+        libview
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

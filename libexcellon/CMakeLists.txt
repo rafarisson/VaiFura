@@ -5,7 +5,7 @@ set(QT_QML_GENERATE_QMLLS_INI ON)
 add_library(VaiFuraExcellon STATIC
     ExcellonToken.h
     ExcellonLexer.cpp ExcellonLexer.h
-    ExcellonParser.cpp ExcellonParser.h
+    ExcellonDrillParser.cpp ExcellonDrillParser.h
 )
 
 target_link_libraries(VaiFuraExcellon PRIVATE

@@ -1,9 +1,8 @@
-#include "ExcellonParser.h"
-#include "DrillBuilder.h"
+#include "ExcellonDrillParser.h"
+#include "DrillDocumentBuilder.h"
 
-DrillModel ExcellonParser::parse(QTextStream &in)
+bool ExcellonDrillParser::parse(QTextStream &in, DrillDocumentBuilder &builder)
 {
-    DrillBuilder builder;
     int currentTool = -1;
 
     while (!in.atEnd()) {
@@ -22,12 +21,12 @@ DrillModel ExcellonParser::parse(QTextStream &in)
             break;
         case ExcellonTokenType::Coord:
             if (currentTool >= 0)
-                builder.addDrill({token.x, token.y, currentTool});
+                builder.addHole({token.x, token.y, currentTool});
             break;
         default:
             break;
         }
     }
 
-    return builder.build();
+    return true;
 }

@@ -1,5 +1,4 @@
-#include "VaiFuraTypes.h"
-#include "DrillModel.h"
+#include "DrillDocument.h"
 #include "DrillTreeItem.h"
 #include "DrillTreeModel.h"
 
@@ -14,14 +13,14 @@ DrillTreeModel::~DrillTreeModel()
     delete rootItem_;
 }
 
-void DrillTreeModel::setModel(const DrillModel *model) {
+void DrillTreeModel::setModel(const DrillDocument *model) {
     beginResetModel();
 
     for (const Tool& tool : model->tools()) {
         auto *toolItem = new DrillTreeItem(QVariant::fromValue(tool), rootItem_);
         rootItem_->appendChild(toolItem);
 
-        for (const Drill& drill : model->drills()) {
+        for (const Hole& drill : model->holes()) {
             if (drill.toolId == tool.id) {
                 toolItem->appendChild(
                     new DrillTreeItem(QVariant::fromValue(drill), toolItem)
@@ -100,8 +99,8 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    if (item->data().canConvert<Drill>()) {
-        Drill d = item->data().value<Drill>();
+    if (item->data().canConvert<Hole>()) {
+        Hole d = item->data().value<Hole>();
         switch (role) {
         case ItemTypeRole: return DrillType;
         case XRole: return d.x;

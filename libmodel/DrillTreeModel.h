@@ -5,7 +5,7 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
-class DrillModel;
+class DrillDocument;
 class DrillTreeItem;
 
 class DrillTreeModel : public QAbstractItemModel
@@ -30,7 +30,7 @@ public:
 
     explicit DrillTreeModel(QObject *parent = nullptr);
     ~DrillTreeModel();
-    void setModel(const DrillModel *model);
+    void setModel(const DrillDocument *model);
 
 private:
     DrillTreeItem *itemAt(const QModelIndex &index) const;

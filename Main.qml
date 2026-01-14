@@ -21,7 +21,7 @@ Window {
 
             TextField {
                 Layout.fillWidth: true
-                onTextChanged: VaiFura.drillDoc.path = text
+                onTextChanged: VaiFura.documentPath = text
                 Component.onCompleted: text = "C:\\Users\\xpert\\Desktop\\drill_1_16.xln"
             }
         }
@@ -30,12 +30,12 @@ Window {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            DrillDocumentPreviewQuickItem {
+            DrillDocumentPreview {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 100
                 Layout.preferredHeight: 300
-                document: VaiFura.drillDoc
+                model: VaiFura.model
             }
 
             ColumnLayout {
@@ -51,7 +51,7 @@ Window {
                     Layout.fillHeight: true
 
                     clip: true
-                    model: VaiFura.toolListModel
+                    model: VaiFura.toolsModel
 
                     delegate: Text {
                         // Assigned by the model
@@ -71,7 +71,7 @@ Window {
                     Layout.fillHeight: true
 
                     clip: true
-                    model: VaiFura.drillListModel
+                    model: VaiFura.holesModel
 
                     delegate: Text {
                         // Assigned by the model
@@ -92,7 +92,7 @@ Window {
                 Layout.preferredHeight: 300
 
                 clip: true
-                model: VaiFura.drillTreeModel
+                model: VaiFura.drillsModel
                 selectionMode: TreeView.SingleSelection
 
                 delegate: Row {

@@ -5,24 +5,24 @@
 #include <QQuickItem>
 #include <QPointF>
 
-#include "DrillDocument.h"
+#include "DrillDocumentModel.h"
 
-class DrillModel;
+class DrillDocument;
 
 class DrillDocumentPreviewQuickItem : public QQuickItem
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_NAMED_ELEMENT(DrillDocumentPreview)
 
-    Q_PROPERTY(DrillDocument* document READ document WRITE setDocument NOTIFY documentChanged)
+    Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
     Q_PROPERTY(QPointF pan READ pan WRITE setPan NOTIFY panChanged)
 
 public:
     explicit DrillDocumentPreviewQuickItem(QQuickItem* parent = nullptr);
 
-    DrillDocument* document() const { return doc_; }
-    void setDocument(DrillDocument *newDoc);
+    DrillDocumentModel* model() const { return documentModel_; }
+    void setModel(DrillDocumentModel *newModel);
     double zoom() const { return zoom_; }
     void setZoom(double z);
     QPointF pan() const { return pan_; }
@@ -47,12 +47,12 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
 
 signals:
-    void documentChanged();
+    void modelChanged();
     void zoomChanged();
     void panChanged();
 
 private:
-    DrillDocument *doc_ = nullptr;
+    DrillDocumentModel *documentModel_ = nullptr;
     double zoom_ = 20.0;
     QPointF pan_{0, 0};
     QPointF lastMousePos_;

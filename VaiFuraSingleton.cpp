@@ -2,14 +2,26 @@
 
 VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     : QObject{parent}
-    , drillDoc_{new DrillDocument(this)}
-    , toolListModel_{new ToolListModel(this)}
-    , drillListModel_{new DrillListModel(this)}
+    , documentModel_{new DrillDocumentModel(this)}
+    , toolsModel_{new ToolListModel(this)}
+    , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
 {
-    connect(drillDoc_, &DrillDocument::changed, this, [=]() {
-        toolListModel_->setModel(drillDoc_->model());
-        drillListModel_->setModel(drillDoc_->model());
-        drillTreeModel_->setModel(drillDoc_->model());
+    documentModel_->setParser(&excellonParser_);
+
+    connect(documentModel_, &DrillDocumentModel::changed, this, [=]() {
+        toolsModel_->setDocument(documentModel_->document());
+        holesModel_->setDocument(documentModel_->document());
+        drillTreeModel_->setModel(documentModel_->document());
     });
+}
+
+void VaiFuraSingleton::setDocumentPath(const QString &path)
+{
+    if (documentPath_ == path)
+        return;
+    documentPath_ = path;
+    emit documentPathChanged();
+
+    documentModel_->loadFile(documentPath_);
 }

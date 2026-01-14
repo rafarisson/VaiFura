@@ -8,6 +8,8 @@ qt_add_qml_module(VaiFuraView
     STATIC
     SOURCES
         DrillDocumentPreviewQuickItem.h DrillDocumentPreviewQuickItem.cpp
+    DEPENDENCIES
+        libmodel
 )
 
 target_link_libraries(VaiFuraView PRIVATE

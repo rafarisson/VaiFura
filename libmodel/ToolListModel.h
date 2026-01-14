@@ -1,9 +1,10 @@
 #ifndef TOOLLISTMODEL_H
 #define TOOLLISTMODEL_H
 
-#include "AbstractDrillListModel.h"
+#include <QQmlEngine>
+#include "AbstractToolHoleListModel.h"
 
-class ToolListModel : public AbstractDrillListModel
+class ToolListModel : public AbstractToolHoleListModel
 {
     Q_OBJECT
     QML_ELEMENT
@@ -14,11 +15,11 @@ public:
         DiameterRole
     };
 
-    explicit ToolListModel(QObject* parent = nullptr)
-        : AbstractDrillListModel{parent}
-    {}
+    explicit ToolListModel(QObject* parent = nullptr);
 
     int size() const override;
+
+protected:
     QVariant data(const QModelIndex &index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 };

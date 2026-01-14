@@ -3,7 +3,7 @@
 #include <QMouseEvent>
 
 #include "DrillDocumentPreviewQuickItem.h"
-#include "DrillModel.h"
+#include "DrillDocument.h"
 
 static QSGGeometryNode *createQuad(const QRectF &r, const QColor &color);
 static QSGGeometryNode *createCircleOutline(const QPointF &center,
@@ -18,18 +18,18 @@ DrillDocumentPreviewQuickItem::DrillDocumentPreviewQuickItem(QQuickItem *parent)
     setAcceptedMouseButtons(Qt::AllButtons);
 }
 
-void DrillDocumentPreviewQuickItem::setDocument(DrillDocument *newDoc)
+void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
 {
-    if (doc_ == newDoc)
+    if (documentModel_ == newModel)
         return;
 
-    if (doc_)
-        disconnect(doc_, nullptr, this, nullptr);
-    doc_ = newDoc;
-    if (doc_)
-        connect(doc_, &DrillDocument::changed, this, &DrillDocumentPreviewQuickItem::update);
+    if (documentModel_)
+        disconnect(documentModel_, nullptr, this, nullptr);
+    documentModel_ = newModel;
+    if (documentModel_)
+        connect(documentModel_, &DrillDocumentModel::changed, this, &DrillDocumentPreviewQuickItem::update);
 
-    emit documentChanged();
+    emit modelChanged();
     update();
 }
 
@@ -70,7 +70,7 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *oldNode, Update
     buildGrid(clipNode);
     buildOrigin(clipNode);
 
-    if (doc_ && doc_->model())
+    if (documentModel_ && documentModel_->document())
         buildDrills(clipNode);
 
     return root;
@@ -85,10 +85,10 @@ void DrillDocumentPreviewQuickItem::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (event->button() == Qt::RightButton && doc_) {
+    if (event->button() == Qt::RightButton && documentModel_) {
         movingDrills_ = true;
         moveStartWorld_ = toWorld(event->position());
-        moveStartOffset_ = doc_->offset();
+        moveStartOffset_ = documentModel_->offset();
         return;
     }
 
@@ -114,11 +114,11 @@ void DrillDocumentPreviewQuickItem::mouseMoveEvent(QMouseEvent *event)
         return;
     }
 
-    if (movingDrills_ && doc_) {
+    if (movingDrills_ && documentModel_) {
         QPointF currentWorld = toWorld(event->position());
         QPointF deltaWorld = currentWorld - moveStartWorld_;
 
-        doc_->setOffset(moveStartOffset_ + deltaWorld);
+        documentModel_->setOffset(moveStartOffset_ + deltaWorld);
 
         update();
         return;
@@ -141,14 +141,14 @@ void DrillDocumentPreviewQuickItem::wheelEvent(QWheelEvent *event)
 
 int DrillDocumentPreviewQuickItem::hitTest(const QPointF &px) const
 {
-    if (!doc_ || !doc_->model())
+    if (!documentModel_ || !documentModel_->document())
         return -1;
 
-    auto *m = doc_->model();
+    auto *m = documentModel_->document();
 
-    for (int i = 0; i < m->drills().size(); ++i) {
-        QPointF c = toScreenDoc({m->drills()[i].x, m->drills()[i].y});
-        if (QLineF(px, c).length() < toolRadius(m->drills()[i].toolId) * zoom_)
+    for (int i = 0; i < m->holes().size(); ++i) {
+        QPointF c = toScreenDoc({m->holes()[i].x, m->holes()[i].y});
+        if (QLineF(px, c).length() < toolRadius(m->holes()[i].toolId) * zoom_)
             return i;
     }
 
@@ -157,8 +157,8 @@ int DrillDocumentPreviewQuickItem::hitTest(const QPointF &px) const
 
 double DrillDocumentPreviewQuickItem::toolRadius(int toolId) const
 {
-    if (doc_ && doc_->model()) {
-        auto *m = doc_->model();
+    if (documentModel_ && documentModel_->document()) {
+        auto *m = documentModel_->document();
         for (const auto& t : m->tools())
             if (t.id == toolId)
                 return t.mm * 0.5;
@@ -171,7 +171,7 @@ QPointF DrillDocumentPreviewQuickItem::toScreenDoc(const QPointF &mm) const
 {
     QPointF world = mm;
 
-    world += doc_->offset();
+    world += documentModel_->offset();
 
     return toScreenWorld(world);
 }
@@ -358,13 +358,13 @@ void DrillDocumentPreviewQuickItem::buildOrigin(QSGNode *root)
 
 void DrillDocumentPreviewQuickItem::buildDrills(QSGNode *root)
 {
-    if (!doc_ || !doc_->model())
+    if (!documentModel_ || !documentModel_->document())
         return;
 
-    auto *m = doc_->model();
+    auto *m = documentModel_->document();
 
-    for (int i = 0; i < m->drills().size(); ++i) {
-        const auto &d = m->drills()[i];
+    for (int i = 0; i < m->holes().size(); ++i) {
+        const auto &d = m->holes()[i];
         QPointF c = toScreenDoc({d.x, d.y});
         double r = toolRadius(d.toolId) * zoom_;
 
