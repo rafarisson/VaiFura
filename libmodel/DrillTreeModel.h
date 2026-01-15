@@ -26,7 +26,8 @@ public:
         XRole,
         YRole,
         ChildCountRole,
-        IsCheckedRole
+        IsCheckedRole,
+        CheckStateRole
     };
 
     explicit DrillTreeModel(QObject *parent = nullptr);

@@ -120,14 +120,10 @@ Window {
                     required property real posX
                     required property real posY
                     required property int childCount
-                    required property bool isChecked
 
-                    checked: isChecked
                     text: type == DrillTreeModel.ToolType
                           ? `Tool ${diameter}mm [${childCount}]`
                           : `Drill (${posX},${posY})`
-
-                    onCheckedChanged: if (isChecked != checked) model.isChecked = checked
                 }
 
                 ScrollBar.vertical: ScrollBar {

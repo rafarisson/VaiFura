@@ -23,9 +23,11 @@ T.TreeViewDelegate {
                || control.treeView.selectionBehavior === TableView.SelectionDisabled)
                && control.row === control.treeView.currentRow)
 
-    // Assigned to by TreeView:
+    // Assigned to by TreeView
     required property int row
     required property var model
+    // Assigned by the model
+    required property int checkState
 
     readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
@@ -57,7 +59,11 @@ T.TreeViewDelegate {
 
     contentItem: CheckBox {
         text: control.text
-        checked: control.checked
-        onToggled: control.checked = checked
+        tristate: control.hasChildren
+        checkState: control.checkState
+        nextCheckState: function() {
+            return checkState === Qt.Checked ? Qt.Unchecked : Qt.Checked
+        }
+        onCheckStateChanged: if (control.model.checkState != checkState) control.model.checkState = checkState
     }
 }

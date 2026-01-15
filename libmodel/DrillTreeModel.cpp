@@ -72,6 +72,7 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case ChildCountRole: return item->childCount();
     case IsCheckedRole: return item->isChecked();
+    case CheckStateRole: return item->checkState();
     }
 
     if (item->type() == DrillTreeNode::Type::IsTool) {
@@ -96,39 +97,31 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
 
 bool DrillTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!index.isValid() || role != IsCheckedRole)
+    if (!index.isValid() || role != CheckStateRole)
         return false;
 
     auto *item = itemAt(index);
     if (!item || item == treeDoc_->root())
         return false;
 
-    bool newChecked = value.toBool();
-    if (!item->setChecked(newChecked))
+    Qt::CheckState newState = value.value<Qt::CheckState>();
+    if (!item->setCheckState(newState))
         return false;
 
     emit dataChanged(index, index, { role });
 
-    // if (item->childCount()) {
-    //     QModelIndex parentIndex = DrillTreeModel::index(item->row(), 0, QModelIndex());
-    //     QModelIndex first = DrillTreeModel::index(0, 0, parentIndex);
-    //     QModelIndex last  = DrillTreeModel::index(item->childCount() - 1, 0, parentIndex);
-    //     emit dataChanged(first, last, { role });
-    // }
+    if (item->childCount()) {
+        QModelIndex parentIndex = DrillTreeModel::index(item->row(), 0, QModelIndex());
+        QModelIndex first = DrillTreeModel::index(0, 0, parentIndex);
+        QModelIndex last = DrillTreeModel::index(item->childCount() - 1, 0, parentIndex);
+        emit dataChanged(first, last, { role });
+    }
 
-    // if (item->childCount() && newState != Qt::PartiallyChecked) {
-    //     emit dataChanged(indexFromNode(item->children().first()),
-    //                      indexFromNode(item->children().last()),
-    //                      { role });
-    // }
-
-    // if (role == CheckedRole || role == Qt::CheckStateRole) {
-    //     bool newState = (value.toInt() == Qt::Checked) || value.toBool();
-    //     if (item->setChecked(newState)) {
-    //         qDebug() << "update" << newState;
-    //         emit dataChanged(index, index, { role });
-    //     }
-    // }
+    QModelIndex recursiveParentIndex = parent(index);
+    while (recursiveParentIndex.isValid()) {
+        emit dataChanged(recursiveParentIndex, recursiveParentIndex, { role });
+        recursiveParentIndex = parent(recursiveParentIndex);
+    }
 
     return true;
 }
@@ -142,6 +135,7 @@ QHash<int, QByteArray> DrillTreeModel::roleNames() const
     roles[YRole] = "posY";
     roles[ChildCountRole] = "childCount";
     roles[IsCheckedRole] = "isChecked";
+    roles[CheckStateRole] = "checkState";
     return roles;
 }
 

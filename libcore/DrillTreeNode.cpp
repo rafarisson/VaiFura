@@ -26,15 +26,50 @@ int DrillTreeNode::row() const
     return parent_ ? parent_->children_.indexOf(this) : 0;
 }
 
-bool DrillTreeNode::setChecked(bool state)
+bool DrillTreeNode::setCheckState(Qt::CheckState newState)
 {
-    if (checked_ == state)
+    if (state_ == newState)
         return false;
 
-    checked_ = state;
+    state_ = newState;
 
-    // for (auto *child : std::as_const(children_))
-    //     child->setChecked(checked_);
+    if (state_ != Qt::PartiallyChecked) {
+        for (auto *child : std::as_const(children_))
+            child->setCheckState(newState);
+    }
+
+    if (parent_)
+        parent_->updateParent();
 
     return true;
+}
+
+void DrillTreeNode::updateParent()
+{
+    Qt::CheckState newParentState = Qt::PartiallyChecked;
+    int checkedCounter = 0;
+    int uncheckedCounter = 0;
+
+    for (auto *child : std::as_const(children_)) {
+        switch (child->checkState()) {
+        case Qt::Checked:
+            checkedCounter++;
+            break;
+        case Qt::Unchecked:
+            uncheckedCounter++;
+            break;
+        case Qt::PartiallyChecked:
+            break;
+        }
+    }
+
+    if (checkedCounter == children_.size())
+        newParentState = Qt::Checked;
+    else if (uncheckedCounter == children_.size())
+        newParentState = Qt::Unchecked;
+
+    state_ = newParentState;
+
+    if (parent_)
+        parent_->updateParent();
 }

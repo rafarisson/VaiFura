@@ -28,18 +28,21 @@ public:
     const Tool *tool() const { return tool_; }
     const Hole *hole() const { return hole_; }
 
-    bool isChecked() const { return checked_; }
-    bool setChecked(bool state);
+    bool isChecked() const { return state_ != Qt::Unchecked; }
+    Qt::CheckState checkState() const { return state_; }
+    bool setCheckState(Qt::CheckState newState);
 
 private:
     friend class DrillTreeDocumentBuilder;
+
+    void updateParent();
 
     Type type_;
     DrillTreeNode *parent_ = nullptr;
     QVector<DrillTreeNode*> children_;
     const Tool *tool_ = nullptr;
     const Hole *hole_ = nullptr;
-    bool checked_ = true;
+    Qt::CheckState state_ = Qt::Checked;
 };
 
 #endif // DRILLTREENODE_H
