@@ -34,7 +34,6 @@ public:
 
 private:
     DrillTreeNode *itemAt(const QModelIndex &index) const;
-    // QModelIndex indexFromNode(DrillTreeNode *node) const;
 
 protected:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;

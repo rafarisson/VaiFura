@@ -13,7 +13,7 @@ public:
     DrillTreeDocument& operator=(const DrillTreeDocument&) = delete;
 
     void reset();
-    DrillTreeNode* root() const { return root_; }
+    DrillTreeNode *root() const { return root_; }
 
 private:
     DrillTreeNode *root_;

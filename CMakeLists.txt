@@ -25,6 +25,7 @@ qt_add_qml_module(appVaiFura
     VERSION 1.0
     QML_FILES
         Main.qml
+        DrillTreeViewDelegate.qml
     SOURCES
         VaiFuraSingleton.h VaiFuraSingleton.cpp
     DEPENDENCIES

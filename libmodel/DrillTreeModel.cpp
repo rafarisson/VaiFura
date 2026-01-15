@@ -24,14 +24,6 @@ DrillTreeNode *DrillTreeModel::itemAt(const QModelIndex &index) const
     return treeDoc_->root();
 }
 
-// QModelIndex DrillTreeModel::indexFromNode(DrillTreeNode *node) const
-// {
-//     if (!node || node == treeDoc_->root())
-//         return {};
-
-//     return createIndex(node->row(), 0, node);
-// }
-
 QModelIndex DrillTreeModel::index(int row, int column, const QModelIndex &parent) const
 {
     if (!hasIndex(row, column, parent))
@@ -104,25 +96,25 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
 
 bool DrillTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    qDebug() << "setData" << index;
-    if (!index.isValid())
+    if (!index.isValid() || role != IsCheckedRole)
         return false;
 
     auto *item = itemAt(index);
-    qDebug() << "item" << index;
-    if (!item)
-        return false;
-
-    qDebug() << "setData" << role;
-    if (role != IsCheckedRole && role != Qt::CheckStateRole)
+    if (!item || item == treeDoc_->root())
         return false;
 
     bool newChecked = value.toBool();
-    qDebug() << newChecked << item->isChecked();
     if (!item->setChecked(newChecked))
         return false;
 
     emit dataChanged(index, index, { role });
+
+    // if (item->childCount()) {
+    //     QModelIndex parentIndex = DrillTreeModel::index(item->row(), 0, QModelIndex());
+    //     QModelIndex first = DrillTreeModel::index(0, 0, parentIndex);
+    //     QModelIndex last  = DrillTreeModel::index(item->childCount() - 1, 0, parentIndex);
+    //     emit dataChanged(first, last, { role });
+    // }
 
     // if (item->childCount() && newState != Qt::PartiallyChecked) {
     //     emit dataChanged(indexFromNode(item->children().first()),

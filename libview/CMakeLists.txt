@@ -1,4 +1,5 @@
 find_package(Qt6 REQUIRED COMPONENTS Core Quick)
+find_package(Qt6 REQUIRED COMPONENTS Core)
 
 set(QT_QML_GENERATE_QMLLS_INI ON)
 
@@ -18,5 +19,6 @@ target_link_libraries(VaiFuraView PRIVATE
     VaiFuraCore
     VaiFuraModel
 )
+target_link_libraries(VaiFuraView PRIVATE Qt6::Core)
 
 target_include_directories(VaiFuraView INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
