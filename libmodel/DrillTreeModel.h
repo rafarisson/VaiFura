@@ -5,8 +5,8 @@
 #include <QAbstractItemModel>
 #include <QObject>
 
-class DrillTreeNode;
-class DrillTreeDocument;
+class DrillNode;
+class DrillDocument;
 
 class DrillTreeModel : public QAbstractItemModel
 {
@@ -31,10 +31,10 @@ public:
     };
 
     explicit DrillTreeModel(QObject *parent = nullptr);
-    void setDocument(const DrillTreeDocument *doc);
+    void setModel(const DrillDocument *doc);
 
 private:
-    DrillTreeNode *itemAt(const QModelIndex &index) const;
+    const DrillNode *itemAt(const QModelIndex &index) const;
 
 protected:
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
@@ -46,7 +46,7 @@ protected:
     QHash<int, QByteArray> roleNames() const override;
 
 private:
-    const DrillTreeDocument *treeDoc_;
+    const DrillDocument *doc_ = nullptr;
 };
 
 #endif // DRILLTREEMODEL_H

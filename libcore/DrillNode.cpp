@@ -1,32 +1,27 @@
-#include "DrillTreeNode.h"
+#include "DrillNode.h"
 
-DrillTreeNode::DrillTreeNode(Type type, DrillTreeNode *parent)
+DrillNode::DrillNode(Type type, DrillNode *parent)
     : type_{type}
     , parent_{parent}
 {}
 
-DrillTreeNode::~DrillTreeNode()
+DrillNode::~DrillNode()
 {
-    reset();
+    clear();
 }
 
-void DrillTreeNode::reset()
+void DrillNode::clear()
 {
     qDeleteAll(children_);
     children_.clear();
 }
 
-DrillTreeNode *DrillTreeNode::child(int row) const
-{
-    return children_.value(row);
-}
-
-int DrillTreeNode::row() const
+int DrillNode::row() const
 {
     return parent_ ? parent_->children_.indexOf(this) : 0;
 }
 
-bool DrillTreeNode::setCheckState(Qt::CheckState newState)
+bool DrillNode::setCheckState(Qt::CheckState newState)
 {
     if (state_ == newState)
         return false;
@@ -44,7 +39,7 @@ bool DrillTreeNode::setCheckState(Qt::CheckState newState)
     return true;
 }
 
-void DrillTreeNode::updateParent()
+void DrillNode::updateParent()
 {
     Qt::CheckState newParentState = Qt::PartiallyChecked;
     int checkedCounter = 0;

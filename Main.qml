@@ -27,75 +27,56 @@ Window {
         }
 
         RowLayout {
+            Label {
+                text: qsTr("Offset X:")
+            }
+            TextField {
+                text: VaiFura.model.offset.x
+                validator: DoubleValidator {
+                    bottom: 0
+                    notation: DoubleValidator.StandardNotation
+                }
+                onTextChanged: if (acceptableInput)
+                                   VaiFura.model.offset = Qt.point(parseFloat(text), VaiFura.model.offset.y)
+            }
+
+            Label {
+                text: qsTr("Offset Y:")
+            }
+            TextField {
+                text: VaiFura.model.offset.y
+                validator: DoubleValidator {
+                    bottom: 0
+                    notation: DoubleValidator.StandardNotation
+                }
+                onTextChanged: {
+                    let v = parseFloat(text)
+                    if (!isNaN(v))
+                        VaiFura.model.offset = Qt.point(VaiFura.model.offset.x, v)
+                }
+            }
+        }
+
+        RowLayout {
             Layout.fillHeight: true
             Layout.fillWidth: true
 
-            DrillDocumentPreview {
+            Button {
+                text: qsTr("a")
+                Layout.fillHeight: true
+            }
+
+            Preview {
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 Layout.preferredHeight: 300
                 Layout.preferredWidth: 100
-
-                model: VaiFura.model
+                doc: VaiFura.model
             }
 
-            ColumnLayout {
+            Button {
+                text: qsTr("b")
                 Layout.fillHeight: true
-                Layout.fillWidth: true
-
-                Label {
-                    text: qsTr("Tools (%1):").arg(toolsListView.count)
-                }
-
-                ListView {
-                    id: toolsListView
-
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    boundsBehavior: Flickable.StopAtBounds
-                    clip: true
-                    model: VaiFura.toolsModel
-
-                    delegate: Text {
-                        required property int id
-                        required property real diameter
-
-                        text: id + ": (" + diameter + ")"
-                    }
-
-                    ScrollBar.vertical: ScrollBar {
-                        visible: true
-                    }
-                }
-
-                Label {
-                    text: qsTr("Holes (%1):").arg(holesListView.count)
-                }
-
-                ListView {
-                    id: holesListView
-
-                    Layout.fillHeight: true
-                    Layout.fillWidth: true
-
-                    boundsBehavior: Flickable.StopAtBounds
-                    clip: true
-                    model: VaiFura.holesModel
-
-                    delegate: Text {
-                        required property int index
-                        required property int toolId
-                        required property real posX
-                        required property real posY
-
-                        text: index + ": (" + posX + "," + posY + ") T" + toolId
-                    }
-
-                    ScrollBar.vertical: ScrollBar {
-                        visible: true
-                    }
-                }
             }
 
 
@@ -104,8 +85,7 @@ Window {
 
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                Layout.preferredHeight: 300
-                Layout.preferredWidth: 100
+                Layout.preferredWidth: 50
 
                 boundsBehavior: Flickable.StopAtBounds
                 clip: true
@@ -121,9 +101,11 @@ Window {
                     required property real posY
                     required property int childCount
 
+                    property point offset: VaiFura.model.offset
+
                     text: type == DrillTreeModel.ToolType
                           ? `Tool ${diameter}mm [${childCount}]`
-                          : `Drill (${posX},${posY})`
+                          : `Drill (${posX + offset.x},${posY + offset.y})`
                 }
 
                 ScrollBar.vertical: ScrollBar {
@@ -131,11 +113,15 @@ Window {
                 }
             }
         }
+
+        Button {
+            text: qsTr("test")
+        }
     }
 
     Connections {
         function onDocumentPathChanged() {
-            Qt.callLater(drillsTreeView.expandRecursively);
+            // Qt.callLater(drillsTreeView.expandRecursively);
         }
 
         target: VaiFura

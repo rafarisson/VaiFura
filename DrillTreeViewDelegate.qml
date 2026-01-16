@@ -57,13 +57,28 @@ T.TreeViewDelegate {
                ? control.palette.alternateBase : control.palette.base)
     }
 
-    contentItem: CheckBox {
-        text: control.text
-        tristate: control.hasChildren
-        checkState: control.checkState
-        nextCheckState: function() {
-            return checkState === Qt.Checked ? Qt.Unchecked : Qt.Checked
+    contentItem: Row {
+        CheckBox {
+            text: control.text
+            tristate: control.hasChildren
+            checkState: control.checkState
+            nextCheckState: function() {
+                return checkState === Qt.Checked ? Qt.Unchecked : Qt.Checked
+            }
+            onCheckStateChanged: if (control.model.checkState != checkState) control.model.checkState = checkState
         }
-        onCheckStateChanged: if (control.model.checkState != checkState) control.model.checkState = checkState
+        Label {
+            text: "ovo"
+        }
     }
+
+    // contentItem: CheckBox {
+    //     text: control.text
+    //     tristate: control.hasChildren
+    //     checkState: control.checkState
+    //     nextCheckState: function() {
+    //         return checkState === Qt.Checked ? Qt.Unchecked : Qt.Checked
+    //     }
+    //     onCheckStateChanged: if (control.model.checkState != checkState) control.model.checkState = checkState
+    // }
 }

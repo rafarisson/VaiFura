@@ -1,14 +1,17 @@
-#include <QFile>
-#include <QTextStream>
-#include "DrillParser.h"
-#include "DrillDocument.h"
 #include "DrillDocumentModel.h"
-#include "DrillDocumentBuilder.h"
-#include "DrillTreeDocumentBuilder.h"
+#include "DrillDocument.h"
+#include "DrillTreeModel.h"
 
 DrillDocumentModel::DrillDocumentModel(QObject *parent)
     : QObject{parent}
+    , doc_{new DrillDocument()}
 {}
+
+void DrillDocumentModel::setDocument(DrillDocument *newDocument)
+{
+    doc_ = newDocument;
+    emit documentChanged();
+}
 
 void DrillDocumentModel::setOffset(const QPointF &o)
 {
@@ -18,29 +21,3 @@ void DrillDocumentModel::setOffset(const QPointF &o)
     emit offsetChanged();
 }
 
-void DrillDocumentModel::setParser(DrillParser *parser)
-{
-    parser_ = parser;
-}
-
-void DrillDocumentModel::loadFile(const QString &path)
-{
-    doc_.reset();
-
-    if (parser_) {
-        QFile f(path);
-
-        if (f.open(QIODevice::ReadOnly)) {
-            QTextStream in(&f);
-            DrillDocumentBuilder builder;
-            parser_->parse(in, builder);
-            doc_ = builder.build();
-            f.close();
-        }
-    }
-
-    DrillTreeDocumentBuilder treeBuilder;
-    treeBuilder.build(treeDoc_, doc_);
-
-    emit changed();
-}

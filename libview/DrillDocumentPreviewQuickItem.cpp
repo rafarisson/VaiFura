@@ -27,9 +27,13 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
 
     if (documentModel_)
         disconnect(documentModel_, nullptr, this, nullptr);
+
     documentModel_ = newModel;
-    if (documentModel_)
-        connect(documentModel_, &DrillDocumentModel::changed, this, &DrillDocumentPreviewQuickItem::update);
+
+    if (documentModel_) {
+        connect(documentModel_, &DrillDocumentModel::documentChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(documentModel_, &DrillDocumentModel::offsetChanged, this, &DrillDocumentPreviewQuickItem::update);
+    }
 
     emit modelChanged();
     update();
@@ -82,8 +86,11 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *oldNode, Update
     buildGrid(clipNode);
     buildOrigin(clipNode);
 
-    if (documentModel_ && documentModel_->document())
+    if (documentModel_ && documentModel_->document()) {
         buildDrills(clipNode);
+        if (snapPreviewActive_)
+           buildSnapPreview(clipNode);
+    }
 
     return root;
 }
@@ -146,8 +153,15 @@ void DrillDocumentPreviewQuickItem::mouseReleaseEvent(QMouseEvent *event)
         update();
     }
 
-    if (event->button() == Qt::RightButton)
+    if (event->button() == Qt::RightButton && documentModel_) {
         movingDrills_ = false;
+
+        if (snapPreviewActive_) {
+            documentModel_->setOffset(snapPreviewWorld_);
+            snapPreviewActive_ = false;
+            update();
+        }
+    }
 }
 
 void DrillDocumentPreviewQuickItem::wheelEvent(QWheelEvent *event)
@@ -390,6 +404,35 @@ void DrillDocumentPreviewQuickItem::buildDrills(QSGNode *root)
                 r,
                 1.0,
                 Qt::cyan
+                )
+            );
+    }
+}
+
+void DrillDocumentPreviewQuickItem::buildSnapPreview(QSGNode *root)
+{
+    QPointF deltaWorld = snapPreviewWorld_ - documentModel_->offset();
+
+    auto *m = documentModel_->document();
+
+    for (int i = 0; i < m->holes().size(); ++i) {
+        const auto &d = m->holes()[i];
+
+        // posição mundial com offset + delta fantasma
+        QPointF worldPos = QPointF(d.x, d.y)
+                           + documentModel_->offset()
+                           + deltaWorld;
+
+        QPointF screen = toScreenWorld(worldPos);
+        double r = toolRadius(d.toolId) * zoom_;
+
+        root->appendChildNode(
+            createCircleOutline(
+                screen,
+                r,
+                1.0,
+                QColor(0, 255, 255, 120), // cyan translúcido
+                32
                 )
             );
     }

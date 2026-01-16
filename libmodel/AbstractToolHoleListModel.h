@@ -22,11 +22,7 @@ public:
 
     virtual int size() const = 0;
 
-    const DrillDocument *document() const {
-        return doc_;
-    }
-
-    void setDocument(const DrillDocument *model) {
+    void setModel(const DrillDocument *model) {
         beginResetModel();
         doc_ = model;
         endResetModel();
@@ -37,7 +33,6 @@ protected:
         return isValid() ? size() : 0;
     }
 
-private:
     const DrillDocument* doc_ = nullptr;
 };
 

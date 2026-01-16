@@ -7,7 +7,7 @@ HoleListModel::HoleListModel(QObject *parent)
 
 int HoleListModel::size() const
 {
-    return isValid() ? document()->holes().size() : 0;
+    return isValid() ? doc_->holes().size() : 0;
 }
 
 QVariant HoleListModel::data(const QModelIndex &index, int role) const
@@ -17,7 +17,7 @@ QVariant HoleListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return {};
 
-    const auto &d = document()->holes()[index.row()];
+    const auto &d = doc_->holes()[index.row()];
 
     switch (role) {
     case XRole: return d.x;

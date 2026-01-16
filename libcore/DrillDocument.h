@@ -2,6 +2,7 @@
 #define DRILLDOCUMENT_H
 
 #include <QVector>
+#include "DrillNode.h"
 
 struct Tool
 {
@@ -18,19 +19,24 @@ struct Hole {
 class DrillDocument
 {
 public:
-    explicit DrillDocument() {}
-    DrillDocument(const QVector<Tool> &t, const QVector<Hole> &h);
+    DrillDocument() = default;
+    DrillDocument(const DrillDocument&) = delete;
+    DrillDocument& operator=(const DrillDocument&) = delete;
 
     const QVector<Tool>& tools() const { return tools_; }
     const QVector<Hole>& holes() const { return holes_; }
 
-    void reset();
+    DrillNode* root() { return &root_; }
+    const DrillNode* root() const { return &root_; }
+
+    void clear();
 
 private:
     friend class DrillDocumentBuilder;
 
     QVector<Tool> tools_;
     QVector<Hole> holes_;
+    DrillNode root_{DrillNode::Type::IsTool};
 };
 
 #endif // DRILLDOCUMENT_H

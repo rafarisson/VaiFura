@@ -1,12 +1,12 @@
-#ifndef DRILLTREENODE_H
-#define DRILLTREENODE_H
+#ifndef DRILLNODE_H
+#define DRILLNODE_H
 
 #include <QVector>
 
 class Tool;
 class Hole;
 
-class DrillTreeNode
+class DrillNode
 {
 public:
     enum class Type {
@@ -14,14 +14,15 @@ public:
         IsHole
     };
 
-    explicit DrillTreeNode(Type type, DrillTreeNode *parent = nullptr);
-    ~DrillTreeNode();
+    explicit DrillNode(Type type, DrillNode *parent = nullptr);
+    ~DrillNode();
 
-    void reset();
+    void clear();
 
     Type type() const { return type_; }
-    DrillTreeNode *child(int row) const;
-    DrillTreeNode *parent() const { return parent_; };
+    DrillNode *child(int row) { return children_.value(row); }
+    const DrillNode *child(int row) const { return children_.value(row); }
+    const DrillNode *parent() const { return parent_; };
     int childCount() const { return children_.size(); }
     int row() const;
 
@@ -33,16 +34,17 @@ public:
     bool setCheckState(Qt::CheckState newState);
 
 private:
+    friend class DrillDocumentBuilder;
     friend class DrillTreeDocumentBuilder;
 
     void updateParent();
 
     Type type_;
-    DrillTreeNode *parent_ = nullptr;
-    QVector<DrillTreeNode*> children_;
+    DrillNode *parent_ = nullptr;
+    QVector<DrillNode*> children_;
     const Tool *tool_ = nullptr;
     const Hole *hole_ = nullptr;
     Qt::CheckState state_ = Qt::Checked;
 };
 
-#endif // DRILLTREENODE_H
+#endif // DRILLNODE_H

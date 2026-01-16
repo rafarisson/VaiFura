@@ -6,26 +6,20 @@
 class DrillDocumentBuilder
 {
 public:
-    DrillDocumentBuilder &addTool(const Tool &tool) {
-        doc_.tools_.append(tool);
-        return *this;
-    }
+    explicit DrillDocumentBuilder(DrillDocument *document);
 
-    DrillDocumentBuilder &addHole(const Hole &drill) {
-        doc_.holes_.append(drill);
-        return *this;
-    }
+    void addTool(const Tool &tool);
+    void addHole(const Hole &hole);
+    void clear();
 
-    DrillDocument build() {
-        return doc_;
-    }
-
-    void reset() {
-        doc_.reset();
-    }
+    void build();
 
 private:
-    DrillDocument doc_;
+    DrillNode *createToolNode(DrillNode *parent, const Tool &tool);
+    void appendHoleNodes(DrillNode *toolNode, const Tool &tool, const QVector<Hole> &holes);
+
+private:
+    DrillDocument *doc_;
 };
 
 #endif // DRILLDOCUMENTBUILDER_H

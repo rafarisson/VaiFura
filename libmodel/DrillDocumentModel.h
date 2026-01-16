@@ -4,10 +4,9 @@
 #include <QtQml/qqml.h>
 #include <QPointF>
 #include <QObject>
-#include "DrillDocument.h"
-#include "DrillTreeDocument.h"
+#include <QTextStream>
 
-class DrillParser;
+class DrillDocument;
 
 class DrillDocumentModel : public QObject
 {
@@ -20,22 +19,19 @@ class DrillDocumentModel : public QObject
 public:
     explicit DrillDocumentModel(QObject *parent = nullptr);
 
+    const DrillDocument *document() const { return doc_; }
+    void setDocument(DrillDocument *newDocument);
+
     QPointF offset() const { return offset_; }
     void setOffset(const QPointF &o);
 
-    void setParser(DrillParser *parser);
-    void loadFile(const QString &path);
-    const DrillDocument *document() const { return &doc_; }
-    const DrillTreeDocument *treeDocument() const { return &treeDoc_; }
-
 signals:
-    void changed();
+    void documentChanged();
     void offsetChanged();
+    void drillCheckeStateChanged();
 
 private:
-    DrillParser *parser_ = nullptr;
-    DrillDocument doc_;
-    DrillTreeDocument treeDoc_;
+    const DrillDocument *doc_ = nullptr;
     QPointF offset_{0, 0};
 };
 

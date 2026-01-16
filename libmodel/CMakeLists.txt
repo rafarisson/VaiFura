@@ -20,6 +20,5 @@ target_link_libraries(VaiFuraModel PRIVATE
     Qt6::Quick
     VaiFuraCore
 )
-target_link_libraries(VaiFuraModel PRIVATE Qt6::Core)
 
 target_include_directories(VaiFuraModel INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

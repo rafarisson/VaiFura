@@ -4,12 +4,11 @@
 #include <QObject>
 #include <QQmlEngine>
 
+#include "DrillDocument.h"
 #include "DrillDocumentModel.h"
 #include "ToolListModel.h"
 #include "HoleListModel.h"
 #include "DrillTreeModel.h"
-
-#include "ExcellonDrillParser.h"
 
 class VaiFuraSingleton : public QObject
 {
@@ -38,7 +37,7 @@ signals:
     void documentPathChanged();
 
 private:
-    ExcellonDrillParser excellonParser_;
+    DrillDocument doc_;
     QString documentPath_;
 
     DrillDocumentModel *documentModel_ = nullptr;

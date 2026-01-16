@@ -1,4 +1,9 @@
+#include <QFile>
+#include <QTextStream>
+
 #include "VaiFuraSingleton.h"
+#include "DrillDocumentBuilder.h"
+#include "ExcellonDrillParser.h"
 
 VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     : QObject{parent}
@@ -7,13 +12,22 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
 {
-    documentModel_->setParser(&excellonParser_);
-
-    connect(documentModel_, &DrillDocumentModel::changed, this, [=]() {
-        toolsModel_->setDocument(documentModel_->document());
-        holesModel_->setDocument(documentModel_->document());
-        drillTreeModel_->setDocument(documentModel_->treeDocument());
+    connect(documentModel_, &DrillDocumentModel::documentChanged, this, [=]() {
+        toolsModel_->setModel(documentModel_->document());
+        holesModel_->setModel(documentModel_->document());
+        drillTreeModel_->setModel(documentModel_->document());
     });
+
+    // connect(drillTreeModel_, &DrillTreeModel::dataChanged, [=](const QModelIndex &topLeft,
+    //                                                            const QModelIndex &bottomRight,
+    //                                                            const QList<int> &roles) {
+    //     if (roles.contains(DrillTreeModel::CheckStateRole)) {
+
+    //     }
+    // });
+
+    connect(drillTreeModel_, &DrillTreeModel::dataChanged,
+            documentModel_, &DrillDocumentModel::drillCheckeStateChanged);
 }
 
 void VaiFuraSingleton::setDocumentPath(const QString &path)
@@ -23,5 +37,16 @@ void VaiFuraSingleton::setDocumentPath(const QString &path)
     documentPath_ = path;
     emit documentPathChanged();
 
-    documentModel_->loadFile(documentPath_);
+    DrillDocumentBuilder builder(&doc_);
+
+    QFile f(path);
+    if (f.open(QIODevice::ReadOnly)) {
+        QTextStream in(&f);
+        ExcellonDrillParser parser;
+        parser.parse(in, builder);
+        builder.build();
+        f.close();
+    }
+
+    documentModel_->setDocument(&doc_);
 }

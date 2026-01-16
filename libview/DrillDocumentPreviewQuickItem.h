@@ -43,6 +43,7 @@ private:
     void buildGrid(QSGNode *root);
     void buildOrigin(QSGNode *root);
     void buildDrills(QSGNode *root);
+    void buildSnapPreview(QSGNode *root);
 
 protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;
@@ -65,6 +66,8 @@ private:
     QPointF lastMousePos_;
     QPointF moveStartWorld_;
     QPointF moveStartOffset_;
+    bool snapPreviewActive_ = false;
+    QPointF snapPreviewWorld_;
     bool panning_ = false;
     bool movingDrills_ = false;
     static constexpr double GRID_MM = 10.0;

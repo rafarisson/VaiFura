@@ -25,6 +25,7 @@ qt_add_qml_module(appVaiFura
     VERSION 1.0
     QML_FILES
         Main.qml
+        Preview.qml
         DrillTreeViewDelegate.qml
     SOURCES
         VaiFuraSingleton.h VaiFuraSingleton.cpp
@@ -53,7 +54,6 @@ target_link_libraries(appVaiFura
         VaiFuraModel
         VaiFuraView
 )
-target_link_libraries(appVaiFura PRIVATE Qt6::Core)
 
 include(GNUInstallDirs)
 install(TARGETS appVaiFura
