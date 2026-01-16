@@ -15,6 +15,8 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
     QML_NAMED_ELEMENT(DrillDocumentPreview)
 
     Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
+
+    Q_PROPERTY(double gridStep READ gridStep WRITE setGridStep NOTIFY gridStepChanged)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
     Q_PROPERTY(QPointF pan READ pan WRITE setPan NOTIFY panChanged)
 
@@ -23,6 +25,9 @@ public:
 
     DrillDocumentModel* model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel);
+
+    double gridStep() const { return gridStep_; }
+    void setGridStep(double s);
     double zoom() const { return zoom_; }
     void setZoom(double z);
     QPointF pan() const { return pan_; }
@@ -48,11 +53,13 @@ protected:
 
 signals:
     void modelChanged();
+    void gridStepChanged();
     void zoomChanged();
     void panChanged();
 
 private:
     DrillDocumentModel *documentModel_ = nullptr;
+    double gridStep_ = 1.0;
     double zoom_ = 20.0;
     QPointF pan_{0, 0};
     QPointF lastMousePos_;

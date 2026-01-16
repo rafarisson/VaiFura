@@ -10,6 +10,8 @@ static QSGGeometryNode *createCircleOutline(const QPointF &center,
                                             double radiusPx, double thicknessPx,
                                             const QColor &color,
                                             int segments = 32);
+static double snap(double v, double step);
+static QPointF snapPoint(const QPointF &p, double step);
 
 DrillDocumentPreviewQuickItem::DrillDocumentPreviewQuickItem(QQuickItem *parent)
     : QQuickItem(parent)
@@ -30,6 +32,16 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
         connect(documentModel_, &DrillDocumentModel::changed, this, &DrillDocumentPreviewQuickItem::update);
 
     emit modelChanged();
+    update();
+}
+
+void DrillDocumentPreviewQuickItem::setGridStep(double s)
+{
+    if (qFuzzyCompare(gridStep_, s))
+        return;
+
+    gridStep_ = s;
+    emit gridStepChanged();
     update();
 }
 
@@ -101,8 +113,6 @@ void DrillDocumentPreviewQuickItem::mousePressEvent(QMouseEvent *event)
 
 void DrillDocumentPreviewQuickItem::mouseMoveEvent(QMouseEvent *event)
 {
-
-
     if (panning_) {
         QPointF deltaPx = event->position() - lastMousePos_;
 
@@ -118,7 +128,10 @@ void DrillDocumentPreviewQuickItem::mouseMoveEvent(QMouseEvent *event)
         QPointF currentWorld = toWorld(event->position());
         QPointF deltaWorld = currentWorld - moveStartWorld_;
 
-        documentModel_->setOffset(moveStartOffset_ + deltaWorld);
+        QPointF candidate = moveStartOffset_ + deltaWorld;
+
+        snapPreviewWorld_ = snapPoint(candidate, gridStep_);
+        snapPreviewActive_ = true;
 
         update();
         return;
@@ -127,8 +140,11 @@ void DrillDocumentPreviewQuickItem::mouseMoveEvent(QMouseEvent *event)
 
 void DrillDocumentPreviewQuickItem::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
+    if (event->button() == Qt::LeftButton) {
         panning_ = false;
+        pan_ = snapPoint(pan_, gridStep_);
+        update();
+    }
 
     if (event->button() == Qt::RightButton)
         movingDrills_ = false;
@@ -201,8 +217,8 @@ void DrillDocumentPreviewQuickItem::buildGrid(QSGNode *root)
 {
     // --- resolve unidade ---
     double unitScale = 1.0;
-    double minorStep = 1.0;   // 1mm ou 0.1in
-    double majorStep = 10.0;  // 10mm ou 1in
+    double minorStep = gridStep_;
+    double majorStep = gridStep_ * 10.0;
 
     // --- limites visíveis em coordenadas de mundo ---
     QPointF w1 = toWorld({0, 0});
@@ -457,3 +473,15 @@ static QSGGeometryNode *createCircleOutline(const QPointF &center,
     return node;
 }
 
+static double snap(double v, double step)
+{
+    return std::round(v / step) * step;
+}
+
+static QPointF snapPoint(const QPointF &p, double step)
+{
+    return {
+        snap(p.x(), step),
+        snap(p.y(), step)
+    };
+}
