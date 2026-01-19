@@ -6,8 +6,15 @@
 #include <QPointF>
 
 #include "DrillDocumentModel.h"
+#include "InteractionController.h"
+#include "SnapEngine.h"
+#include "SnapPreviewRenderer.h"
+#include "ViewportTransform.h"
+#include "GridRenderer.h"
+#include "OriginRenderer.h"
+#include "DrillRenderer.h"
 
-class DrillDocument;
+class DrillDocumentModel;
 
 class DrillDocumentPreviewQuickItem : public QQuickItem
 {
@@ -16,34 +23,13 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
 
     Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
 
-    Q_PROPERTY(double gridStep READ gridStep WRITE setGridStep NOTIFY gridStepChanged)
-    Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
-    Q_PROPERTY(QPointF pan READ pan WRITE setPan NOTIFY panChanged)
-
 public:
     explicit DrillDocumentPreviewQuickItem(QQuickItem *parent = nullptr);
 
     DrillDocumentModel* model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel);
 
-    double gridStep() const { return gridStep_; }
-    void setGridStep(double s);
-    double zoom() const { return zoom_; }
-    void setZoom(double z);
-    QPointF pan() const { return pan_; }
-    void setPan(const QPointF& p);
-
-private:
-    int hitTest(const QPointF &px) const;
-    double toolRadius(int toolId) const;
-    QPointF toScreenDoc(const QPointF &mm) const;
-    QPointF toScreenWorld(const QPointF &mm) const;
-    QPointF toWorld(const QPointF &px) const;
-    void buildBackground(QSGNode *root);
-    void buildGrid(QSGNode *root);
-    void buildOrigin(QSGNode *root);
-    void buildDrills(QSGNode *root);
-    void buildSnapPreview(QSGNode *root);
+    // Q_INVOKABLE void fitToContent(double marginPx = 40.0);
 
 protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;
@@ -52,25 +38,26 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+private:
+    void buildBackground(QSGNode *root);
+
 signals:
     void modelChanged();
-    void gridStepChanged();
-    void zoomChanged();
-    void panChanged();
 
 private:
     DrillDocumentModel *documentModel_ = nullptr;
-    double gridStep_ = 1.0;
-    double zoom_ = 20.0;
-    QPointF pan_{0, 0};
-    QPointF lastMousePos_;
-    QPointF moveStartWorld_;
-    QPointF moveStartOffset_;
+
+    ViewportTransform viewport_;
+    SnapEngine snap_;
+    InteractionController interaction_;
+
+    GridRenderer grid_;
+    OriginRenderer origin_;
+    DrillRenderer drill_;
+
     bool snapPreviewActive_ = false;
-    QPointF snapPreviewWorld_;
-    bool panning_ = false;
-    bool movingDrills_ = false;
-    static constexpr double GRID_MM = 10.0;
+    QPointF snapDeltaWorld_;
+    SnapPreviewRenderer snapPreview_;
 };
 
 #endif // DRILLDOCUMENTPREVIEWQUICKITEM_H
