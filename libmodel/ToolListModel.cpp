@@ -7,7 +7,7 @@ ToolListModel::ToolListModel(QObject *parent)
 
 int ToolListModel::size() const
 {
-    return isValid() ? doc_->tools().size() : 0;
+    return isValid() ? model()->document()->tools().size() : 0;
 }
 
 QVariant ToolListModel::data(const QModelIndex &index, int role) const
@@ -17,7 +17,7 @@ QVariant ToolListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return {};
 
-    const auto &t = doc_->tools()[index.row()];
+    const auto &t = model()->document()->tools()[index.row()];
 
     switch (role) {
     case IdRole: return t.id;

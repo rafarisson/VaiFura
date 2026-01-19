@@ -21,7 +21,7 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
     Q_PROPERTY(QPointF pan READ pan WRITE setPan NOTIFY panChanged)
 
 public:
-    explicit DrillDocumentPreviewQuickItem(QQuickItem* parent = nullptr);
+    explicit DrillDocumentPreviewQuickItem(QQuickItem *parent = nullptr);
 
     DrillDocumentModel* model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel);

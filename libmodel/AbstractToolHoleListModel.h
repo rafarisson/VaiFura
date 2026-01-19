@@ -3,12 +3,13 @@
 
 #include <QAbstractListModel>
 #include <QObject>
-
-#include "DrillDocument.h"
+#include "DrillDocumentModel.h"
 
 class AbstractToolHoleListModel : public QAbstractListModel
 {
     Q_OBJECT
+
+    Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged FINAL)
 
 public:
     explicit AbstractToolHoleListModel(QObject* parent = nullptr)
@@ -17,15 +18,27 @@ public:
     virtual ~AbstractToolHoleListModel() = default;
 
     bool isValid() const {
-        return doc_ != nullptr;
+        return documentModel_ && documentModel_->document();
     }
 
     virtual int size() const = 0;
 
-    void setModel(const DrillDocument *model) {
+    DrillDocumentModel* model() const { return documentModel_; }
+    void setModel(DrillDocumentModel *newModel) {
+        if (documentModel_ == newModel)
+            return;
+
+        if (documentModel_)
+            disconnect(documentModel_, nullptr, this, nullptr);
+
         beginResetModel();
-        doc_ = model;
+        documentModel_ = newModel;
         endResetModel();
+
+        emit modelChanged();
+
+        if (documentModel_)
+            connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &AbstractToolHoleListModel::onDocumentModelContentChanged);
     }
 
 protected:
@@ -33,7 +46,16 @@ protected:
         return isValid() ? size() : 0;
     }
 
-    const DrillDocument* doc_ = nullptr;
+signals:
+    void modelChanged();
+
+private:
+    void onDocumentModelContentChanged() {
+        beginResetModel();
+        endResetModel();
+    }
+
+    DrillDocumentModel* documentModel_ = nullptr;
 };
 
 #endif // ABSTRACTTOOLHOLELISTMODEL_H

@@ -1,4 +1,5 @@
 #include "DrillTreeModel.h"
+#include "DrillDocumentModel.h"
 #include "DrillDocument.h"
 #include "DrillNode.h"
 
@@ -6,15 +7,32 @@ DrillTreeModel::DrillTreeModel(QObject *parent)
     : QAbstractItemModel{parent}
 {}
 
-void DrillTreeModel::setModel(const DrillDocument *doc) {
+void DrillTreeModel::setModel(DrillDocumentModel *newModel) {
+    if (documentModel_ == newModel)
+        return;
+
+    if (documentModel_)
+        disconnect(documentModel_, nullptr, this, nullptr);
+
     beginResetModel();
-    doc_ = doc;
+    documentModel_ = newModel;
+    endResetModel();
+
+    emit modelChanged();
+
+    if (documentModel_)
+        connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &DrillTreeModel::onDocumentModelContentChanged);
+}
+
+void DrillTreeModel::onDocumentModelContentChanged()
+{
+    beginResetModel();
     endResetModel();
 }
 
 const DrillNode *DrillTreeModel::itemAt(const QModelIndex &index) const
 {
-    if (!doc_ || !doc_->root())
+    if (!documentModel_ || !documentModel_->document()->root())
         return nullptr;
 
     if (index.isValid()) {
@@ -23,7 +41,7 @@ const DrillNode *DrillTreeModel::itemAt(const QModelIndex &index) const
             return item;
     }
 
-    return doc_->root();
+    return documentModel_->document()->root();
 }
 
 QModelIndex DrillTreeModel::index(int row, int column, const QModelIndex &parent) const
@@ -42,13 +60,13 @@ QModelIndex DrillTreeModel::index(int row, int column, const QModelIndex &parent
 
 QModelIndex DrillTreeModel::parent(const QModelIndex &child) const
 {
-    if (!doc_ || !doc_->root() || !child.isValid())
+    if (!documentModel_ || !documentModel_->document()->root() || !child.isValid())
         return {};
 
     auto *childItem = itemAt(child);
     auto *parentItem = childItem->parent();
 
-    if (!parentItem || parentItem == doc_->root())
+    if (!parentItem || parentItem == documentModel_->document()->root())
         return {};
 
     return createIndex(parentItem->row(), 0, parentItem);
@@ -56,7 +74,7 @@ QModelIndex DrillTreeModel::parent(const QModelIndex &child) const
 
 int DrillTreeModel::rowCount(const QModelIndex &parent) const
 {
-    return doc_ && doc_->root() ? itemAt(parent)->childCount() : 0;
+    return documentModel_ && documentModel_->document()->root() ? itemAt(parent)->childCount() : 0;
 }
 
 int DrillTreeModel::columnCount(const QModelIndex &parent) const
@@ -66,7 +84,7 @@ int DrillTreeModel::columnCount(const QModelIndex &parent) const
 
 QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
 {
-    if (!doc_ || !doc_->root() || !index.isValid())
+    if (!documentModel_ || !documentModel_->document()->root() || !index.isValid())
         return {};
 
     auto *item = itemAt(index);
@@ -101,15 +119,18 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
 
 bool DrillTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (!doc_ || !doc_->root() || !index.isValid() || role != CheckStateRole)
+    if (!documentModel_ || !documentModel_->document()->root() || !index.isValid() || role != CheckStateRole)
         return false;
 
-    auto *item = (DrillNode*)itemAt(index);
-    if (!item || item == doc_->root())
+    // auto *item = (DrillNode*)itemAt(index);
+    auto *item = itemAt(index);
+    if (!item || item == documentModel_->document()->root())
         return false;
 
-    Qt::CheckState newState = value.value<Qt::CheckState>();
-    if (!item->setCheckState(newState))
+    // Qt::CheckState newState = value.value<Qt::CheckState>();
+    // if (!item->setCheckState(newState))
+    //     return false;
+    if (!documentModel_->setCheckState(item, value.value<Qt::CheckState>()))
         return false;
 
     emit dataChanged(index, index, { role });

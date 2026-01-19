@@ -6,12 +6,14 @@
 #include <QObject>
 
 class DrillNode;
-class DrillDocument;
+class DrillDocumentModel;
 
 class DrillTreeModel : public QAbstractItemModel
 {
     Q_OBJECT
     QML_ELEMENT
+
+    Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged FINAL)
 
 public:
     enum DrillTreeItemType {
@@ -31,9 +33,12 @@ public:
     };
 
     explicit DrillTreeModel(QObject *parent = nullptr);
-    void setModel(const DrillDocument *doc);
+
+    DrillDocumentModel* model() const { return documentModel_; }
+    void setModel(DrillDocumentModel *newModel);
 
 private:
+    void onDocumentModelContentChanged();
     const DrillNode *itemAt(const QModelIndex &index) const;
 
 protected:
@@ -45,8 +50,11 @@ protected:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QHash<int, QByteArray> roleNames() const override;
 
+signals:
+    void modelChanged();
+
 private:
-    const DrillDocument *doc_ = nullptr;
+    DrillDocumentModel *documentModel_ = nullptr;
 };
 
 #endif // DRILLTREEMODEL_H

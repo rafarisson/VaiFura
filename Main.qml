@@ -75,7 +75,7 @@ Window {
             }
 
             Button {
-                text: qsTr("b")
+                text: VaiFura.model.selectedHoleCount
                 Layout.fillHeight: true
             }
 

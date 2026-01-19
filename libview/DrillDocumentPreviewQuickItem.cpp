@@ -31,8 +31,9 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
     documentModel_ = newModel;
 
     if (documentModel_) {
-        connect(documentModel_, &DrillDocumentModel::documentChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &DrillDocumentPreviewQuickItem::update);
         connect(documentModel_, &DrillDocumentModel::offsetChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(documentModel_, &DrillDocumentModel::drillCheckeStateChanged, this, &DrillDocumentPreviewQuickItem::update);
     }
 
     emit modelChanged();
@@ -283,7 +284,10 @@ void DrillDocumentPreviewQuickItem::buildGrid(QSGNode *root)
     int iM = 0;
 
     // --- linhas verticais ---
-    for (double x = minX; x <= maxX + 1e-9; x += minorStep) {
+    int countX = int(std::round((maxX - minX) / minorStep));
+    for (int i = 0; i <= countX; ++i) {
+        double x = minX + i * minorStep;
+
         QPointF a = toScreenWorld({x, minY});
         QPointF b = toScreenWorld({x, maxY});
 
@@ -297,7 +301,10 @@ void DrillDocumentPreviewQuickItem::buildGrid(QSGNode *root)
     }
 
     // --- linhas horizontais ---
-    for (double y = minY; y <= maxY + 1e-9; y += minorStep) {
+    int countY = int(std::round((maxY - minY) / minorStep));
+    for (int i = 0; i <= countY; ++i) {
+        double y = minY + i * minorStep;
+
         QPointF a = toScreenWorld({minX, y});
         QPointF b = toScreenWorld({maxX, y});
 
@@ -391,21 +398,36 @@ void DrillDocumentPreviewQuickItem::buildDrills(QSGNode *root)
     if (!documentModel_ || !documentModel_->document())
         return;
 
-    auto *m = documentModel_->document();
+    const DrillDocument *doc = documentModel_->document();
+    const DrillNode *rootNode = doc->root();
 
-    for (int i = 0; i < m->holes().size(); ++i) {
-        const auto &d = m->holes()[i];
-        QPointF c = toScreenDoc({d.x, d.y});
-        double r = toolRadius(d.toolId) * zoom_;
+    for (int t = 0; t < rootNode->childCount(); ++t) {
+        const DrillNode *toolNode = rootNode->child(t);
 
-        root->appendChildNode(
-            createCircleOutline(
-                c,
-                r,
-                1.0,
-                Qt::cyan
-                )
-            );
+        for (int h = 0; h < toolNode->childCount(); ++h) {
+            const DrillNode *holeNode = toolNode->child(h);
+
+            const Hole *hole = holeNode->hole();
+            if (!hole)
+                continue;
+
+            QPointF c = toScreenDoc({ hole->x, hole->y });
+            double r = toolRadius(hole->toolId) * zoom_;
+
+            QColor color =
+                holeNode->isChecked()
+                    ? Qt::cyan
+                    : Qt::darkGray;
+
+            root->appendChildNode(
+                createCircleOutline(
+                    c,
+                    r,
+                    1.0,
+                    color
+                    )
+                );
+        }
     }
 }
 

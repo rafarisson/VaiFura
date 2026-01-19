@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QQmlEngine>
 
-#include "DrillDocument.h"
 #include "DrillDocumentModel.h"
 #include "ToolListModel.h"
 #include "HoleListModel.h"
@@ -37,7 +36,6 @@ signals:
     void documentPathChanged();
 
 private:
-    DrillDocument doc_;
     QString documentPath_;
 
     DrillDocumentModel *documentModel_ = nullptr;
