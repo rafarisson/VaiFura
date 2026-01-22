@@ -29,7 +29,7 @@ public:
     DrillDocumentModel* model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel);
 
-    // Q_INVOKABLE void fitToContent(double marginPx = 40.0);
+    Q_INVOKABLE void fitToContent(double marginPx = 40.0);
 
 protected:
     QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;

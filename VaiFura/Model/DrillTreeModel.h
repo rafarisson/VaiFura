@@ -23,7 +23,8 @@ public:
     Q_ENUM(DrillTreeItemType)
 
     enum DrillTreeRoleNames {
-        ItemTypeRole = Qt::UserRole + 1,
+        DocumentModelRole = Qt::UserRole + 1,
+        ItemTypeRole,
         DiameterRole,
         XRole,
         YRole,
@@ -31,6 +32,7 @@ public:
         IsCheckedRole,
         CheckStateRole
     };
+    Q_ENUM(DrillTreeRoleNames)
 
     explicit DrillTreeModel(QObject *parent = nullptr);
 

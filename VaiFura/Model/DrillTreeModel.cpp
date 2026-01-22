@@ -92,12 +92,13 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
         return {};
 
     switch (role) {
+    case DocumentModelRole: return QVariant::fromValue(documentModel_);
     case ChildCountRole: return item->childCount();
     case IsCheckedRole: return item->isChecked();
     case CheckStateRole: return item->checkState();
     }
 
-    if (item->type() == DrillNode::Type::IsTool) {
+    if (item->type() == DrillNode::Type::IsTool && item->tool()) {
         switch (role) {
         case Qt::DisplayRole:
         case ItemTypeRole: return ToolType;
@@ -105,7 +106,7 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
         }
     }
 
-    if (item->type() == DrillNode::Type::IsHole) {
+    if (item->type() == DrillNode::Type::IsHole && item->hole()) {
         switch (role) {
         case Qt::DisplayRole:
         case ItemTypeRole: return DrillType;
@@ -122,14 +123,10 @@ bool DrillTreeModel::setData(const QModelIndex &index, const QVariant &value, in
     if (!documentModel_ || !documentModel_->document()->root() || !index.isValid() || role != CheckStateRole)
         return false;
 
-    // auto *item = (DrillNode*)itemAt(index);
     auto *item = itemAt(index);
     if (!item || item == documentModel_->document()->root())
         return false;
 
-    // Qt::CheckState newState = value.value<Qt::CheckState>();
-    // if (!item->setCheckState(newState))
-    //     return false;
     if (!documentModel_->setCheckState(item, value.value<Qt::CheckState>()))
         return false;
 
@@ -154,6 +151,7 @@ bool DrillTreeModel::setData(const QModelIndex &index, const QVariant &value, in
 QHash<int, QByteArray> DrillTreeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
+    roles[DocumentModelRole] = "documentModel";
     roles[ItemTypeRole] = "type";
     roles[DiameterRole] = "diameter";
     roles[XRole] = "posX";

@@ -2,7 +2,6 @@
 #include <QSGFlatColorMaterial>
 #include <QMouseEvent>
 #include "DrillDocumentPreviewQuickItem.h"
-#include "DrillDocument.h"
 
 DrillDocumentPreviewQuickItem::DrillDocumentPreviewQuickItem(QQuickItem *parent)
     : QQuickItem(parent)
@@ -33,6 +32,11 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
 
     emit modelChanged();
     update();
+}
+
+void DrillDocumentPreviewQuickItem::fitToContent(double marginPx)
+{
+
 }
 
 QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePaintNodeData *)

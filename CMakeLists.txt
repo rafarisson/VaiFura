@@ -5,16 +5,14 @@ project(VaiFura VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Quick)
-find_package(Qt6 REQUIRED COMPONENTS Core)
 
-set(QT_QML_GENERATE_QMLLS_INI ON)
+qt_standard_project_setup(REQUIRES 6.10)
 
-qt_standard_project_setup(REQUIRES 6.5)
-
-add_subdirectory(libcore)
-add_subdirectory(libexcellon)
-add_subdirectory(libmodel)
-add_subdirectory(libview)
+add_subdirectory(VaiFura/Core)
+add_subdirectory(VaiFura/Model)
+add_subdirectory(VaiFura/Preview)
+add_subdirectory(VaiFura/Ui)
+add_subdirectory(VaiFura/Parser/Excellon)
 
 qt_add_executable(appVaiFura
     main.cpp
@@ -25,13 +23,13 @@ qt_add_qml_module(appVaiFura
     VERSION 1.0
     QML_FILES
         Main.qml
-        Preview.qml
-        DrillTreeViewDelegate.qml
+        SettingsPage.qml
     SOURCES
         VaiFuraSingleton.h VaiFuraSingleton.cpp
     DEPENDENCIES
-        libmodel
-        libview
+        TARGET VaiFuraModel
+        TARGET VaiFuraPreview
+        TARGET VaiFuraUi
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -50,9 +48,10 @@ target_link_libraries(appVaiFura
         Qt6::Core
         Qt6::Quick
         VaiFuraCore
-        VaiFuraExcellon
         VaiFuraModel
-        VaiFuraView
+        VaiFuraPreview
+        VaiFuraUi
+        VaiFuraParserExcellon
 )
 
 include(GNUInstallDirs)

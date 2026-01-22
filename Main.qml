@@ -1,129 +1,154 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Controls.Basic
 
-import libmodel
-import libview
 import VaiFura
+import VaiFura.Ui
 
-Window {
-    width: 640
-    height: 480
+ApplicationWindow {
+    width: 1200
+    height: 800
     visible: true
-    title: qsTr("Hello World")
 
-    ColumnLayout {
-        anchors.fill: parent
-
+    header: ToolBar {
         RowLayout {
-            Layout.fillWidth: true
+            Label {
+                text: qsTr("Excellon file:")
+            }
 
             TextField {
                 Layout.fillWidth: true
+                Layout.preferredWidth: 300
 
                 Component.onCompleted: text = "C:\\Users\\xpert\\Desktop\\drill_1_16.xln"
                 onTextChanged: VaiFura.documentPath = text
             }
+
+            // Label { text: "Offset X:" }
+            // SpinBox { }
+            // Label { text: "Offset Y:" }
+            // SpinBox { }
+            // Button { text: "Exportar" }
+        }
+    }
+
+    RowLayout {
+        anchors.fill: parent
+        anchors.margins: 6
+
+        ColumnLayout {
+            Layout.fillHeight: true
+            Layout.preferredWidth: 50
+
+            TabBar {
+                id: tab
+
+                Layout.fillWidth: true
+
+                TabButton {
+                    text: qsTr("Drills")
+                }
+
+                TabButton {
+                    text: qsTr("Settings")
+                }
+            }
+
+            StackLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+
+                currentIndex: tab.currentIndex
+
+                PageDrills {
+                    drillModel: VaiFura.drillsModel
+                }
+
+                Item {}
+            }
         }
 
-        RowLayout {
-            Label {
-                text: qsTr("Offset X:")
-            }
-            TextField {
-                text: VaiFura.model.offset.x
-                validator: DoubleValidator {
-                    bottom: 0
-                    notation: DoubleValidator.StandardNotation
-                }
-                onTextChanged: if (acceptableInput)
-                                   VaiFura.model.offset = Qt.point(parseFloat(text), VaiFura.model.offset.y)
-            }
-
-            Label {
-                text: qsTr("Offset Y:")
-            }
-            TextField {
-                text: VaiFura.model.offset.y
-                validator: DoubleValidator {
-                    bottom: 0
-                    notation: DoubleValidator.StandardNotation
-                }
-                onTextChanged: {
-                    let v = parseFloat(text)
-                    if (!isNaN(v))
-                        VaiFura.model.offset = Qt.point(VaiFura.model.offset.x, v)
-                }
-            }
-        }
-
-        RowLayout {
+        Preview {
+            id: preview
             Layout.fillHeight: true
             Layout.fillWidth: true
-
-            Button {
-                text: qsTr("a")
-                Layout.fillHeight: true
-            }
-
-            Preview {
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.preferredHeight: 300
-                Layout.preferredWidth: 100
-                doc: VaiFura.model
-            }
-
-            Button {
-                text: VaiFura.model.selectedHoleCount
-                Layout.fillHeight: true
-            }
-
-
-            TreeView {
-                id: drillsTreeView
-
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-                Layout.preferredWidth: 50
-
-                boundsBehavior: Flickable.StopAtBounds
-                clip: true
-                reuseItems: false
-                alternatingRows: false
-                model: VaiFura.drillsModel
-
-                delegate: DrillTreeViewDelegate {
-                    // Assigned by the model
-                    required property int type
-                    required property real diameter
-                    required property real posX
-                    required property real posY
-                    required property int childCount
-
-                    property point offset: VaiFura.model.offset
-
-                    text: type == DrillTreeModel.ToolType
-                          ? `Tool ${diameter}mm [${childCount}]`
-                          : `Drill (${posX + offset.x},${posY + offset.y})`
-                }
-
-                ScrollBar.vertical: ScrollBar {
-                    visible: true
-                }
-            }
+            Layout.preferredHeight: 300
+            Layout.preferredWidth: 100
+            doc: VaiFura.model
         }
-
-        Button {
-            text: qsTr("test")
-        }
-    }
-
-    Connections {
-        function onDocumentPathChanged() {
-            // Qt.callLater(drillsTreeView.expandRecursively);
-        }
-
-        target: VaiFura
     }
 }
+
+
+// ApplicationWindow {
+//     width: 640
+//     height: 480
+//     visible: true
+//     title: qsTr("Hello World")
+
+//     header: ToolBar {
+//         ToolButton {
+//             text: qsTr("A")
+//             onClicked: toolsDrawer.open()
+//         }
+//     }
+
+//     Drawer {
+//         id: toolsDrawer
+//         // y: header.height
+//         // width: window.width * 0.6
+//         // height: window.height - header.height
+//         // edge: Qt.RightEdge
+//         // width: 320
+
+//         ColumnLayout {
+//             anchors.fill: parent
+//             // deslocamento cima/baixo + velocidade
+//             Repeater {
+//                 model: 10
+//                 RowLayout {
+//                     Layout.fillWidth: true
+
+//                     Label {
+//                         text: qsTr("Velocidade")
+//                     }
+//                     TextField {
+//                         Layout.fillWidth: true
+//                     }
+//                 }
+//             }
+//         }
+//     }
+
+//     PreviewPage {
+//         anchors.fill: parent
+//     }
+
+//     // ColumnLayout {
+//     //     anchors.fill: parent
+
+//     //     TabBar {
+//     //         Layout.fillWidth: true
+
+//     //         TabButton {
+//     //             text: qsTr("Home");
+//     //             // onClicked: stackView.push()
+//     //         }
+//     //         TabButton {
+//     //             text: qsTr("Configurações");
+//     //             // onClicked: stackView.pop()
+//     //         }
+//     //     }
+
+//     //     // StackView {
+//     //     //     id: stackView
+
+//     //     //     Layout.fillWidth: true
+//     //     //     Layout.fillHeight: true
+
+//     //     //     PreviewPage { }
+//     //     //     SettingsPage { }
+//     //     // }
+//     // }
+// }
