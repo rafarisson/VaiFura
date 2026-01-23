@@ -8,9 +8,11 @@ qt_add_qml_module(VaiFuraUi
         Components/Preview.qml
         Components/DrillTreeViewDelegate.qml
         PageDrills.qml
+        PageSettings.qml
     DEPENDENCIES
         TARGET VaiFuraModel
         TARGET VaiFuraPreview
+        QML_FILES Components/ScrollablePage.qml
 )
 
 target_link_libraries(VaiFuraUi

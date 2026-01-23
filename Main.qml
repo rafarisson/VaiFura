@@ -1,7 +1,6 @@
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Controls
-import QtQuick.Controls.Basic
+import QtQuick.Layouts
 
 import VaiFura
 import VaiFura.Ui
@@ -65,7 +64,9 @@ ApplicationWindow {
                     drillModel: VaiFura.drillsModel
                 }
 
-                Item {}
+                PageSettings {
+                    documentModel: VaiFura.model
+                }
             }
         }
 

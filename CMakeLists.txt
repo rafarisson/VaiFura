@@ -18,12 +18,17 @@ qt_add_executable(appVaiFura
     main.cpp
 )
 
+qt_add_resources(appVaiFura "style"
+    PREFIX "/"
+    FILES
+        qtquickcontrols2.conf
+)
+
 qt_add_qml_module(appVaiFura
     URI VaiFura
     VERSION 1.0
     QML_FILES
         Main.qml
-        SettingsPage.qml
     SOURCES
         VaiFuraSingleton.h VaiFuraSingleton.cpp
     DEPENDENCIES
