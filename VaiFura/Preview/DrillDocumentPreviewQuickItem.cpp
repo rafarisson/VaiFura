@@ -1,6 +1,7 @@
 #include <QSGGeometryNode>
 #include <QSGFlatColorMaterial>
 #include <QMouseEvent>
+#include "DrillHelper.h"
 #include "DrillDocumentPreviewQuickItem.h"
 
 DrillDocumentPreviewQuickItem::DrillDocumentPreviewQuickItem(QQuickItem *parent)
@@ -36,7 +37,28 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
 
 void DrillDocumentPreviewQuickItem::fitToContent(double marginPx)
 {
+    if (!documentModel_ || !documentModel_->document())
+        return;
 
+    QRectF contentBounds;
+    bool first = true;
+
+    DrillHelper::forEachHole(documentModel_, {},
+                             [&](auto, auto, const QPointF &p, double radius) {
+                                 QRectF hr(p.x() - radius, p.y() - radius, radius * 2, radius * 2);
+                                 if (first) {
+                                     contentBounds = hr;
+                                     first = false;
+                                 } else {
+                                     contentBounds |= hr;
+                                 }
+                             });
+
+    if (first)
+        return;
+
+    viewport_.fitWorldRect(contentBounds, marginPx);
+    update();
 }
 
 QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePaintNodeData *)
