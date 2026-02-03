@@ -10,15 +10,22 @@ Page {
     required property DrillDocumentModel documentModel
 
     ColumnLayout {
+        anchors {
+            left: parent.left
+            right: parent.right
+        }
+
         RowLayout {
             Layout.fillWidth: true
 
             Label {
                 Layout.fillWidth: true
-                text: qsTr("Offset x")
+                text: qsTr("X Offset")
             }
-            TextField {
-                text: root.documentModel.offset.x
+            UnitTextField {
+                unit: "mm"
+                value: root.documentModel.offset.x
+                onValueChanged: root.documentModel.offset.x = value
             }
         }
 
@@ -27,21 +34,12 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: qsTr("Offset y")
+                text: qsTr("Y Offset")
             }
-            TextField {
-                text: root.documentModel.offset.y
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Avanço z")
-            }
-            TextField {
+            UnitTextField {
+                unit: "mm"
+                value: root.documentModel.offset.y
+                onValueChanged: root.documentModel.offset.y = value
             }
         }
 
@@ -50,61 +48,23 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: qsTr("Velocidade z")
+                text: qsTr("Z Depth")
             }
-            TextField {
+            UnitTextField {
+                unit: "mm"
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Label {
+                Layout.fillWidth: true
+                text: qsTr("Z Feed Rate")
+            }
+            UnitTextField {
+                unit: "mm/min"
             }
         }
     }
 }
-
-// // Page {
-// ScrollablePage {
-//     id: root
-
-//     contentLayout: ScrollablePage.LayoutFill
-
-//     ColumnLayout {
-//         implicitWidth: parent.width
-
-//         RowLayout {
-//             Layout.fillWidth: true
-
-//             Label {
-//                 Layout.fillWidth: true
-//                 text: qsTr("Offset x:")
-//             }
-//             TextField {
-//             }
-//         }
-
-//         RowLayout {
-//             Layout.fillWidth: true
-
-//             Label {
-//                 Layout.fillWidth: true
-//                 text: qsTr("Offset y:")
-//             }
-//             TextField {
-//             }
-//         }
-//     }
-
-//     // Column {
-//     //     // width: 500
-
-//     //     // clip: true
-//     //     Repeater {
-//     //         model: 5
-//     //         Button {
-//     //             required property int index
-//     //             text: `Item ${index}`
-//     //         }
-//     //     }
-
-//     //     Button { text: "ovo"}
-//     //     Button { text: "galinha" }
-//     //     Button { text: "dinossauro" }
-//     //     Button { text: "dinossauro de braço curto abobado" }
-//     // }
-// }

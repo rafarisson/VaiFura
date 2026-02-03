@@ -6,18 +6,17 @@ import VaiFura.Preview
 Item {
     id: root
 
-    required property DrillDocumentModel doc
+    required property DrillDocumentModel documentModel
 
     function fit() {
-        // Qt.callLater(documentPreview.fitToContent)
+        Qt.callLater(documentPreview.fitToContent)
     }
-
-    // onWidthChanged: Qt.callLater(fit)
-    // onHeightChanged: Qt.callLater(fit)
 
     DrillDocumentPreview {
         id: documentPreview
         anchors.fill: parent
-        model: root.doc
+        model: root.documentModel
     }
+
+    Component.onCompleted: Qt.callLater(fit)
 }

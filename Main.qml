@@ -6,14 +6,24 @@ import VaiFura
 import VaiFura.Ui
 
 ApplicationWindow {
+    id: www
     width: 1200
     height: 800
     visible: true
 
     header: ToolBar {
         RowLayout {
+            anchors {
+                fill: parent
+            }
+
             Label {
-                text: qsTr("Excellon file:")
+                text: MaterialIcons.fileDocument
+                font.family: MaterialIcons.fontFamily
+                font.pointSize: 16
+            }
+            Label {
+                text: qsTr("Excellon file")
             }
 
             TextField {
@@ -23,12 +33,6 @@ ApplicationWindow {
                 Component.onCompleted: text = "C:\\Users\\xpert\\Desktop\\drill_1_16.xln"
                 onTextChanged: VaiFura.documentPath = text
             }
-
-            // Label { text: "Offset X:" }
-            // SpinBox { }
-            // Label { text: "Offset Y:" }
-            // SpinBox { }
-            // Button { text: "Exportar" }
         }
     }
 
@@ -76,80 +80,29 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.preferredHeight: 300
             Layout.preferredWidth: 100
-            doc: VaiFura.model
+            documentModel: VaiFura.model
+        }
+    }
+
+    footer: ToolBar {
+        RowLayout {
+            anchors {
+                verticalCenter: parent.verticalCenter
+            }
+
+            Label {
+                text: MaterialIcons.dotsHexagon
+                font.family: MaterialIcons.fontFamily
+                font.pointSize: 16
+            }
+            Label {
+                text: qsTr("Total de furos: %1").arg(VaiFura.model.selectedHoleCount)
+            }
+
+            ToolButton {
+                text: qsTr("Fit")
+                onClicked: preview.fit()
+            }
         }
     }
 }
-
-
-// ApplicationWindow {
-//     width: 640
-//     height: 480
-//     visible: true
-//     title: qsTr("Hello World")
-
-//     header: ToolBar {
-//         ToolButton {
-//             text: qsTr("A")
-//             onClicked: toolsDrawer.open()
-//         }
-//     }
-
-//     Drawer {
-//         id: toolsDrawer
-//         // y: header.height
-//         // width: window.width * 0.6
-//         // height: window.height - header.height
-//         // edge: Qt.RightEdge
-//         // width: 320
-
-//         ColumnLayout {
-//             anchors.fill: parent
-//             // deslocamento cima/baixo + velocidade
-//             Repeater {
-//                 model: 10
-//                 RowLayout {
-//                     Layout.fillWidth: true
-
-//                     Label {
-//                         text: qsTr("Velocidade")
-//                     }
-//                     TextField {
-//                         Layout.fillWidth: true
-//                     }
-//                 }
-//             }
-//         }
-//     }
-
-//     PreviewPage {
-//         anchors.fill: parent
-//     }
-
-//     // ColumnLayout {
-//     //     anchors.fill: parent
-
-//     //     TabBar {
-//     //         Layout.fillWidth: true
-
-//     //         TabButton {
-//     //             text: qsTr("Home");
-//     //             // onClicked: stackView.push()
-//     //         }
-//     //         TabButton {
-//     //             text: qsTr("Configurações");
-//     //             // onClicked: stackView.pop()
-//     //         }
-//     //     }
-
-//     //     // StackView {
-//     //     //     id: stackView
-
-//     //     //     Layout.fillWidth: true
-//     //     //     Layout.fillHeight: true
-
-//     //     //     PreviewPage { }
-//     //     //     SettingsPage { }
-//     //     // }
-//     // }
-// }
