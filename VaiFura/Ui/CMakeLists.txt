@@ -1,5 +1,9 @@
 find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 
+set_source_files_properties(MaterialIcons/MaterialIcons.qml
+    PROPERTIES QT_QML_SINGLETON_TYPE TRUE
+)
+
 qt_add_qml_module(VaiFuraUi
     URI VaiFura.Ui
     VERSION 1.0
@@ -7,12 +11,14 @@ qt_add_qml_module(VaiFuraUi
     QML_FILES
         Components/Preview.qml
         Components/DrillTreeViewDelegate.qml
+        MaterialIcons/MaterialIcons.qml
         PageDrills.qml
         PageSettings.qml
     DEPENDENCIES
         TARGET VaiFuraModel
         TARGET VaiFuraPreview
-        QML_FILES Components/ScrollablePage.qml
+    RESOURCES
+        MaterialIcons/materialdesignicons-webfont.ttf
 )
 
 target_link_libraries(VaiFuraUi
