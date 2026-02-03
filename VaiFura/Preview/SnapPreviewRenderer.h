@@ -8,7 +8,9 @@ class SnapPreviewRenderer : public DrillRendererBase
 {
 protected:
     QColor holeColor(const DrillNode *holeNode) const override {
-        return QColor(0, 255, 255, 120);
+        QColor c = DrillRendererBase::holeColor(holeNode);
+        c.setAlpha(120);
+        return c;
     }
 };
 

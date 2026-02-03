@@ -1,6 +1,7 @@
 #include <QSGGeometryNode>
 #include <QSGFlatColorMaterial>
 #include <cmath>
+#include "DrillHelper.h"
 #include "DrillRendererBase.h"
 #include "DrillDocument.h"
 #include "DrillDocumentModel.h"
@@ -8,38 +9,16 @@
 
 void DrillRendererBase::build(QSGNode *root, const DrillDocumentModel *model, const ViewportTransform &vp, const QPointF &delta)
 {
-    const DrillNode *rootNode = model->document()->root();
-
-    for (int t = 0; t < rootNode->childCount(); ++t) {
-        const DrillNode *toolNode = rootNode->child(t);
-
-        for (int h = 0; h < toolNode->childCount(); ++h) {
-            const DrillNode *holeNode = toolNode->child(h);
-            const Hole *hole = holeNode->hole();
-            if (!hole)
-                continue;
-
-            QPointF screen = vp.toScreen({hole->x + model->offset().x() + delta.x(),
-                                          hole->y + model->offset().y() + delta.y()});
-
-            double r = toolRadius(model, hole->toolId) * vp.zoom();
-
-            root->appendChildNode(createCircleOutline(screen, r, 1.0, holeColor(holeNode)));
-        }
-    }
+    DrillHelper::forEachHole(model, delta,
+                             [&](const DrillNode *holeNode, const Hole *, const QPointF &p, double r) {
+                    QPointF screen = vp.toScreen(p);
+                    root->appendChildNode(createCircleOutline(screen, r * vp.zoom(), 1.0, holeColor(holeNode)));
+    });
 }
 
 QColor DrillRendererBase::holeColor(const DrillNode *holeNode) const
 {
-    return Qt::cyan;
-}
-
-double DrillRendererBase::toolRadius(const DrillDocumentModel *model, int toolId) const
-{
-    for (const auto &t : model->document()->tools())
-        if (t.id == toolId)
-            return t.mm * 0.5;
-    return 0.2;
+    return holeNode->isChecked() ? Qt::cyan : Qt::darkGray;
 }
 
 QSGGeometryNode *DrillRendererBase::createCircleOutline(const QPointF &center, double radiusPx, double thicknessPx, const QColor &color, int segments)

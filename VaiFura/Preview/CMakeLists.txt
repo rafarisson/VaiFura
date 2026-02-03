@@ -16,6 +16,7 @@ qt_add_qml_module(VaiFuraPreview
         GridRenderer.cpp
         OriginRenderer.h
         OriginRenderer.cpp
+        DrillHelper.h
         DrillRendererBase.h
         DrillRendererBase.cpp
         DrillRenderer.h

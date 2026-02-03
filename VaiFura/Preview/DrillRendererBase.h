@@ -20,7 +20,6 @@ public:
 
 protected:
     virtual QColor holeColor(const DrillNode *holeNode) const;
-    double toolRadius(const DrillDocumentModel *model, int toolId) const;
 
 private:
     QSGGeometryNode *createCircleOutline(const QPointF &center,
