@@ -24,8 +24,8 @@ Page {
             }
             UnitTextField {
                 unit: "mm"
-                value: root.documentModel.offset.x
-                onValueChanged: root.documentModel.offset.x = value
+                text: root.documentModel.offset.x
+                onValueChanged: (value) => root.documentModel.offset.x = value
             }
         }
 
@@ -38,8 +38,8 @@ Page {
             }
             UnitTextField {
                 unit: "mm"
-                value: root.documentModel.offset.y
-                onValueChanged: root.documentModel.offset.y = value
+                text: root.documentModel.offset.y
+                onValueChanged: (value) => root.documentModel.offset.y = value
             }
         }
 

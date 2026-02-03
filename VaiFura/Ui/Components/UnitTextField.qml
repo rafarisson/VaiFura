@@ -5,11 +5,11 @@ TextField {
     id: root
 
     property alias unit: unitLabel.text
-    property real value
+
     property int maxBeforeDecimal: 11
     property int maxAfterDecimal: 4
 
-    text: value
+    signal valueChanged(value: double)
 
     Label {
         id: unitLabel
@@ -36,8 +36,8 @@ TextField {
         if (!text)
             return;
         let v = Number(text)
-        if (isNaN(v) || v == value)
+        if (isNaN(v))
             return;
-        value = v;
+        root.valueChanged(v)
     }
 }
