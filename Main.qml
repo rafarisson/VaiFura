@@ -6,7 +6,6 @@ import VaiFura
 import VaiFura.Ui
 
 ApplicationWindow {
-    id: www
     width: 1200
     height: 800
     visible: true
@@ -15,11 +14,13 @@ ApplicationWindow {
         RowLayout {
             anchors {
                 fill: parent
+                leftMargin: 12
+                rightMargin: 12
             }
 
             Label {
-                text: MaterialIcons.fileDocument
-                font.family: MaterialIcons.fontFamily
+                text: MaterialSymbols.file_open
+                font.family: MaterialSymbols.fontFamily
                 font.pointSize: 16
             }
             Label {
@@ -27,11 +28,14 @@ ApplicationWindow {
             }
 
             TextField {
-                Layout.fillWidth: true
                 Layout.preferredWidth: 300
 
-                Component.onCompleted: text = "C:\\Users\\xpert\\Desktop\\drill_1_16.xln"
-                onTextChanged: VaiFura.documentPath = text
+                text: VaiFura.documentPath
+                onTextEdited: VaiFura.documentPath = text
+            }
+
+            Item {
+                Layout.fillWidth: true
             }
         }
     }
@@ -87,21 +91,22 @@ ApplicationWindow {
     footer: ToolBar {
         RowLayout {
             anchors {
-                verticalCenter: parent.verticalCenter
+                fill: parent
+                leftMargin: 12
+                rightMargin: 12
             }
 
             Label {
-                text: MaterialIcons.dotsHexagon
-                font.family: MaterialIcons.fontFamily
+                text: MaterialSymbols.tools_power_drill
+                font.family: MaterialSymbols.fontFamily
                 font.pointSize: 16
             }
             Label {
                 text: qsTr("Total de furos: %1").arg(VaiFura.model.selectedHoleCount)
             }
 
-            ToolButton {
-                text: qsTr("Fit")
-                onClicked: preview.fit()
+            Item {
+                Layout.fillWidth: true
             }
         }
     }
