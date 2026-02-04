@@ -8,8 +8,11 @@ TextField {
 
     property int maxBeforeDecimal: 11
     property int maxAfterDecimal: 4
+    property string _lastValidText: ""
 
     signal valueChanged(value: double)
+
+    implicitWidth: 150
 
     Label {
         id: unitLabel
@@ -33,11 +36,13 @@ TextField {
     }
 
     onTextEdited: {
-        if (!text)
-            return;
-        let v = Number(text)
-        if (isNaN(v))
-            return;
-        root.valueChanged(v)
+        if (acceptableInput) {
+            _lastValidText = text
+            let v = Number(text.replace(",", "."))
+            if (!isNaN(v) && isFinite(v))
+                root.valueChanged(v)
+        } else {
+            text = _lastValidText
+        }
     }
 }
