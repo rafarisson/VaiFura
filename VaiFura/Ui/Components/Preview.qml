@@ -13,9 +13,12 @@ Item {
         Qt.callLater(documentPreview.fitToContent)
     }
 
+    clip: true
+
     DrillDocumentPreview {
         id: documentPreview
         anchors.fill: parent
+
         model: root.documentModel
     }
 

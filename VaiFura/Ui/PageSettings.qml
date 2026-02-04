@@ -4,17 +4,15 @@ import QtQuick.Layouts
 
 import VaiFura.Model
 
-Page {
+PageLayout {
     id: root
 
     required property DrillDocumentModel documentModel
 
-    ColumnLayout {
-        anchors {
-            left: parent.left
-            right: parent.right
-        }
+    icon: MaterialSymbols.settings
+    title: qsTr("Export Settings")
 
+    ColumnLayout {
         RowLayout {
             Layout.fillWidth: true
 
@@ -48,7 +46,7 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: qsTr("Z Depth")
+                text: qsTr("Safe Z Height")
             }
             UnitTextField {
                 unit: "mm"
@@ -60,7 +58,43 @@ Page {
 
             Label {
                 Layout.fillWidth: true
-                text: qsTr("Z Feed Rate")
+                text: qsTr("Drilling Depth")
+            }
+            UnitTextField {
+                unit: "mm"
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Label {
+                Layout.fillWidth: true
+                text: qsTr("Drilling Feed Rate")
+            }
+            UnitTextField {
+                unit: "mm/min"
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Label {
+                Layout.fillWidth: true
+                text: qsTr("Retract Height")
+            }
+            UnitTextField {
+                unit: "mm"
+            }
+        }
+
+        RowLayout {
+            Layout.fillWidth: true
+
+            Label {
+                Layout.fillWidth: true
+                text: qsTr("Retract Feed Rate")
             }
             UnitTextField {
                 unit: "mm/min"

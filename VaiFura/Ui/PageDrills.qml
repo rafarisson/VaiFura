@@ -1,17 +1,27 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 import VaiFura.Model
 
-Page {
+PageLayout {
     id: root
 
+    required property DrillDocumentModel documentModel
     required property DrillTreeModel drillModel
 
-    TreeView {
-        id: drillTree
+    Layout.fillWidth: true
+    Layout.fillHeight: true
 
-        anchors.fill: parent
+    icon: MaterialSymbols.tools_power_drill
+    title: qsTr("Tools and Holes")
+    description: qsTr("Total holes selected: %1").arg(root.documentModel.selectedHoleCount)
+
+    TreeView {
+        Layout.fillWidth: true
+        Layout.fillHeight: true
+        Layout.preferredWidth: 200
+        Layout.preferredHeight: 200
 
         boundsBehavior: Flickable.StopAtBounds
         clip: true

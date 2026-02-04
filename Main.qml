@@ -10,103 +10,58 @@ ApplicationWindow {
     height: 800
     visible: true
 
-    header: ToolBar {
-        RowLayout {
-            anchors {
-                fill: parent
-                leftMargin: 12
-                rightMargin: 12
-            }
-
-            Label {
-                text: MaterialSymbols.file_open
-                font.family: MaterialSymbols.fontFamily
-                font.pointSize: 16
-            }
-            Label {
-                text: qsTr("Excellon file")
-            }
-
-            TextField {
-                Layout.preferredWidth: 300
-
-                text: VaiFura.documentPath
-                onTextEdited: VaiFura.documentPath = text
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-        }
-    }
-
-    RowLayout {
+    SplitView {
         anchors.fill: parent
-        anchors.margins: 6
+        orientation: Qt.Horizontal
 
         ColumnLayout {
-            Layout.fillHeight: true
-            Layout.preferredWidth: 50
+            PageLayout {
+                icon: MaterialSymbols.upload
+                title: qsTr("Excellon file")
+                description: qsTr("Select drill file (.xln, .drl or .txt)")
 
-            TabBar {
-                id: tab
-
-                Layout.fillWidth: true
-
-                TabButton {
-                    text: qsTr("Drills")
-                }
-
-                TabButton {
-                    text: qsTr("Settings")
+                RowLayout {
+                    Button {
+                        text: qsTr("Select file")
+                    }
+                    TextField {
+                        Layout.fillWidth: true
+                        text: VaiFura.documentPath
+                        onTextEdited: VaiFura.documentPath = text
+                    }
                 }
             }
 
-            StackLayout {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-
-                currentIndex: tab.currentIndex
-
-                PageDrills {
-                    drillModel: VaiFura.drillsModel
-                }
-
-                PageSettings {
-                    documentModel: VaiFura.model
-                }
+            PageDrills {
+                documentModel: VaiFura.model
+                drillModel: VaiFura.drillsModel
             }
         }
 
         Preview {
-            id: preview
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            Layout.preferredHeight: 300
-            Layout.preferredWidth: 100
+            SplitView.fillWidth: true
+            SplitView.fillHeight: true
             documentModel: VaiFura.model
         }
-    }
 
-    footer: ToolBar {
-        RowLayout {
-            anchors {
-                fill: parent
-                leftMargin: 12
-                rightMargin: 12
+        ColumnLayout {
+            PageSettings {
+                documentModel: VaiFura.model
             }
 
-            Label {
-                text: MaterialSymbols.tools_power_drill
-                font.family: MaterialSymbols.fontFamily
-                font.pointSize: 16
-            }
-            Label {
-                text: qsTr("Total de furos: %1").arg(VaiFura.model.selectedHoleCount)
+            PageLayout {
+                icon: MaterialSymbols.download
+                title: qsTr("G-Code file")
+                description: qsTr("Export g-code file (.gcode)")
+
+                Button {
+                    Layout.alignment: Qt.AlignHCenter
+                    text: qsTr("Export")
+                }
             }
 
             Item {
-                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
         }
     }

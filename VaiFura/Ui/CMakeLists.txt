@@ -12,10 +12,11 @@ qt_add_qml_module(VaiFuraUi
     VERSION 1.0
     STATIC
     QML_FILES
-        Components/ScrollablePage.qml
+        Components/PageLayout.qml
         Components/Preview.qml
         Components/DrillTreeViewDelegate.qml
         Components/UnitTextField.qml
+        Components/PageHeader.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
         PageDrills.qml

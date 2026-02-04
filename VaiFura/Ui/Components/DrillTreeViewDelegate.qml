@@ -16,7 +16,7 @@ TreeViewDelegate {
     property point position: Qt.point(posX + documentModel.offset.x,
                                       posY + documentModel.offset.y)
 
-
+    implicitHeight: 50
     implicitWidth: treeView.width
 
     contentItem: CheckBox {
