@@ -10,9 +10,6 @@ PageLayout {
     required property DrillDocumentModel documentModel
     required property DrillTreeModel drillModel
 
-    Layout.fillWidth: true
-    Layout.fillHeight: true
-
     icon: MaterialSymbols.tools_power_drill
     title: qsTr("Tools and Holes")
     description: qsTr("Total holes selected: %1").arg(root.documentModel.selectedHoleCount)

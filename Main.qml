@@ -33,8 +33,15 @@ ApplicationWindow {
             }
 
             PageDrills {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 documentModel: VaiFura.model
                 drillModel: VaiFura.drillsModel
+            }
+
+            PageOffset {
+                Layout.fillWidth: true
+                documentModel: VaiFura.model
             }
         }
 
@@ -46,6 +53,7 @@ ApplicationWindow {
 
         ColumnLayout {
             PageSettings {
+                Layout.fillWidth: true
                 documentModel: VaiFura.model
             }
 
