@@ -8,6 +8,7 @@
 #include "ToolListModel.h"
 #include "HoleListModel.h"
 #include "DrillTreeModel.h"
+#include "ExportSettingsListModel.h"
 
 class VaiFuraSingleton : public QObject
 {
@@ -20,6 +21,7 @@ class VaiFuraSingleton : public QObject
     Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
     Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)
     Q_PROPERTY(DrillTreeModel *drillsModel READ drillsModel CONSTANT FINAL)
+    Q_PROPERTY(ExportSettingsListModel *exportSettingsModel READ exportSettingsModel CONSTANT FINAL)
 
 public:
     explicit VaiFuraSingleton(QObject *parent = nullptr);
@@ -31,6 +33,7 @@ public:
     ToolListModel* toolsModel() const { return toolsModel_; }
     HoleListModel* holesModel() const { return holesModel_; }
     DrillTreeModel* drillsModel() const { return drillTreeModel_; }
+    ExportSettingsListModel* exportSettingsModel() const { return exportSettingsModel_; }
 
 signals:
     void documentPathChanged();
@@ -42,6 +45,7 @@ private:
     ToolListModel *toolsModel_ = nullptr;
     HoleListModel *holesModel_ = nullptr;
     DrillTreeModel *drillTreeModel_ = nullptr;
+    ExportSettingsListModel *exportSettingsModel_ = nullptr;
 };
 
 #endif // VAIFURASINGLETON_H

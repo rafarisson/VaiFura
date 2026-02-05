@@ -23,7 +23,7 @@ public:
 
     virtual int size() const = 0;
 
-    DrillDocumentModel* model() const { return documentModel_; }
+    DrillDocumentModel *model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel) {
         if (documentModel_ == newModel)
             return;

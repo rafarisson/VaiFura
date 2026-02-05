@@ -9,7 +9,12 @@ class DrillHelper
 {
 public:
     template <typename F>
-    static void forEachHole(const DrillDocumentModel *model, const QPointF &delta, F &&fn){
+    static void forEachHole(const DrillDocumentModel *model,
+                            const QPointF &delta,
+                            F &&fn){
+        if (!model || !model->document() || !model->document()->root())
+            return;
+
         const DrillNode *root = model->document()->root();
 
         for (int t = 0; t < root->childCount(); ++t) {

@@ -14,6 +14,8 @@ qt_add_qml_module(VaiFuraModel
         HoleListModel.cpp
         DrillTreeModel.h
         DrillTreeModel.cpp
+        ExportSettingsListModel.h
+        ExportSettingsListModel.cpp
 )
 
 target_link_libraries(VaiFuraModel

@@ -7,7 +7,10 @@
 #include "DrillDocumentModel.h"
 #include "ViewportTransform.h"
 
-void DrillRendererBase::build(QSGNode *root, const DrillDocumentModel *model, const ViewportTransform &vp, const QPointF &delta)
+void DrillRendererBase::build(QSGNode *root,
+                              const DrillDocumentModel *model,
+                              const ViewportTransform &vp,
+                              const QPointF &delta)
 {
     DrillHelper::forEachHole(model, delta,
                              [&](const DrillNode *holeNode, const Hole *, const QPointF &p, double r) {

@@ -7,6 +7,7 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , toolsModel_{new ToolListModel(this)}
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
+    , exportSettingsModel_{new ExportSettingsListModel(this)}
 {
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);

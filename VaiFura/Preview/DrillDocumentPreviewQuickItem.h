@@ -14,8 +14,6 @@
 #include "OriginRenderer.h"
 #include "DrillRenderer.h"
 
-class DrillDocumentModel;
-
 class DrillDocumentPreviewQuickItem : public QQuickItem
 {
     Q_OBJECT
