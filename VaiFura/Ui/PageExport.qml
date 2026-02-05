@@ -8,97 +8,62 @@ PageLayout {
     id: root
 
     required property DrillDocumentModel documentModel
+    required property ExportSettingsListModel exportSettingsModel
 
-    icon: MaterialSymbols.settings
-    title: qsTr("Export Settings")
+    icon: MaterialSymbols.download
+    title: qsTr("G-Code file")
+    description: qsTr("Export g-code file (.gcode)")
 
     ColumnLayout {
-        RowLayout {
+        ListView {
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.preferredWidth: 300
+            Layout.preferredHeight: 200
 
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("X Offset")
+            boundsBehavior: Flickable.StopAtBounds
+            clip: true
+            model: root.exportSettingsModel
+            visible: root.exportSettingsModel.size
+
+            delegate: Item {
+                id: itemDelegate
+
+                required property var model
+                required property string label
+                required property string description
+                required property string unit
+                required property var value
+
+                width: ListView.view.width
+                implicitHeight: itemLayout.implicitHeight
+
+                RowLayout {
+                    id: itemLayout
+                    anchors.fill: parent
+                    Label {
+                        Layout.fillWidth: true
+                        text: itemDelegate.label
+                    }
+                    HelpToolTip {
+                        help: itemDelegate.description
+                    }
+                    UnitTextField {
+                        unit: itemDelegate.unit
+                        text: itemDelegate.value
+                        onValueChanged: (v) => itemDelegate.model.value = v
+                    }
+                }
             }
-            UnitTextField {
-                unit: "mm"
-                text: root.documentModel.offset.x
-                onValueChanged: (value) => root.documentModel.offset.x = value
+
+            ScrollBar.vertical: ScrollBar {
+                visible: true
             }
         }
 
-        RowLayout {
+        Button {
             Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Y Offset")
-            }
-            UnitTextField {
-                unit: "mm"
-                text: root.documentModel.offset.y
-                onValueChanged: (value) => root.documentModel.offset.y = value
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Safe Z Height")
-            }
-            UnitTextField {
-                unit: "mm"
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Drilling Depth")
-            }
-            UnitTextField {
-                unit: "mm"
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Drilling Feed Rate")
-            }
-            UnitTextField {
-                unit: "mm/min"
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Retract Height")
-            }
-            UnitTextField {
-                unit: "mm"
-            }
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Retract Feed Rate")
-            }
-            UnitTextField {
-                unit: "mm/min"
-            }
+            text: qsTr("Export")
         }
     }
 }

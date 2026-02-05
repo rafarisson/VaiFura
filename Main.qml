@@ -38,11 +38,6 @@ ApplicationWindow {
                 documentModel: VaiFura.model
                 drillModel: VaiFura.drillsModel
             }
-
-            PageOffset {
-                Layout.fillWidth: true
-                documentModel: VaiFura.model
-            }
         }
 
         Preview {
@@ -52,24 +47,15 @@ ApplicationWindow {
         }
 
         ColumnLayout {
-            PageSettings {
+            PageOffset {
                 Layout.fillWidth: true
                 documentModel: VaiFura.model
             }
 
-            PageLayout {
-                icon: MaterialSymbols.download
-                title: qsTr("G-Code file")
-                description: qsTr("Export g-code file (.gcode)")
-
-                Button {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: qsTr("Export")
-                }
-            }
-
-            Item {
-                Layout.fillHeight: true
+            PageExport {
+                Layout.fillWidth: true
+                documentModel: VaiFura.model
+                exportSettingsModel: VaiFura.exportSettingsModel
             }
         }
     }
