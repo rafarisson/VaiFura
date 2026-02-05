@@ -17,6 +17,7 @@ qt_add_qml_module(VaiFuraUi
         Components/DrillTreeViewDelegate.qml
         Components/UnitTextField.qml
         Components/PageHeader.qml
+        Components/HelpToolTip.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
         PageDrills.qml
