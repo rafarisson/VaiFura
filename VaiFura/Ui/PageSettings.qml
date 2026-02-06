@@ -25,7 +25,7 @@ PageLayout {
         delegate: DelegateChooser {
             role: "type"
             DelegateChoice {
-                roleValue: ExportSettingsListModel.Number
+                roleValue: SettingsListModel.Number
                 SettingsNumberDelegate {
                     Layout.fillWidth: true
                 }
@@ -47,11 +47,11 @@ PageLayout {
     //     delegate: DelegateChooser {
     //         role: "type"
     //         DelegateChoice {
-    //             roleValue: ExportSettingsListModel.Number
+    //             roleValue: SettingsListModel.Number
     //             SettingsNumberDelegate {}
     //         }
     //         DelegateChoice {
-    //             roleValue: ExportSettingsListModel.Text
+    //             roleValue: SettingsListModel.Text
     //             SettingsTextDelegate {}
     //         }
     //     }
