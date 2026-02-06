@@ -9,8 +9,8 @@ qt_add_library(VaiFuraCore STATIC
     DrillNode.cpp
     DrillParser.h
     DrillExporter.h
-    ExportSettings.h
-    ExportSettingsRepository.h ExportSettingsRepository.cpp
+    Settings.h
+    SettingsRepository.h SettingsRepository.cpp
 )
 
 target_link_libraries(VaiFuraCore

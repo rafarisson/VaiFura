@@ -1,35 +1,37 @@
-#include "ExportSettingsListModel.h"
-#include "ExportSettingsRepository.h"
+#include "SettingsListModel.h"
+#include "SettingsRepository.h"
 
-ExportSettingsListModel::ExportSettingsListModel(QObject *parent)
+SettingsListModel::SettingsListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
 }
 
-void ExportSettingsListModel::load(const QString &fileName)
+void SettingsListModel::load(const QString &fileName)
 {
     beginResetModel();
-    ExportSettingsRepository::load(fileName, &settings_);
+    if (!SettingsRepository::load(fileName, &settings_)) {
+        // Default settings
+    }
     endResetModel();
     emit sizeChanged();
 }
 
-void ExportSettingsListModel::save(const QString &fileName)
+void SettingsListModel::save(const QString &fileName)
 {
-
+    SettingsRepository::save(fileName, &settings_);
 }
 
-int ExportSettingsListModel::rowCount(const QModelIndex &parent) const
+int SettingsListModel::rowCount(const QModelIndex &parent) const
 {
     return size();
 }
 
-QVariant ExportSettingsListModel::data(const QModelIndex &index, int role) const
+QVariant SettingsListModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return {};
 
-    const ExportSettings &s = settings_.at(index.row());
+    const Settings &s = settings_.at(index.row());
 
     switch (role) {
     case KeyRole: return s.key;
@@ -43,14 +45,14 @@ QVariant ExportSettingsListModel::data(const QModelIndex &index, int role) const
     return {};
 }
 
-bool ExportSettingsListModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool SettingsListModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (!index.isValid() || index.row() < 0 || index.row() >= size())
         return false;
     if (role != ValueRole)
         return false;
 
-    ExportSettings &s = settings_[index.row()];
+    Settings &s = settings_[index.row()];
     if (s.value == value)
         return false;
 
@@ -62,7 +64,7 @@ bool ExportSettingsListModel::setData(const QModelIndex &index, const QVariant &
     return true;
 }
 
-QHash<int, QByteArray> ExportSettingsListModel::roleNames() const
+QHash<int, QByteArray> SettingsListModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[KeyRole] = "key";

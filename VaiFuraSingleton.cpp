@@ -7,11 +7,12 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , toolsModel_{new ToolListModel(this)}
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
-    , exportSettingsModel_{new ExportSettingsListModel(this)}
+    , settingsModel_{new SettingsListModel(this)}
 {
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_);
+    settingsModel_->load(QDir(QCoreApplication::applicationDirPath()).filePath("settings.json"));
 }
 
 void VaiFuraSingleton::setDocumentPath(const QString &path)

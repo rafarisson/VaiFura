@@ -1,12 +1,12 @@
-#ifndef EXPORTSETTINGSLISTMODEL_H
-#define EXPORTSETTINGSLISTMODEL_H
+#ifndef SETTINGSLISTMODEL_H
+#define SETTINGSLISTMODEL_H
 
 #include <QQmlEngine>
 #include <QAbstractListModel>
 #include <QObject>
-#include "ExportSettings.h"
+#include "Settings.h"
 
-class ExportSettingsListModel : public QAbstractListModel
+class SettingsListModel : public QAbstractListModel
 {
     Q_OBJECT
     QML_ELEMENT
@@ -24,13 +24,13 @@ public:
     };
 
     enum ValueRoles {
-        Number = ExportSettings::Number,
-        Text = ExportSettings::Text,
-        Boolean = ExportSettings::Boolean
+        Number = Settings::Number,
+        Text = Settings::Text,
+        Boolean = Settings::Boolean
     };
     Q_ENUM(ValueRoles)
 
-    explicit ExportSettingsListModel(QObject *parent = nullptr);
+    explicit SettingsListModel(QObject *parent = nullptr);
 
     int size() const { return settings_.size(); }
 
@@ -47,7 +47,7 @@ signals:
     void sizeChanged();
 
 private:
-    QVector<ExportSettings> settings_;
+    QVector<Settings> settings_;
 };
 
-#endif // EXPORTSETTINGSLISTMODEL_H
+#endif // SETTINGSLISTMODEL_H

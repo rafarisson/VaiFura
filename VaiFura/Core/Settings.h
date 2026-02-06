@@ -1,10 +1,10 @@
-#ifndef EXPORTSETTINGS_H
-#define EXPORTSETTINGS_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
 #include <QString>
 #include <QVariant>
 
-class ExportSettings
+class Settings
 {
 public:
     enum Types {
@@ -21,4 +21,4 @@ public:
     int type;
 };
 
-#endif // EXPORTSETTINGS_H
+#endif // SETTINGS_H

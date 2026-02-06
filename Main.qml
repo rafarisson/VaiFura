@@ -46,7 +46,7 @@ ApplicationWindow {
 
             PageSettings {
                 documentModel: VaiFura.model
-                exportSettingsModel: VaiFura.exportSettingsModel
+                settingsModel: VaiFura.settingsModel
             }
 
             PageExport {

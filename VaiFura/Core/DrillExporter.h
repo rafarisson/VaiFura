@@ -4,7 +4,7 @@
 #include <QString>
 
 class DrillDocument;
-class ExportSettings;
+class Settings;
 
 class DrillExporter
 {
@@ -12,7 +12,7 @@ public:
     virtual ~DrillExporter() = default;
     virtual bool save(const QString &fileName,
                       const DrillDocument &document,
-                      const ExportSettings &settings);
+                      const Settings &settings);
 };
 
 #endif // DRILLEXPORTER_H

@@ -7,9 +7,9 @@ PageLayout {
     id: root
 
     required property DrillDocumentModel documentModel
-    required property ExportSettingsListModel exportSettingsModel
+    required property SettingsListModel settingsModel
 
-    visible: exportSettingsModel.size
+    visible: settingsModel.size
 
     icon: MaterialSymbols.settings
     title: qsTr("G-code Settings")
@@ -19,8 +19,8 @@ PageLayout {
         Layout.fillWidth: true
 
         clip: true
-        model: root.exportSettingsModel
-        visible: root.exportSettingsModel.size
+        model: root.settingsModel
+        visible: root.settingsModel.size
 
         delegate: DelegateChooser {
             role: "type"
@@ -41,8 +41,8 @@ PageLayout {
 
     //     boundsBehavior: Flickable.StopAtBounds
     //     clip: true
-    //     model: root.exportSettingsModel
-    //     visible: root.exportSettingsModel.size
+    //     model: root.settingsModel
+    //     visible: root.settingsModel.size
 
     //     delegate: DelegateChooser {
     //         role: "type"
