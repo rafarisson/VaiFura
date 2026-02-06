@@ -19,7 +19,8 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
 
             PageUpload {
-                model: VaiFura
+                path: VaiFura.documentPath
+                onPathChanged: VaiFura.documentPath = path
             }
 
             PageDrills {

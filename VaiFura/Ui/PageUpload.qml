@@ -5,7 +5,7 @@ import QtQuick.Layouts
 PageLayout {
     id: root
 
-    required property var model
+    required property string path
 
     icon: MaterialSymbols.upload
     title: qsTr("Excellon file")
@@ -17,8 +17,8 @@ PageLayout {
         }
         TextField {
             Layout.fillWidth: true
-            text: root.model.documentPath
-            onTextEdited: root.model.documentPath = text
+            text: root.path
+            onTextEdited: root.path = text
         }
     }
 }
