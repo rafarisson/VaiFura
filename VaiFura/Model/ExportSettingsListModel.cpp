@@ -37,6 +37,7 @@ QVariant ExportSettingsListModel::data(const QModelIndex &index, int role) const
     case DescriptionRole: return s.description;
     case UnitRole: return s.unit;
     case ValueRole: return s.value;
+    case TypeRole: return s.type;
     }
 
     return {};
@@ -56,6 +57,8 @@ bool ExportSettingsListModel::setData(const QModelIndex &index, const QVariant &
     s.value = value;
     emit dataChanged(index, index, { role });
 
+    qDebug() << "set" << role << value;
+
     return true;
 }
 
@@ -67,5 +70,6 @@ QHash<int, QByteArray> ExportSettingsListModel::roleNames() const
     roles[DescriptionRole] = "description";
     roles[UnitRole] = "unit";
     roles[ValueRole] = "value";
+    roles[TypeRole] = "type";
     return roles;
 }

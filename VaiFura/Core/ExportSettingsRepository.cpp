@@ -33,6 +33,7 @@ void ExportSettingsRepository::load(const QString &fileName, QVector<ExportSetti
         s.description = obj.value("description").toString();
         s.unit = obj.value("unit").toString();
         s.value = obj.value("value").toVariant();
+        s.type = obj.value("type").toInt(ExportSettings::Number);
 
         settings->append(s);
     }

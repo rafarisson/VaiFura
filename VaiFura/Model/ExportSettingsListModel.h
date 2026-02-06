@@ -19,8 +19,16 @@ public:
         LabelRole,
         DescriptionRole,
         UnitRole,
-        ValueRole
+        ValueRole,
+        TypeRole
     };
+
+    enum ValueRoles {
+        Number = ExportSettings::Number,
+        Text = ExportSettings::Text,
+        Boolean = ExportSettings::Boolean
+    };
+    Q_ENUM(ValueRoles)
 
     explicit ExportSettingsListModel(QObject *parent = nullptr);
 
