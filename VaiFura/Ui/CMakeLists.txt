@@ -16,8 +16,12 @@ qt_add_qml_module(VaiFuraUi
         Components/Preview.qml
         Components/DrillTreeViewDelegate.qml
         Components/UnitTextField.qml
+        Components/NumberTextField.qml
         Components/PageHeader.qml
         Components/HelpToolTip.qml
+        Components/SettingsBaseDelegate.qml
+        Components/SettingsNumberDelegate.qml
+        Components/SettingsBooleanDelegate.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
         PageDrills.qml
