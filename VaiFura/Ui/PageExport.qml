@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Dialogs
 
 import VaiFura.Model
 
@@ -8,6 +9,10 @@ PageLayout {
     id: root
 
     required property DrillDocumentModel documentModel
+    required property bool generateFilePerTool
+    property alias outputPath: folderDialog.selectedFolder
+
+    signal generate()
 
     icon: MaterialSymbols.download
     title: qsTr("G-Code file")
@@ -20,6 +25,8 @@ PageLayout {
         Switch {
             spacing: 0
             rightPadding: 0
+            checked: root.generateFilePerTool
+            onCheckedChanged: root.generateFilePerTool = checked
         }
     }
 
@@ -27,5 +34,11 @@ PageLayout {
         Layout.fillWidth: true
         text: qsTr("Export")
         enabled: root.documentModel.selectedHoleCount
+        onClicked: folderDialog.open()
+    }
+
+    FolderDialog {
+        id: folderDialog
+        onAccepted: root.generate()
     }
 }
