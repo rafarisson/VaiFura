@@ -16,26 +16,13 @@ ApplicationWindow {
 
         ColumnLayout {
             SplitView.fillHeight: true
+            SplitView.preferredWidth: 300
 
-            PageLayout {
-                icon: MaterialSymbols.upload
-                title: qsTr("Excellon file")
-                description: qsTr("Select drill file (.xln, .drl or .txt)")
-
-                RowLayout {
-                    Button {
-                        text: qsTr("Select file")
-                    }
-                    TextField {
-                        Layout.fillWidth: true
-                        text: VaiFura.documentPath
-                        onTextEdited: VaiFura.documentPath = text
-                    }
-                }
+            PageUpload {
+                model: VaiFura
             }
 
             PageDrills {
-                Layout.fillWidth: true
                 Layout.fillHeight: true
                 documentModel: VaiFura.model
                 drillModel: VaiFura.drillsModel
@@ -50,16 +37,23 @@ ApplicationWindow {
 
         ColumnLayout {
             SplitView.fillHeight: true
+            SplitView.preferredWidth: 300
 
             PageOffset {
-                Layout.fillWidth: true
                 documentModel: VaiFura.model
             }
 
-            PageExport {
-                Layout.fillWidth: true
+            PageSettings {
                 documentModel: VaiFura.model
                 exportSettingsModel: VaiFura.exportSettingsModel
+            }
+
+            PageExport {
+                documentModel: VaiFura.model
+            }
+
+            Item {
+                Layout.fillHeight: true
             }
         }
     }

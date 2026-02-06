@@ -17,7 +17,6 @@ PageLayout {
     TreeView {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.preferredWidth: 250
         Layout.preferredHeight: 200
 
         boundsBehavior: Flickable.StopAtBounds
