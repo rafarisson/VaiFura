@@ -15,6 +15,8 @@ ApplicationWindow {
         orientation: Qt.Horizontal
 
         ColumnLayout {
+            SplitView.fillHeight: true
+
             PageLayout {
                 icon: MaterialSymbols.upload
                 title: qsTr("Excellon file")
@@ -47,6 +49,8 @@ ApplicationWindow {
         }
 
         ColumnLayout {
+            SplitView.fillHeight: true
+
             PageOffset {
                 Layout.fillWidth: true
                 documentModel: VaiFura.model
