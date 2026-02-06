@@ -9,6 +9,8 @@ PageLayout {
     required property DrillDocumentModel documentModel
     required property ExportSettingsListModel exportSettingsModel
 
+    visible: exportSettingsModel.size
+
     icon: MaterialSymbols.settings
     title: qsTr("G-code Settings")
     description: qsTr("Configure G-code parameters")
