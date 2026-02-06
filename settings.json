@@ -1,0 +1,50 @@
+[
+    {
+        "key": "z_tool_change",
+        "label": "Tool Change Height",
+        "unit": "mm",
+        "description": "Safe Z height used for tool change. This is the home or predefined safe position and is not part of the drilling cycle.",
+        "value": 20.0,
+        "type": 0
+    },
+    {
+        "key": "z_move",
+        "label": "Move Height",
+        "unit": "mm",
+        "description": "Z height used for rapid movements between holes. The tool always returns to this height before moving in X/Y.",
+        "value": 5.0,
+        "type": 0
+    },
+    {
+        "key": "z_drill_offset",
+        "label": "Drill Offset",
+        "unit": "mm",
+        "description": "Relative Z offset applied from the move height to perform drilling. This value should be negative to define the drilling depth.",
+        "value": -2.0,
+        "type": 0
+    },
+    {
+        "key": "z_drill_feed",
+        "label": "Drill Feed Rate",
+        "unit": "mm/min",
+        "description": "Feed rate used when moving down from the move height to the drilling depth.",
+        "value": 80.0,
+        "type": 0
+    },
+    {
+        "key": "z_retract_feed",
+        "label": "Retract Feed Rate",
+        "unit": "mm/min",
+        "description": "Feed rate used when retracting the tool from the drilling depth back to the move height.",
+        "value": 200.0,
+        "type": 0
+    },
+    {
+        "key": "generate_file_per_tool",
+        "label": "Generate File Per Tool",
+        "unit": "",
+        "description": "When enabled, a separate output file is generated for each tool instead of combining all tools into a single file.",
+        "value": false,
+        "type": 2
+    }
+]
