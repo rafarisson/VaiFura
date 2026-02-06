@@ -11,6 +11,8 @@ Page {
 
     readonly property int contentMargin: 6
 
+    Layout.fillWidth: true
+
     implicitWidth: Math.max(pageHeader.implicitWidth, contentWrapper.implicitWidth) + (contentMargin * 2)
     implicitHeight: pageHeader.implicitHeight + contentWrapper.implicitHeight + (contentMargin * 1)
     clip: true
@@ -19,13 +21,6 @@ Page {
         id: pageHeader
         title: root.title
     }
-
-    // Component.onCompleted: {
-    //     console.log(title)
-    //     console.log(pageHeader.implicitWidth, pageHeader.implicitHeight, pageHeader.width, pageHeader.height)
-    //     console.log(implicitWidth, implicitHeight, width, height)
-    //     console.log(contentWrapper.implicitWidth, contentWrapper.implicitHeight, contentWrapper.width, contentWrapper.height)
-    // }
 
     ColumnLayout {
         id: contentWrapper
