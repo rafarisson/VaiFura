@@ -19,6 +19,7 @@ qt_add_qml_module(VaiFuraUi
         Components/NumberTextField.qml
         Components/PageHeader.qml
         Components/HelpToolTip.qml
+        Components/SettingsItem.qml
         Components/SettingsBaseDelegate.qml
         Components/SettingsNumberDelegate.qml
         Components/SettingsBooleanDelegate.qml

@@ -1,11 +1,10 @@
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
 
 Item {
     id: control
 
-    default property alias editor: contentWrapper.data
+    default property alias editor: item.editor
+    property alias columnEditor: item.columnEditor
 
     required property var model
     required property string label
@@ -13,24 +12,13 @@ Item {
     required property string unit
     required property var value
 
-    width: ListView.view.width
-    implicitHeight: itemLayout.implicitHeight
+    width: ListView.view ? ListView.view.width : parent.width
+    implicitHeight: item.implicitHeight
 
-    RowLayout {
-        id: itemLayout
-        anchors.fill: parent
-
-        HelpToolTip {
-            help: control.description
-        }
-        Label {
-            Layout.fillWidth: true
-            text: control.label
-        }
-        Item {
-            id: contentWrapper
-            implicitWidth: childrenRect.width
-            implicitHeight: childrenRect.height
-        }
+    SettingsItem {
+        id: item
+        width: control.width
+        label: control.label
+        description: control.description
     }
 }
