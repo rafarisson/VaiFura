@@ -21,10 +21,10 @@ PageLayout {
                 Layout.fillWidth: true
                 text: qsTr("X Offset")
             }
-            UnitTextField {
+            NumberTextField {
                 unit: "mm"
                 text: root.documentModel.offset.x
-                onValueChanged: (value) => root.documentModel.offset.x = value
+                onValueChanged: (v) => root.documentModel.offset.x = v
             }
         }
 
@@ -35,10 +35,10 @@ PageLayout {
                 Layout.fillWidth: true
                 text: qsTr("Y Offset")
             }
-            UnitTextField {
+            NumberTextField {
                 unit: "mm"
                 text: root.documentModel.offset.y
-                onValueChanged: (value) => root.documentModel.offset.y = value
+                onValueChanged: (v) => root.documentModel.offset.y = v
             }
         }
     }
