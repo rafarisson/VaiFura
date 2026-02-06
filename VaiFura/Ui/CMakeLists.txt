@@ -25,8 +25,10 @@ qt_add_qml_module(VaiFuraUi
         Components/SettingsBooleanDelegate.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
+        PageUpload.qml
         PageDrills.qml
         PageOffset.qml
+        PageSettings.qml
         PageExport.qml
     DEPENDENCIES
         TARGET VaiFuraModel
