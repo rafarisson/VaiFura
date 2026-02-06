@@ -20,7 +20,7 @@ ApplicationWindow {
 
             PageUpload {
                 path: VaiFura.documentPath
-                onPathChanged: VaiFura.documentPath = path
+                onFileSelected: (p) => VaiFura.documentPath = p
             }
 
             PageDrills {

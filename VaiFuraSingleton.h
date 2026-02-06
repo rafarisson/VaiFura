@@ -17,6 +17,7 @@ class VaiFuraSingleton : public QObject
     QML_NAMED_ELEMENT(VaiFura)
 
     Q_PROPERTY(QString documentPath READ documentPath WRITE setDocumentPath NOTIFY documentPathChanged)
+
     Q_PROPERTY(DrillDocumentModel* model READ model CONSTANT FINAL)
     Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
     Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)

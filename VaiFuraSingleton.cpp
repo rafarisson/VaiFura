@@ -1,3 +1,5 @@
+#include <QCoreApplication>
+#include <QDir>
 #include "VaiFuraSingleton.h"
 #include "ExcellonDrillParser.h"
 
@@ -12,6 +14,7 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_);
+
     settingsModel_->load(QDir(QCoreApplication::applicationDirPath()).filePath("settings.json"));
 }
 
@@ -20,9 +23,9 @@ void VaiFuraSingleton::setDocumentPath(const QString &path)
     if (documentPath_ == path)
         return;
 
-    documentPath_ = path;
+    documentPath_ = QUrl::fromUserInput(path).toLocalFile();
     emit documentPathChanged();
 
     ExcellonDrillParser parser;
-    documentModel_->loadFromFile(path, parser);
+    documentModel_->loadFromFile(documentPath_, parser);
 }

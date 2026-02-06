@@ -16,12 +16,14 @@ void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &pars
 {
     DrillDocumentBuilder builder(doc_);
 
-    QFile f(filePath);
-    if (f.open(QIODevice::ReadOnly)) {
-        QTextStream in(&f);
-        parser.parse(in, builder);
-        builder.build();
-        f.close();
+    if (!filePath.isEmpty()) {
+        QFile f(filePath);
+        if (f.open(QIODevice::ReadOnly)) {
+            QTextStream in(&f);
+            parser.parse(in, builder);
+            builder.build();
+            f.close();
+        }
     }
 
     setSelectedHoleCount(doc_->holes().count());
