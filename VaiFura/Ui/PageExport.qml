@@ -26,33 +26,19 @@ PageLayout {
             model: root.exportSettingsModel
             visible: root.exportSettingsModel.size
 
-            delegate: Item {
-                id: itemDelegate
-
-                required property var model
-                required property string label
-                required property string description
-                required property string unit
-                required property var value
-
-                width: ListView.view.width
-                implicitHeight: itemLayout.implicitHeight
-
-                RowLayout {
-                    id: itemLayout
-                    anchors.fill: parent
-                    Label {
-                        Layout.fillWidth: true
-                        text: itemDelegate.label
-                    }
-                    HelpToolTip {
-                        help: itemDelegate.description
-                    }
-                    UnitTextField {
-                        unit: itemDelegate.unit
-                        text: itemDelegate.value
-                        onValueChanged: (v) => itemDelegate.model.value = v
-                    }
+            delegate: DelegateChooser {
+                role: "type"
+                DelegateChoice {
+                    roleValue: ExportSettingsListModel.Number
+                    SettingsNumberDelegate {}
+                }
+                DelegateChoice {
+                    roleValue: ExportSettingsListModel.Text
+                    SettingsNumberDelegate {}
+                }
+                DelegateChoice {
+                    roleValue: ExportSettingsListModel.Boolean
+                    SettingsBooleanDelegate {}
                 }
             }
 
@@ -64,6 +50,7 @@ PageLayout {
         Button {
             Layout.fillWidth: true
             text: qsTr("Export")
+            enabled: root.documentModel.selectedHoleCount
         }
     }
 }
