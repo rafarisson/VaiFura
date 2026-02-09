@@ -9,26 +9,63 @@ PageLayout {
     id: root
 
     required property DrillDocumentModel documentModel
-    required property bool generateFilePerTool
-    property alias outputPath: folderDialog.selectedFolder
+    required property SettingsListModel settingsModel
 
-    signal generate()
+    // property alias currentPath: folderDialog.currentFolder
+
+    signal saveRequest(path: string)
 
     icon: MaterialSymbols.download
     title: qsTr("G-Code file")
-    description: qsTr("Export g-code file (.gcode)")
+    description: qsTr("Configure G-code parameters")
 
-    SettingsItem {
+    Repeater {
         Layout.fillWidth: true
-        label: qsTr("Generate File Per Tool")
-        description: qsTr("When enabled, a separate output file is generated for each tool instead of combining all tools into a single file.")
-        Switch {
-            spacing: 0
-            rightPadding: 0
-            checked: root.generateFilePerTool
-            onCheckedChanged: root.generateFilePerTool = checked
+
+        clip: true
+        model: root.settingsModel
+        visible: root.settingsModel.size
+
+        delegate: DelegateChooser {
+            role: "type"
+            DelegateChoice {
+                roleValue: SettingsListModel.Number
+                SettingsNumberDelegate {
+                    Layout.fillWidth: true
+                }
+            }
+            DelegateChoice {
+                roleValue: SettingsListModel.Boolean
+                SettingsBooleanDelegate {
+                    Layout.fillWidth: true
+                }
+            }
         }
     }
+
+    // ListView {
+    //     Layout.fillWidth: true
+    //     Layout.fillHeight: true
+    //     Layout.preferredWidth: 300
+    //     Layout.preferredHeight: 200
+
+    //     boundsBehavior: Flickable.StopAtBounds
+    //     clip: true
+    //     model: root.settingsModel
+    //     visible: root.settingsModel.size
+
+    //     delegate: DelegateChooser {
+    //         role: "type"
+    //         DelegateChoice {
+    //             roleValue: SettingsListModel.Number
+    //             SettingsNumberDelegate {}
+    //         }
+    //         DelegateChoice {
+    //             roleValue: SettingsListModel.Boolean
+    //             SettingsBooleanDelegate {}
+    //         }
+    //     }
+    // }
 
     Button {
         Layout.fillWidth: true
@@ -39,6 +76,6 @@ PageLayout {
 
     FolderDialog {
         id: folderDialog
-        onAccepted: root.generate()
+        onAccepted: root.saveRequest(selectedFolder)
     }
 }
