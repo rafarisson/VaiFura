@@ -1,6 +1,7 @@
 find_package(Qt6 REQUIRED COMPONENTS Core)
 
 qt_add_library(VaiFuraCore STATIC
+    DrillHelper.h
     DrillDocument.h
     DrillDocument.cpp
     DrillDocumentBuilder.h

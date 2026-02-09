@@ -1,50 +1,48 @@
-#ifndef DRILLHELPER_H
-#define DRILLHELPER_H
+#ifndef DRILLRENDERERHELPER_H
+#define DRILLRENDERERHELPER_H
 
 #include <QPointF>
 #include "DrillDocument.h"
 #include "DrillDocumentModel.h"
+#include "DrillHelper.h"
 
-class DrillHelper
+class DrillRendererHelper
 {
 public:
     template <typename F>
-    static void forEachHole(const DrillDocumentModel *model,
-                            const QPointF &delta,
-                            F &&fn){
-        if (!model || !model->document() || !model->document()->root())
+    static void forEachHole(const DrillDocumentModel *model, const QPointF &delta, F &&fn) {
+        if (!model || !model->document())
             return;
 
-        const DrillNode *root = model->document()->root();
+        double tool_mm = 0;
 
-        for (int t = 0; t < root->childCount(); ++t) {
-            const DrillNode *toolNode = root->child(t);
-
-            for (int h = 0; h < toolNode->childCount(); ++h) {
-                const DrillNode *holeNode = toolNode->child(h);
+        DrillHelper::forEachHole(
+            model->document()->root(),
+            [&](const DrillNode *toolNode) {
+                if (toolNode && toolNode->tool())
+                    tool_mm = toolNode->tool()->mm;
+            },
+            [&](const DrillNode *holeNode, const QPointF &pos) {
                 const Hole *hole = holeNode->hole();
-                if (!hole)
-                    continue;
-
-                QPointF p(
-                    hole->x + model->offset().x() + delta.x(),
-                    hole->y + model->offset().y() + delta.y()
-                    );
-
-                double r = toolRadius(model, hole->toolId);
-
+                QPointF p(pos.x() + model->offset().x() + delta.x(),
+                          pos.y() + model->offset().y() + delta.y());
+                // double r = toolRadius(model, hole->toolId);
+                double r = toolRadius(tool_mm);
                 fn(holeNode, hole, p, r);
-            }
-        }
+            });
+    }
+
+    static double toolRadius(double mm) {
+        return mm * 0.5;
     }
 
     static double toolRadius(const DrillDocumentModel *model, int toolId)
     {
         for (const auto &t : model->document()->tools())
             if (t.id == toolId)
-                return t.mm * 0.5;
+                return toolRadius(t.mm);
         return 0.2;
     }
 };
 
-#endif // DRILLHELPER_H
+#endif // DRILLRENDERERHELPER_H

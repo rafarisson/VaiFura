@@ -1,7 +1,7 @@
 #include <QSGGeometryNode>
 #include <QSGFlatColorMaterial>
 #include <cmath>
-#include "DrillHelper.h"
+#include "DrillRendererHelper.h"
 #include "DrillRendererBase.h"
 #include "DrillDocument.h"
 #include "DrillDocumentModel.h"
@@ -12,7 +12,7 @@ void DrillRendererBase::build(QSGNode *root,
                               const ViewportTransform &vp,
                               const QPointF &delta)
 {
-    DrillHelper::forEachHole(model, delta,
+    DrillRendererHelper::forEachHole(model, delta,
                              [&](const DrillNode *holeNode, const Hole *, const QPointF &p, double r) {
                     QPointF screen = vp.toScreen(p);
                     root->appendChildNode(createCircleOutline(screen, r * vp.zoom(), 1.0, holeColor(holeNode)));

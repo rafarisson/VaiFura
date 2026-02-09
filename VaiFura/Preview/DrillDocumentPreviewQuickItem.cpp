@@ -1,7 +1,7 @@
 #include <QSGGeometryNode>
 #include <QSGFlatColorMaterial>
 #include <QMouseEvent>
-#include "DrillHelper.h"
+#include "DrillRendererHelper.h"
 #include "DrillDocumentPreviewQuickItem.h"
 
 DrillDocumentPreviewQuickItem::DrillDocumentPreviewQuickItem(QQuickItem *parent)
@@ -43,7 +43,7 @@ void DrillDocumentPreviewQuickItem::fitToContent(double marginPx)
     QRectF contentBounds;
     bool first = true;
 
-    DrillHelper::forEachHole(documentModel_, {},
+    DrillRendererHelper::forEachHole(documentModel_, {},
                              [&](auto, auto, const QPointF &p, double radius) {
                                  QRectF hr(p.x() - radius, p.y() - radius, radius * 2, radius * 2);
                                  if (first) {
