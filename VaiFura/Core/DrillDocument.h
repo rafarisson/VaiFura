@@ -27,7 +27,6 @@ public:
     const QVector<Hole>& holes() const { return holes_; }
 
     const DrillNode* root() const { return &root_; }
-
     void clear();
 
 private:
