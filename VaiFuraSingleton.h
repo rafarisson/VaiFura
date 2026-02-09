@@ -9,6 +9,7 @@
 #include "HoleListModel.h"
 #include "DrillTreeModel.h"
 #include "SettingsListModel.h"
+#include "GCodeExporter.h"
 
 class VaiFuraSingleton : public QObject
 {
@@ -35,6 +36,9 @@ public:
     HoleListModel *holesModel() const { return holesModel_; }
     DrillTreeModel *drillsModel() const { return drillTreeModel_; }
     SettingsListModel *settingsModel() const { return settingsModel_; }
+
+    Q_INVOKABLE void save(const QString &path);
+
 private:
     QString resolvePath(const QString &fileName) const;
 
@@ -49,6 +53,8 @@ private:
     HoleListModel *holesModel_ = nullptr;
     DrillTreeModel *drillTreeModel_ = nullptr;
     SettingsListModel *settingsModel_ = nullptr;
+
+    GCodeExporter *exporter_ = nullptr;
 };
 
 #endif // VAIFURASINGLETON_H
