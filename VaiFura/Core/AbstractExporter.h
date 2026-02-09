@@ -13,7 +13,7 @@ public:
 
     virtual QString settingsFile() const = 0;
     virtual QVector<Settings> defaultSettings() const;
-    virtual bool save(const QString &fileName, const DrillDocument &document, const QVector<Settings> &settings) = 0;
+    virtual bool save(const QString &fileName, const DrillDocument *document, const QVector<Settings> &settings) = 0;
 };
 
 #endif // ABSTRACTEXPORTER_H

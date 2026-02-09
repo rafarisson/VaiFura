@@ -46,7 +46,7 @@ void VaiFuraSingleton::save(const QString &path)
     DrillDocumentExportPreparer documentTransformer;
     documentTransformer.prepare(*documentModel_->document(), documentModel_->offset());
 
-    exporter_->save(output, *documentTransformer.document(), settingsModel_->settings());
+    exporter_->save(output, documentTransformer.document(), settingsModel_->settings());
 }
 
 QString VaiFuraSingleton::resolvePath(const QString &fileName) const

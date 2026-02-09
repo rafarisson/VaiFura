@@ -13,14 +13,14 @@ QString GCodeExporter::settingsFile() const
 QVector<Settings> GCodeExporter::defaultSettings() const
 {
     return {
-        // Settings{
-        //     GCodeKeys::Z_TOOL_CHANGE,
-        //     "Tool Change Height",
-        //     "Safe Z height used for tool change. This is the home or predefined safe position and is not part of the drilling cycle.",
-        //     "mm",
-        //     GCodeDefault::Z_TOOL_CHANGE,
-        //     Settings::Number
-        // },
+        Settings{
+            GCodeKeys::Z_TOOL_CHANGE,
+            "Tool Change Height",
+            "Safe Z height used for tool change. This is the home or predefined safe position and is not part of the drilling cycle.",
+            "mm",
+            GCodeDefault::Z_TOOL_CHANGE,
+            Settings::Number
+        },
         Settings{
             GCodeKeys::Z_MOVE,
             "Move Height",
@@ -72,11 +72,14 @@ QVector<Settings> GCodeExporter::defaultSettings() const
     };
 }
 
-bool GCodeExporter::save(const QString &fileName, const DrillDocument &document, const QVector<Settings> &settings)
+bool GCodeExporter::save(const QString &fileName, const DrillDocument *document, const QVector<Settings> &settings)
 {
-    if (fileName.isEmpty() || document.holes().empty() || !document.root()->childCount())
+    if (!document || !document->root())
+        return false;
+    if (fileName.isEmpty() || document->holes().empty() || !document->root()->childCount())
         return false;
 
+    document_ = document;
     settings_ = GCodeSettings::from(settings);
     decodeFileName(fileName);
 
@@ -84,7 +87,7 @@ bool GCodeExporter::save(const QString &fileName, const DrillDocument &document,
         open();
 
     DrillHelper::forEachHole(
-        document.root(),
+        document->root(),
         [&](const DrillNode *toolNode) {
             exportTool(toolNode);
         },
@@ -116,12 +119,33 @@ void GCodeExporter::open(const QString &fileName)
         return;
 
     out_.setDevice(&file_);
+    exportHeader();
+    exportIniti();
 }
 
 void GCodeExporter::close()
 {
     if (file_.isOpen())
         file_.close();
+}
+
+void GCodeExporter::exportHeader()
+{
+    out_ << "; VaiFura - GCodeExporter" << "\n";
+    out_ << "; Generated: "<< QDateTime::currentDateTime().toString() << "\n";
+
+    if (!settings_.filePerTool)
+        out_ << "; Total tools: " << document_->tools().size() <<  "\n";
+
+    out_ << "; Total holes: " << document_->holes().size() << "\n";
+}
+
+void GCodeExporter::exportIniti()
+{
+    out_ << "G21" << "; Metric units\n";
+    out_ << "G90" << "; Absolute positioning\n";
+    out_ << "G28" << "; Home\n";
+    out_ << "G0 Z" << settings_.zToolChange << "; Safe Z\n";
 }
 
 void GCodeExporter::exportTool(const DrillNode *toolNode)
@@ -149,7 +173,7 @@ GCodeExporter::GCodeSettings GCodeExporter::GCodeSettings::from(const QVector<Se
 {
     SettingsReader setts(settings);
     return {
-        // setts.number(GCodeKeys::Z_TOOL_CHANGE,  GCodeDefault::Z_TOOL_CHANGE),
+        setts.number(GCodeKeys::Z_TOOL_CHANGE,  GCodeDefault::Z_TOOL_CHANGE),
         setts.number(GCodeKeys::Z_MOVE,         GCodeDefault::Z_MOVE),
         setts.number(GCodeKeys::XY_MOVE_FEED,   GCodeDefault::XY_MOVE_FEED),
         setts.number(GCodeKeys::Z_DRILL_OFFSET, GCodeDefault::Z_DRILL_OFFSET),

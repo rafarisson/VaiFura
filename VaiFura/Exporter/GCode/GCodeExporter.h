@@ -8,7 +8,7 @@
 class DrillNode;
 
 namespace GCodeKeys {
-// inline static constexpr auto Z_TOOL_CHANGE  = "Z_TOOL_CHANGE";
+inline static constexpr auto Z_TOOL_CHANGE  = "Z_TOOL_CHANGE";
 inline static constexpr auto Z_MOVE         = "Z_MOVE";
 inline static constexpr auto XY_MOVE_FEED   = "XY_MOVE_FEED";
 inline static constexpr auto Z_DRILL_OFFSET = "Z_DRILL_OFFSET";
@@ -18,7 +18,7 @@ inline static constexpr auto FILE_PER_TOOL  = "FILE_PER_TOOL";
 }
 
 namespace GCodeDefault {
-// inline static constexpr double Z_TOOL_CHANGE    = 20.0;
+inline static constexpr double Z_TOOL_CHANGE    = 20.0;
 inline static constexpr double Z_MOVE           = 5.0;
 inline static constexpr double XY_MOVE_FEED     = 3000.0;
 inline static constexpr double Z_DRILL_OFFSET   = -2.0;
@@ -32,23 +32,27 @@ class GCodeExporter : public AbstractExporter
 public:
     QString settingsFile() const override;
     QVector<Settings> defaultSettings() const override;
-    bool save(const QString &fileName, const DrillDocument &document, const QVector<Settings> &settings) override;
+    bool save(const QString &fileName, const DrillDocument *document, const QVector<Settings> &settings) override;
 
 private:
     void decodeFileName(const QString &fileName);
     void open(const QString &fileName = QString());
     void close();
+    void exportHeader();
+    void exportIniti();
     void exportTool(const DrillNode *toolNode);
     void exportHole(const DrillNode *holeNode, const QPointF &pos);
 
 private:
+    const DrillDocument *document_ = nullptr;
+
     QString basePath_;
     QString baseName_;
     QFile file_;
     QTextStream out_;
 
     struct GCodeSettings {
-        // double zToolChange;
+        double zToolChange;
         double zMove;
         double xyMoveFeed;
         double zDrillOffset;
