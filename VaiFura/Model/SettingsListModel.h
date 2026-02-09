@@ -34,8 +34,8 @@ public:
 
     int size() const { return settings_.size(); }
 
-    void load(const QString &fileName);
-    void save(const QString &fileName);
+    void setSettings(const QVector<Settings> &newSettings);
+    const QVector<Settings> &settings() const { return settings_; }
 
 protected:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

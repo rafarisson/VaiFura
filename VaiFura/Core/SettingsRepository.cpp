@@ -1,20 +1,18 @@
 #include <QFile>
+#include <QDir>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
 
 #include "SettingsRepository.h"
 
-bool SettingsRepository::load(const QString &fileName, QVector<Settings> *settings)
+bool SettingsRepository::load(const QString &fileName, QVector<Settings> &settings)
 {
-    if (!settings)
-        return false;
-
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly))
         return false;
 
-    settings->clear();
+    settings.clear();
 
     const QJsonDocument json = QJsonDocument::fromJson(file.readAll());
     if (!json.isArray())
@@ -36,13 +34,38 @@ bool SettingsRepository::load(const QString &fileName, QVector<Settings> *settin
         s.value = obj.value("value").toVariant();
         s.type = obj.value("type").toInt(Settings::Number);
 
-        settings->append(s);
+        settings.append(s);
     }
 
-    return settings->size() > 0;
+    return settings.size() > 0;
 }
 
-bool SettingsRepository::save(const QString &fileName, const QVector<Settings> *settings)
+bool SettingsRepository::save(const QString &fileName, const QVector<Settings> &settings)
 {
-    return false;
+    QJsonArray array;
+
+    for (const Settings &s : settings) {
+        QJsonObject obj;
+        obj["key"] = s.key;
+        obj["label"] = s.label;
+        obj["description"] = s.description;
+        obj["unit"] = s.unit;
+        obj["value"] = QJsonValue::fromVariant(s.value);
+        obj["type"] = static_cast<int>(s.type);
+
+        array.append(obj);
+    }
+
+    if (array.empty())
+        return false;
+
+    QFile file(QDir::toNativeSeparators(fileName));
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+
+    QJsonDocument doc(array);
+    file.write(doc.toJson(QJsonDocument::Indented));
+    file.close();
+
+    return true;
 }

@@ -19,8 +19,8 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
 
             PageUpload {
-                path: VaiFura.documentPath
-                onFileSelected: (p) => VaiFura.documentPath = p
+                fileName: VaiFura.documentFileName
+                onFileSelected: (fn) => VaiFura.documentFileName = fn
             }
 
             PageDrills {

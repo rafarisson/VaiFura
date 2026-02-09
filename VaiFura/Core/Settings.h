@@ -21,4 +21,8 @@ public:
     int type;
 };
 
+namespace SettingsHelper {
+QVariant find(const QVector<Settings> &settings, const QString &key, QVariant def = {});
+}
+
 #endif // SETTINGS_H

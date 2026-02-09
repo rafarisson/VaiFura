@@ -21,8 +21,8 @@ class VaiFuraSingleton : public QObject
     Q_PROPERTY(DrillDocumentModel* model READ model CONSTANT FINAL)
     Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
     Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)
-    Q_PROPERTY(DrillTreeModel *drillsModel READ drillsModel CONSTANT FINAL)
-    Q_PROPERTY(SettingsListModel *settingsModel READ settingsModel CONSTANT FINAL)
+    Q_PROPERTY(DrillTreeModel* drillsModel READ drillsModel CONSTANT FINAL)
+    Q_PROPERTY(SettingsListModel* settingsModel READ settingsModel CONSTANT FINAL)
 
 public:
     explicit VaiFuraSingleton(QObject *parent = nullptr);
@@ -30,6 +30,11 @@ public:
     QString documentFileName() const { return documentFileName_; }
     void setDocumentFileName(const QString &path);
 
+    DrillDocumentModel *model() const { return documentModel_; }
+    ToolListModel *toolsModel() const { return toolsModel_; }
+    HoleListModel *holesModel() const { return holesModel_; }
+    DrillTreeModel *drillsModel() const { return drillTreeModel_; }
+    SettingsListModel *settingsModel() const { return settingsModel_; }
 private:
     QString resolvePath(const QString &fileName) const;
 

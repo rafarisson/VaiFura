@@ -1,24 +1,15 @@
 #include "SettingsListModel.h"
-#include "SettingsRepository.h"
 
 SettingsListModel::SettingsListModel(QObject *parent)
     : QAbstractListModel{parent}
 {
 }
 
-void SettingsListModel::load(const QString &fileName)
+void SettingsListModel::setSettings(const QVector<Settings> &newSettings)
 {
     beginResetModel();
-    if (!SettingsRepository::load(fileName, &settings_)) {
-        // Default settings
-    }
+    settings_ = newSettings;
     endResetModel();
-    emit sizeChanged();
-}
-
-void SettingsListModel::save(const QString &fileName)
-{
-    SettingsRepository::save(fileName, &settings_);
 }
 
 int SettingsListModel::rowCount(const QModelIndex &parent) const
@@ -35,8 +26,8 @@ QVariant SettingsListModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case KeyRole: return s.key;
-    case LabelRole: return s.label;
-    case DescriptionRole: return s.description;
+    case LabelRole: return tr(qPrintable(s.label));
+    case DescriptionRole: return tr(qPrintable(s.description));
     case UnitRole: return s.unit;
     case ValueRole: return s.value;
     case TypeRole: return s.type;
@@ -58,8 +49,6 @@ bool SettingsListModel::setData(const QModelIndex &index, const QVariant &value,
 
     s.value = value;
     emit dataChanged(index, index, { role });
-
-    qDebug() << "set" << role << value;
 
     return true;
 }
