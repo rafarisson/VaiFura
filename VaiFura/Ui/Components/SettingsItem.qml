@@ -18,6 +18,8 @@ Item {
         id: itemColumn
         anchors.fill: parent
 
+        spacing: 0
+
         RowLayout {
             Layout.fillWidth: true
 
