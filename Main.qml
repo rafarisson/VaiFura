@@ -44,7 +44,7 @@ ApplicationWindow {
                 documentModel: VaiFura.model
             }
 
-            PageSettings {
+            PageExport {
                 documentModel: VaiFura.model
                 settingsModel: VaiFura.settingsModel
                 onSaveRequest: (path) => VaiFura.save(path)
