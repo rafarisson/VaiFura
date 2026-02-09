@@ -7,9 +7,9 @@ import QtCore
 PageLayout {
     id: root
 
-    required property string path
+    required property string fileName
 
-    signal fileSelected(p: string)
+    signal fileSelected(fn: string)
 
     icon: MaterialSymbols.upload
     title: qsTr("Excellon file")
@@ -22,8 +22,8 @@ PageLayout {
         }
         TextField {
             Layout.fillWidth: true
-            text: root.path
-            onTextChanged: if (text != root.path) root.fileSelected(text)
+            text: root.fileName
+            onTextChanged: if (text != root.fileName) root.fileSelected(text)
         }
     }
 

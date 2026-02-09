@@ -18,14 +18,18 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     settingsModel_->load(QDir(QCoreApplication::applicationDirPath()).filePath("settings.json"));
 }
 
-void VaiFuraSingleton::setDocumentPath(const QString &path)
+void VaiFuraSingleton::setDocumentFileName(const QString &path)
 {
-    if (documentPath_ == path)
+    if (documentFileName_ == path)
         return;
 
-    documentPath_ = QUrl::fromUserInput(path).toLocalFile();
-    emit documentPathChanged();
+    documentFileName_ = QUrl::fromUserInput(path).toLocalFile();
+    emit documentFileNameChanged();
 
     ExcellonDrillParser parser;
-    documentModel_->loadFromFile(documentPath_, parser);
+    documentModel_->loadFromFile(documentFileName_, parser);
+}
+QString VaiFuraSingleton::resolvePath(const QString &fileName) const
+{
+    return QDir(QCoreApplication::applicationDirPath()).filePath(fileName);
 }
