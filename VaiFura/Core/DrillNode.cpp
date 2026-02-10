@@ -16,6 +16,11 @@ void DrillNode::clear()
     children_.clear();
 }
 
+int DrillNode::checkedHoleCount() const
+{
+    return checkedHoleCountRecursive();
+}
+
 int DrillNode::row() const
 {
     return parent_ ? parent_->children_.indexOf(this) : 0;
@@ -67,4 +72,16 @@ void DrillNode::updateParent()
 
     if (parent_)
         parent_->updateParent();
+}
+
+int DrillNode::checkedHoleCountRecursive() const
+{
+    if (type_ == Type::IsHole)
+        return isChecked() ? 1 : 0;
+
+    int count = 0;
+    for (auto *child : children_)
+        count += child->checkedHoleCountRecursive();
+
+    return count;
 }

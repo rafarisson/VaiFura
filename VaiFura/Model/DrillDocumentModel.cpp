@@ -10,7 +10,9 @@
 DrillDocumentModel::DrillDocumentModel(QObject *parent)
     : QObject{parent}
     , doc_{new DrillDocument()}
-{}
+{
+    connect(this, &DrillDocumentModel::drillCheckeStateChanged, this, &DrillDocumentModel::updateSelectedHoleCount);
+}
 
 void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &parser)
 {
@@ -26,7 +28,7 @@ void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &pars
         }
     }
 
-    setSelectedHoleCount(doc_->holes().count());
+    updateSelectedHoleCount();
 
     emit documentContentChanged();
 }
@@ -45,28 +47,13 @@ bool DrillDocumentModel::setCheckState(const DrillNode *node, Qt::CheckState new
     if (!n || !n->setCheckState(newState))
         return false;
 
-    int delta = calculateSelectedHoleDelta(node);
-    setSelectedHoleCount(selectedHoleCount_ + delta);
-
     emit drillCheckeStateChanged();
     return true;
 }
 
-int DrillDocumentModel::calculateSelectedHoleDelta(const DrillNode *node)
+void DrillDocumentModel::updateSelectedHoleCount()
 {
-    if (!node)
-        return 0;
-    if (node->type() == DrillNode::Type::IsHole)
-        return node->isChecked() ? 1 : -1;
-
-    int count = 0;
-    for (int i = 0; i < node->childCount(); ++i)
-        count += calculateSelectedHoleDelta(node->child(i));
-    return count;
-}
-
-void DrillDocumentModel::setSelectedHoleCount(int newCount)
-{
+    int newCount = doc_->root()->checkedHoleCount();
     if (selectedHoleCount_ == newCount)
         return;
 

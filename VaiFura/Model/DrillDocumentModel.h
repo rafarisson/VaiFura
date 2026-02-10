@@ -33,8 +33,7 @@ public:
     bool setCheckState(const DrillNode *node, Qt::CheckState newState);
 
 private:
-    int calculateSelectedHoleDelta(const DrillNode *node);
-    void setSelectedHoleCount(int newCount);
+    void updateSelectedHoleCount();
 
 signals:
     void documentContentChanged();

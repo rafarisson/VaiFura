@@ -18,6 +18,7 @@ public:
     ~DrillNode();
 
     void clear();
+    int checkedHoleCount() const;
 
     Type type() const { return type_; }
     DrillNode *child(int row) { return children_.value(row); }
@@ -38,6 +39,7 @@ private:
     friend class DrillTreeDocumentBuilder;
 
     void updateParent();
+    int checkedHoleCountRecursive() const;
 
     Type type_;
     DrillNode *parent_ = nullptr;
