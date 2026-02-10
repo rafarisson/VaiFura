@@ -13,7 +13,6 @@ qt_add_qml_module(VaiFuraUi
     STATIC
     QML_FILES
         Components/PageLayout.qml
-        Components/Preview.qml
         Components/DrillTreeViewDelegate.qml
         Components/UnitTextField.qml
         Components/NumberTextField.qml
@@ -25,6 +24,7 @@ qt_add_qml_module(VaiFuraUi
         Components/SettingsBooleanDelegate.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
+        Preview.qml
         PageUpload.qml
         PageDrills.qml
         PageOffset.qml
