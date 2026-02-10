@@ -76,6 +76,9 @@ PageLayout {
 
     FolderDialog {
         id: folderDialog
-        onAccepted: root.saveRequest(selectedFolder)
+        onAccepted: {
+            currentFolder = selectedFolder
+            root.saveRequest(selectedFolder)
+        }
     }
 }
