@@ -8,8 +8,11 @@ class SettingsReader
 {
 public:
     explicit SettingsReader(const QVector<Settings> &settings) {
-        for (const auto &s : settings)
+        for (const auto &s : settings) {
+            if (map_.contains(s.key))
+                continue;
             map_.insert(s.key, &s);
+        }
     }
 
     QVariant value(const QString &key, const QVariant &def = {}) const {

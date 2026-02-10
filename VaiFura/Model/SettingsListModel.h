@@ -12,6 +12,7 @@ class SettingsListModel : public QAbstractListModel
     QML_ELEMENT
 
     Q_PROPERTY(int size READ size NOTIFY sizeChanged FINAL)
+    Q_PROPERTY(bool modified READ isModified NOTIFY modifiedChanged)
 
 public:
     enum Roles {
@@ -33,6 +34,7 @@ public:
     explicit SettingsListModel(QObject *parent = nullptr);
 
     int size() const { return settings_.size(); }
+    bool isModified() const { return isModified_; }
 
     void setSettings(const QVector<Settings> &newSettings);
     const QVector<Settings> &settings() const { return settings_; }
@@ -43,11 +45,16 @@ protected:
     bool setData(const QModelIndex &index, const QVariant &value, int role) override;
     QHash<int, QByteArray> roleNames() const override;
 
+private:
+    void setIsModifed(bool m);
+
 signals:
     void sizeChanged();
+    void modifiedChanged();
 
 private:
     QVector<Settings> settings_;
+    bool isModified_ = false;
 };
 
 #endif // SETTINGSLISTMODEL_H

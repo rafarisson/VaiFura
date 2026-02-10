@@ -18,9 +18,8 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_);
 
-    QVector<Settings> exporterSettings;
-    if (!SettingsRepository::load(resolvePath(exporter_->settingsFile()), exporterSettings))
-        exporterSettings = exporter_->defaultSettings();
+    QVector<Settings> exporterSettings = exporter_->defaultSettings();
+    SettingsRepository::load(resolvePath(exporter_->settingsFile()), exporterSettings);
     settingsModel_->setSettings(exporterSettings);
 }
 
@@ -38,15 +37,16 @@ void VaiFuraSingleton::setDocumentFileName(const QString &path)
 
 void VaiFuraSingleton::save(const QString &path)
 {
-    SettingsRepository::save(resolvePath(exporter_->settingsFile()), settingsModel_->settings());
+    if (settingsModel_->isModified())
+        SettingsRepository::save(resolvePath(exporter_->settingsFile()), settingsModel_->settings());
 
     QString fn = QFileInfo(documentFileName_).fileName();
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
-    DrillDocumentExportPreparer documentTransformer;
-    documentTransformer.prepare(*documentModel_->document(), documentModel_->offset());
+    DrillDocumentExportPreparer exporterDoc;
+    exporterDoc.prepare(*documentModel_->document(), documentModel_->offset());
 
-    exporter_->save(output, documentTransformer.document(), settingsModel_->settings());
+    exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }
 
 QString VaiFuraSingleton::resolvePath(const QString &fileName) const

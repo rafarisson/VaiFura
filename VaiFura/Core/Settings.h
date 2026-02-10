@@ -13,12 +13,12 @@ public:
         Boolean
     };
 
-    QString key;
-    QString label;
-    QString description;
-    QString unit;
+    const QString key;
+    const QString label;
+    const QString description;
+    const QString unit;
     QVariant value;
-    int type;
+    const int type;
 };
 
 namespace SettingsHelper {

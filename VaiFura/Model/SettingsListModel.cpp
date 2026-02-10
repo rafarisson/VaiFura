@@ -9,6 +9,7 @@ void SettingsListModel::setSettings(const QVector<Settings> &newSettings)
 {
     beginResetModel();
     settings_ = newSettings;
+    setIsModifed(false);
     endResetModel();
 }
 
@@ -49,6 +50,7 @@ bool SettingsListModel::setData(const QModelIndex &index, const QVariant &value,
 
     s.value = value;
     emit dataChanged(index, index, { role });
+    setIsModifed(true);
 
     return true;
 }
@@ -63,4 +65,12 @@ QHash<int, QByteArray> SettingsListModel::roleNames() const
     roles[ValueRole] = "value";
     roles[TypeRole] = "type";
     return roles;
+}
+
+void SettingsListModel::setIsModifed(bool m)
+{
+    if (isModified_ == m)
+        return;
+    isModified_ = m;
+    emit modifiedChanged();
 }

@@ -12,29 +12,31 @@ bool SettingsRepository::load(const QString &fileName, QVector<Settings> &settin
     if (!file.open(QIODevice::ReadOnly))
         return false;
 
-    settings.clear();
-
     const QJsonDocument json = QJsonDocument::fromJson(file.readAll());
     if (!json.isArray())
         return false;
 
     const QJsonArray array = json.array();
+    QSet<QString> seenKeys;
 
     for (const QJsonValue &v : array) {
         if (!v.isObject())
             continue;
 
         const QJsonObject obj = v.toObject();
+        const QString key = obj.value("key").toString();
 
-        Settings s;
-        s.key = obj.value("key").toString();
-        s.label = obj.value("label").toString();
-        s.description = obj.value("description").toString();
-        s.unit = obj.value("unit").toString();
-        s.value = obj.value("value").toVariant();
-        s.type = obj.value("type").toInt(Settings::Number);
+        if (seenKeys.contains(key))
+            continue;
 
-        settings.append(s);
+        auto it = std::find_if(settings.begin(), settings.end(), [&](const Settings &s) {
+            return s.key == key;
+        });
+        if (it == settings.end())
+            continue;
+
+        seenKeys.insert(key);
+        it->value = obj.value("value").toVariant();
     }
 
     return settings.size() > 0;
@@ -47,12 +49,7 @@ bool SettingsRepository::save(const QString &fileName, const QVector<Settings> &
     for (const Settings &s : settings) {
         QJsonObject obj;
         obj["key"] = s.key;
-        obj["label"] = s.label;
-        obj["description"] = s.description;
-        obj["unit"] = s.unit;
         obj["value"] = QJsonValue::fromVariant(s.value);
-        obj["type"] = static_cast<int>(s.type);
-
         array.append(obj);
     }
 
