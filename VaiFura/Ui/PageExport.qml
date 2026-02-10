@@ -11,7 +11,7 @@ PageLayout {
     required property DrillDocumentModel documentModel
     required property SettingsListModel settingsModel
 
-    // property alias currentPath: folderDialog.currentFolder
+    property alias currentPath: folderDialog.currentFolder
 
     signal saveRequest(path: string)
 

@@ -32,7 +32,7 @@ QVector<Settings> GCodeExporter::defaultSettings() const
         Settings{
             GCodeKeys::XY_MOVE_FEED,
             "Move Feed Rate",
-            "Feed rate used for X/Y movements while the tool is at the move height (Z_MOVE).",
+            "Feed rate used for X/Y movements while the tool is at the move height (Move Height).",
             "mm/min",
             GCodeDefault::XY_MOVE_FEED,
             Settings::Number
@@ -87,7 +87,7 @@ bool GCodeExporter::save(const QString &fileName, const DrillDocument *document,
         open();
 
     DrillHelper::forEachHole(
-        document->root(),
+        document_->root(),
         [&](const DrillNode *toolNode) {
             exportTool(toolNode);
         },
@@ -142,20 +142,22 @@ void GCodeExporter::exportHeader()
 
 void GCodeExporter::exportIniti()
 {
-    out_ << "G21" << "; Metric units\n";
-    out_ << "G90" << "; Absolute positioning\n";
-    out_ << "G28" << "; Home\n";
-    out_ << "G0 Z" << settings_.zToolChange << "; Safe Z\n";
+    out_ << "\n";
+    out_ << "G21" << " ; Metric units\n";
+    out_ << "G90" << " ; Absolute positioning\n";
+    out_ << "G28" << " ; Home\n";
+    out_ << "G0 Z" << settings_.zToolChange << " ; Safe Z\n";
 }
 
 void GCodeExporter::exportTool(const DrillNode *toolNode)
 {
     if (settings_.filePerTool) {
         close();
-        open(QString("_tool_%1").arg(toolNode->tool()->mm));
+        open(QString("_[tool %1mm]").arg(toolNode->tool()->mm));
     }
 
-    out_ << "; Tool " << toolNode->tool()->mm << "\n";
+    out_ << "\n";
+    out_ << QString("; Tool %1mm").arg(toolNode->tool()->mm) << "\n";
 }
 
 void GCodeExporter::exportHole(const DrillNode *holeNode, const QPointF &pos)
@@ -163,6 +165,7 @@ void GCodeExporter::exportHole(const DrillNode *holeNode, const QPointF &pos)
     if (!file_.isOpen())
         return;
 
+    out_ << "\n";
     out_ << "; Hole " << "\n";
     out_ << "G0 X" << pos.x() << " Y" << pos.y() << " F" << settings_.xyMoveFeed << "\n";
     out_ << "G1 Z" << settings_.zDrillOffset << " F" << settings_.zDrillFeed << "\n";
