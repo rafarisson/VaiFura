@@ -16,6 +16,7 @@ add_subdirectory(VaiFura/Parser/Excellon)
 add_subdirectory(VaiFura/Exporter/GCode)
 
 qt_add_executable(appVaiFura
+    "${CMAKE_CURRENT_SOURCE_DIR}/VaiFura.rc"
     main.cpp
 )
 
