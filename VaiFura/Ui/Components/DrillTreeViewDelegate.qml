@@ -13,8 +13,10 @@ TreeViewDelegate {
     required property int childCount
     required property int checkState
 
-    property point position: Qt.point(posX + documentModel.offset.x,
-                                      posY + documentModel.offset.y)
+    property point absolutePosition:
+        Qt.point(posX + documentModel.offset.x, posY + documentModel.offset.y)
+    readonly property string positionText:
+        `(${absolutePosition.x.toFixed(3)}, ${absolutePosition.y.toFixed(3)})`
 
     implicitHeight: 50
     implicitWidth: treeView.width
