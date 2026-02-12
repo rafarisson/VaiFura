@@ -4,12 +4,14 @@
 #include <QQmlEngine>
 #include <QObject>
 #include <QPointF>
+#include "DrillTransform.h"
 
 class DrillTransformModel : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(QPointF pivot READ pivot WRITE setPivot NOTIFY pivotChanged)
     Q_PROPERTY(QPointF offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
     Q_PROPERTY(bool mirrorX READ mirrorX WRITE setMirrorX NOTIFY mirrorXChanged)
@@ -18,29 +20,33 @@ class DrillTransformModel : public QObject
 public:
     explicit DrillTransformModel(QObject *parent = nullptr);
 
-    QPointF offset() const { return offset_; }
+    const DrillTransform *transform() const { return transform_; }
+
+    QPointF pivot() const { return transform_->pivot; }
+    void setPivot(const QPointF &p);
+
+    QPointF offset() const { return transform_->offset; }
     void setOffset(const QPointF &o);
 
-    double rotation() const { return rotation_; }
+    double rotation() const { return transform_->rotation; }
     void setRotation(double rotation);
 
-    bool mirrorX() const { return mirrorX_; }
+    bool mirrorX() const { return transform_->mirrorX; }
     void setMirrorX(bool mirror);
 
-    bool mirrorY() const { return mirrorY_; }
+    bool mirrorY() const { return transform_->mirrorY; }
     void setMirrorY(bool mirror);
 
 signals:
+    void transformChanged();
+    void pivotChanged();
     void offsetChanged();
     void rotationChanged();
     void mirrorXChanged();
     void mirrorYChanged();
 
 private:
-    QPointF offset_ = {0, 0};
-    double rotation_ = 0.0;
-    bool mirrorX_ = false;
-    bool mirrorY_ = false;
+    DrillTransform *transform_ = nullptr;
 };
 
 

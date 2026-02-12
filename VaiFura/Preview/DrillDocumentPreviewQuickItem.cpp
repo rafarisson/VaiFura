@@ -45,7 +45,7 @@ void DrillDocumentPreviewQuickItem::setTransformModel(DrillTransformModel *newMo
     interaction_.setTransformModel(transformModel_);
 
     if (transformModel_)
-        connect(transformModel_, &DrillTransformModel::offsetChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(transformModel_, &DrillTransformModel::transformChanged, this, &DrillDocumentPreviewQuickItem::update);
 
     emit transformModelChanged();
     update();

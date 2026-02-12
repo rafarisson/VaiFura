@@ -24,13 +24,10 @@ public:
                     tool_mm = toolNode->tool()->mm;
             },
             [&](const DrillNode *holeNode, const QPointF &pos) {
-                QPointF o = transform ? transform->offset() : QPointF();
                 const Hole *hole = holeNode->hole();
-                QPointF p(pos.x() + o.x() + delta.x(),
-                          pos.y() + o.y() + delta.y());
-                // double r = toolRadius(model, hole->toolId);
+                QPointF p = transform ? transform->transform()->apply(pos) : pos;
                 double r = toolRadius(tool_mm);
-                fn(holeNode, hole, p, r);
+                fn(holeNode, hole, p + delta, r);
             });
     }
 
