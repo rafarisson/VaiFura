@@ -14,11 +14,12 @@ TreeViewDelegate {
     required property int childCount
     required property int checkState
 
+    property int precision: 4
     readonly property point position: Qt.point(posX, posY)
     readonly property string positionText: formatPosition(position.x, position.y)
 
     function formatPosition(x: real, y: real) : string {
-        return `(${x.toFixed(3)}, ${y.toFixed(3)})`
+        return `(${x.toFixed(precision)}, ${y.toFixed(precision)})`
     }
 
     implicitHeight: 50
