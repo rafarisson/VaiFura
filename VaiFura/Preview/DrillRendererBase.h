@@ -4,6 +4,7 @@
 #include <QSGNode>
 
 class DrillDocumentModel;
+class DrillTransformModel;
 class ViewportTransform;
 class DrillNode;
 
@@ -15,6 +16,7 @@ public:
 
     void build(QSGNode *root,
                const DrillDocumentModel *model,
+               const DrillTransformModel *transform,
                const ViewportTransform &vp,
                const QPointF &delta = {0, 0});
 

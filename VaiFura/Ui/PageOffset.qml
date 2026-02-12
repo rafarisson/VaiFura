@@ -7,11 +7,11 @@ import VaiFura.Model
 PageLayout {
     id: root
 
-    required property DrillDocumentModel documentModel
+    required property DrillTransformModel transformModel
 
     icon: MaterialSymbols.gamepad
-    title: qsTr("Position Offset")
-    description: qsTr("Control positional offset")
+    title: qsTr("Positioning")
+    description: qsTr("Adjust position, rotation and mirror")
 
     ColumnLayout {
         RowLayout {
@@ -23,8 +23,8 @@ PageLayout {
             }
             NumberTextField {
                 unit: "mm"
-                text: root.documentModel.offset.x
-                onValueChanged: (v) => root.documentModel.offset.x = v
+                text: root.transformModel.offset.x
+                onValueChanged: (v) => root.transformModel.offset.x = v
             }
         }
 
@@ -37,8 +37,8 @@ PageLayout {
             }
             NumberTextField {
                 unit: "mm"
-                text: root.documentModel.offset.y
-                onValueChanged: (v) => root.documentModel.offset.y = v
+                text: root.transformModel.offset.y
+                onValueChanged: (v) => root.transformModel.offset.y = v
             }
         }
     }

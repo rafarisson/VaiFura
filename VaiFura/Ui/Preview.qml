@@ -8,6 +8,7 @@ Item {
     id: root
 
     required property DrillDocumentModel documentModel
+    required property DrillTransformModel transformModel
 
     function fit() {
         Qt.callLater(documentPreview.fitToContent)
@@ -20,6 +21,7 @@ Item {
         anchors.fill: parent
 
         model: root.documentModel
+        transformModel: root.transformModel
     }
 
     RoundButton {

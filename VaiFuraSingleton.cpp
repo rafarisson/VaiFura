@@ -11,12 +11,13 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , toolsModel_{new ToolListModel(this)}
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
+    , transformModel_{new DrillTransformModel(this)}
     , settingsModel_{new SettingsListModel(this)}
     , exporter_{new GCodeExporter}
 {
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
-    drillTreeModel_->setModel(documentModel_);
+    drillTreeModel_->setModel(documentModel_, transformModel_);
 
     QVector<Settings> exporterSettings = exporter_->defaultSettings();
     SettingsRepository::load(resolvePath(exporter_->settingsFile()), exporterSettings);
@@ -44,7 +45,7 @@ void VaiFuraSingleton::save(const QString &path)
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
     DrillDocumentExportPreparer exporterDoc;
-    exporterDoc.prepare(*documentModel_->document(), documentModel_->offset());
+    exporterDoc.prepare(*documentModel_->document(), transformModel_->offset());
 
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }

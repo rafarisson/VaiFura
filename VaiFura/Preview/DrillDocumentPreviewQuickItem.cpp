@@ -23,15 +23,31 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
         disconnect(documentModel_, nullptr, this, nullptr);
 
     documentModel_ = newModel;
-    interaction_.setDocumentModel(documentModel_);
 
     if (documentModel_) {
         connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &DrillDocumentPreviewQuickItem::update);
-        connect(documentModel_, &DrillDocumentModel::offsetChanged, this, &DrillDocumentPreviewQuickItem::update);
         connect(documentModel_, &DrillDocumentModel::drillCheckeStateChanged, this, &DrillDocumentPreviewQuickItem::update);
     }
 
     emit modelChanged();
+    update();
+}
+
+void DrillDocumentPreviewQuickItem::setTransformModel(DrillTransformModel *newModel)
+{
+    if (transformModel_ == newModel)
+        return;
+
+    if (transformModel_)
+        disconnect(transformModel_, nullptr, this, nullptr);
+
+    transformModel_ = newModel;
+    interaction_.setTransformModel(transformModel_);
+
+    if (transformModel_)
+        connect(transformModel_, &DrillTransformModel::offsetChanged, this, &DrillDocumentPreviewQuickItem::update);
+
+    emit transformModelChanged();
     update();
 }
 
@@ -43,7 +59,7 @@ void DrillDocumentPreviewQuickItem::fitToContent(double marginPx)
     QRectF contentBounds;
     bool first = true;
 
-    DrillRendererHelper::forEachHole(documentModel_, {},
+    DrillRendererHelper::forEachHole(documentModel_, transformModel_, {},
                              [&](auto, auto, const QPointF &p, double radius) {
                                  QRectF hr(p.x() - radius, p.y() - radius, radius * 2, radius * 2);
                                  if (first) {
@@ -80,9 +96,9 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
     origin_.build(clipNode, viewport_);
 
     if (documentModel_ && documentModel_->document()) {
-        drill_.build(clipNode, documentModel_, viewport_);
+        drill_.build(clipNode, documentModel_, transformModel_, viewport_);
         if (interaction_.snapActive())
-            snapPreview_.build(clipNode, documentModel_, viewport_, interaction_.snapDelta());
+            snapPreview_.build(clipNode, documentModel_, transformModel_, viewport_, interaction_.snapDelta());
     }
 
     return root;

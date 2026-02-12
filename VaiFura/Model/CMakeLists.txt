@@ -14,6 +14,8 @@ qt_add_qml_module(VaiFuraModel
         HoleListModel.cpp
         DrillTreeModel.h
         DrillTreeModel.cpp
+        DrillTransformModel.h
+        DrillTransformModel.cpp
         SettingsListModel.h
         SettingsListModel.cpp
 )

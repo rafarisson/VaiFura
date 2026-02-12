@@ -35,15 +35,4 @@ void ViewportTransform::fitWorldRect(const QRectF &r, double marginPx)
 
     QPointF center = r.center();
     pan_ = QPointF(-center.x(), -center.y());
-
-    // double widthWithMargin  = r.width()  + 2.0 * marginPx / zoom_;
-    // double heightWithMargin = r.height() + 2.0 * marginPx / zoom_;
-
-    // double zoomX = size_.width()  / widthWithMargin;
-    // double zoomY = size_.height() / heightWithMargin;
-
-    // zoom_ = std::clamp(std::min(zoomX, zoomY), 0.1, 500.0);
-
-    // QPointF center = r.center();
-    // pan_ = QPointF(-center.x(), -center.y());
 }

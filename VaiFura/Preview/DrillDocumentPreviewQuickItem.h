@@ -6,6 +6,7 @@
 #include <QPointF>
 
 #include "DrillDocumentModel.h"
+#include "DrillTransformModel.h"
 #include "InteractionController.h"
 #include "SnapEngine.h"
 #include "SnapPreviewRenderer.h"
@@ -20,12 +21,16 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
     QML_NAMED_ELEMENT(DrillDocumentPreview)
 
     Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
+    Q_PROPERTY(DrillTransformModel* transformModel READ transformModel WRITE setTransformModel NOTIFY transformModelChanged)
 
 public:
     explicit DrillDocumentPreviewQuickItem(QQuickItem *parent = nullptr);
 
     DrillDocumentModel* model() const { return documentModel_; }
     void setModel(DrillDocumentModel *newModel);
+
+    DrillTransformModel* transformModel() const { return transformModel_; }
+    void setTransformModel(DrillTransformModel *newModel);
 
     Q_INVOKABLE void fitToContent(double marginPx = 40.0);
 
@@ -41,9 +46,11 @@ private:
 
 signals:
     void modelChanged();
+    void transformModelChanged();
 
 private:
     DrillDocumentModel *documentModel_ = nullptr;
+    DrillTransformModel *transformModel_ = nullptr;
 
     ViewportTransform viewport_;
     SnapEngine snap_;

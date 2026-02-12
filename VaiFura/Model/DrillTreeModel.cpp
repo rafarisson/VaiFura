@@ -1,5 +1,6 @@
 #include "DrillTreeModel.h"
 #include "DrillDocumentModel.h"
+#include "DrillTransformModel.h"
 #include "DrillDocument.h"
 #include "DrillNode.h"
 
@@ -7,15 +8,17 @@ DrillTreeModel::DrillTreeModel(QObject *parent)
     : QAbstractItemModel{parent}
 {}
 
-void DrillTreeModel::setModel(DrillDocumentModel *newModel) {
-    if (documentModel_ == newModel)
+void DrillTreeModel::setModel(DrillDocumentModel *doc, DrillTransformModel *transform)
+{
+    if (documentModel_ == doc && transformModel_ == transform)
         return;
 
     if (documentModel_)
         disconnect(documentModel_, nullptr, this, nullptr);
 
     beginResetModel();
-    documentModel_ = newModel;
+    documentModel_ = doc;
+    transformModel_ = transform;
     endResetModel();
 
     emit modelChanged();
@@ -93,6 +96,7 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
 
     switch (role) {
     case DocumentModelRole: return QVariant::fromValue(documentModel_);
+    case TransformModelRole: return QVariant::fromValue(transformModel_);
     case ChildCountRole: return item->childCount();
     case IsCheckedRole: return item->isChecked();
     case CheckStateRole: return item->checkState();
@@ -152,6 +156,7 @@ QHash<int, QByteArray> DrillTreeModel::roleNames() const
 {
     QHash<int, QByteArray> roles;
     roles[DocumentModelRole] = "documentModel";
+    roles[TransformModelRole] = "transformModel";
     roles[ItemTypeRole] = "type";
     roles[DiameterRole] = "diameter";
     roles[XRole] = "posX";

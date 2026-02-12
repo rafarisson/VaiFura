@@ -4,13 +4,14 @@
 #include <QPointF>
 #include "DrillDocument.h"
 #include "DrillDocumentModel.h"
+#include "DrillTransformModel.h"
 #include "DrillHelper.h"
 
 class DrillRendererHelper
 {
 public:
     template <typename F>
-    static void forEachHole(const DrillDocumentModel *model, const QPointF &delta, F &&fn) {
+    static void forEachHole(const DrillDocumentModel *model, const DrillTransformModel *transform, const QPointF &delta, F &&fn) {
         if (!model || !model->document())
             return;
 
@@ -23,9 +24,10 @@ public:
                     tool_mm = toolNode->tool()->mm;
             },
             [&](const DrillNode *holeNode, const QPointF &pos) {
+                QPointF o = transform ? transform->offset() : QPointF();
                 const Hole *hole = holeNode->hole();
-                QPointF p(pos.x() + model->offset().x() + delta.x(),
-                          pos.y() + model->offset().y() + delta.y());
+                QPointF p(pos.x() + o.x() + delta.x(),
+                          pos.y() + o.y() + delta.y());
                 // double r = toolRadius(model, hole->toolId);
                 double r = toolRadius(tool_mm);
                 fn(holeNode, hole, p, r);

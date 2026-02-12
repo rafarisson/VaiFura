@@ -9,10 +9,11 @@
 
 void DrillRendererBase::build(QSGNode *root,
                               const DrillDocumentModel *model,
+                              const DrillTransformModel *transform,
                               const ViewportTransform &vp,
                               const QPointF &delta)
 {
-    DrillRendererHelper::forEachHole(model, delta,
+    DrillRendererHelper::forEachHole(model, transform, delta,
                              [&](const DrillNode *holeNode, const Hole *, const QPointF &p, double r) {
                     QPointF screen = vp.toScreen(p);
                     root->appendChildNode(createCircleOutline(screen, r * vp.zoom(), 1.0, holeColor(holeNode)));

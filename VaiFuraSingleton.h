@@ -8,6 +8,7 @@
 #include "ToolListModel.h"
 #include "HoleListModel.h"
 #include "DrillTreeModel.h"
+#include "DrillTransformModel.h"
 #include "SettingsListModel.h"
 #include "GCodeExporter.h"
 
@@ -23,6 +24,7 @@ class VaiFuraSingleton : public QObject
     Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
     Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)
     Q_PROPERTY(DrillTreeModel* drillsModel READ drillsModel CONSTANT FINAL)
+    Q_PROPERTY(DrillTransformModel* transformModel READ transformModel CONSTANT FINAL)
     Q_PROPERTY(SettingsListModel* settingsModel READ settingsModel CONSTANT FINAL)
 
 public:
@@ -35,6 +37,7 @@ public:
     ToolListModel *toolsModel() const { return toolsModel_; }
     HoleListModel *holesModel() const { return holesModel_; }
     DrillTreeModel *drillsModel() const { return drillTreeModel_; }
+    DrillTransformModel *transformModel() const { return transformModel_; }
     SettingsListModel *settingsModel() const { return settingsModel_; }
 
     Q_INVOKABLE void save(const QString &path);
@@ -52,6 +55,7 @@ private:
     ToolListModel *toolsModel_ = nullptr;
     HoleListModel *holesModel_ = nullptr;
     DrillTreeModel *drillTreeModel_ = nullptr;
+    DrillTransformModel *transformModel_ = nullptr;
     SettingsListModel *settingsModel_ = nullptr;
 
     GCodeExporter *exporter_ = nullptr;

@@ -33,14 +33,6 @@ void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &pars
     emit documentContentChanged();
 }
 
-void DrillDocumentModel::setOffset(const QPointF &o)
-{
-    if (offset_ == o)
-        return;
-    offset_ = o;
-    emit offsetChanged();
-}
-
 bool DrillDocumentModel::setCheckState(const DrillNode *node, Qt::CheckState newState)
 {
     auto *n = const_cast<DrillNode*>(node);

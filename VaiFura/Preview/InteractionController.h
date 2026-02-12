@@ -5,7 +5,7 @@
 
 class ViewportTransform;
 class SnapEngine;
-class DrillDocumentModel;
+class DrillTransformModel;
 
 class InteractionController
 {
@@ -14,7 +14,7 @@ public:
 
     void setViewport(ViewportTransform *v) { viewport_ = v; }
     void setSnap(SnapEngine *s) { snap_ = s; }
-    void setDocumentModel(DrillDocumentModel *m) { documentModel_ = m; }
+    void setTransformModel(DrillTransformModel *m) { transformModel_ = m; }
 
     void mousePress(const QPointF &pos, Qt::MouseButton button);
     void mouseMove(const QPointF &pos);
@@ -27,7 +27,7 @@ public:
 private:
     ViewportTransform *viewport_ = nullptr;
     SnapEngine *snap_ = nullptr;
-    DrillDocumentModel *documentModel_ = nullptr;
+    DrillTransformModel *transformModel_ = nullptr;
 
     bool panning_ = false;
     bool movingDrills_ = false;

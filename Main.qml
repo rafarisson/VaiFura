@@ -34,6 +34,7 @@ ApplicationWindow {
             SplitView.fillWidth: true
             SplitView.fillHeight: true
             documentModel: VaiFura.model
+            transformModel: VaiFura.transformModel
         }
 
         ColumnLayout {
@@ -41,7 +42,7 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
 
             PageOffset {
-                documentModel: VaiFura.model
+                transformModel: VaiFura.transformModel
             }
 
             PageExport {

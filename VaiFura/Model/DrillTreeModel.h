@@ -7,6 +7,7 @@
 
 class DrillNode;
 class DrillDocumentModel;
+class DrillTransformModel;
 
 class DrillTreeModel : public QAbstractItemModel
 {
@@ -24,6 +25,7 @@ public:
 
     enum DrillTreeRoleNames {
         DocumentModelRole = Qt::UserRole + 1,
+        TransformModelRole,
         ItemTypeRole,
         DiameterRole,
         XRole,
@@ -37,7 +39,8 @@ public:
     explicit DrillTreeModel(QObject *parent = nullptr);
 
     DrillDocumentModel* model() const { return documentModel_; }
-    void setModel(DrillDocumentModel *newModel);
+    DrillTransformModel* transformModel() const { return transformModel_; }
+    void setModel(DrillDocumentModel *doc, DrillTransformModel *transform = nullptr);
 
 private:
     void onDocumentModelContentChanged();
@@ -57,6 +60,7 @@ signals:
 
 private:
     DrillDocumentModel *documentModel_ = nullptr;
+    DrillTransformModel *transformModel_ = nullptr;
 };
 
 #endif // DRILLTREEMODEL_H

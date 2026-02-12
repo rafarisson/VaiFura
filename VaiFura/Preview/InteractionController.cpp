@@ -1,14 +1,14 @@
 #include "InteractionController.h"
 #include "SnapEngine.h"
 #include "ViewportTransform.h"
-#include "DrillDocumentModel.h"
+#include "DrillTransformModel.h"
 
 QPointF InteractionController::snapDelta() const
 {
-    if (!documentModel_)
+    if (!transformModel_)
         return {0, 0};
 
-    return snapPreviewWorld_ - documentModel_->offset();
+    return snapPreviewWorld_ - transformModel_->offset();
 }
 
 void InteractionController::mousePress(const QPointF &pos, Qt::MouseButton button)
@@ -20,10 +20,10 @@ void InteractionController::mousePress(const QPointF &pos, Qt::MouseButton butto
         return;
     }
 
-    if (button == Qt::RightButton && documentModel_ && viewport_) {
+    if (button == Qt::RightButton && transformModel_ && viewport_) {
         movingDrills_ = true;
         moveStartWorld_ = viewport_->toWorld(pos);
-        moveStartOffset_ = documentModel_->offset();
+        moveStartOffset_ = transformModel_->offset();
         snapActive_ = true;
     }
 }
@@ -42,7 +42,7 @@ void InteractionController::mouseMove(const QPointF &pos)
         return;
     }
 
-    if (movingDrills_ && documentModel_ && viewport_) {
+    if (movingDrills_ && transformModel_ && viewport_) {
         QPointF currentWorld = viewport_->toWorld(pos);
         QPointF deltaWorld = currentWorld - moveStartWorld_;
         QPointF candidate = moveStartOffset_ + deltaWorld;
@@ -62,11 +62,11 @@ void InteractionController::mouseRelease(const QPointF &, Qt::MouseButton button
         panning_ = false;
     }
 
-    if (button == Qt::RightButton && documentModel_) {
+    if (button == Qt::RightButton && transformModel_) {
         movingDrills_ = false;
 
         if (snapActive_) {
-            documentModel_->setOffset(snapPreviewWorld_);
+            transformModel_->setOffset(snapPreviewWorld_);
             snapActive_ = false;
         }
     }
