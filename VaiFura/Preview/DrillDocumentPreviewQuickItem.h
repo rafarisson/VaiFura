@@ -41,6 +41,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 
+private slots:
+    void onTransformChanged();
+
 private:
     void buildBackground(QSGNode *root);
 

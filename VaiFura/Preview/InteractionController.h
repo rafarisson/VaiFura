@@ -22,6 +22,7 @@ public:
     void wheel(double delta);
 
     bool snapActive() const { return snapActive_; }
+    void initSnap();
     QPointF snapDelta() const;
 
 private:

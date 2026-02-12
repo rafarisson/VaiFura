@@ -45,7 +45,7 @@ void DrillDocumentPreviewQuickItem::setTransformModel(DrillTransformModel *newMo
     interaction_.setTransformModel(transformModel_);
 
     if (transformModel_)
-        connect(transformModel_, &DrillTransformModel::transformChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(transformModel_, &DrillTransformModel::transformChanged, this, &DrillDocumentPreviewQuickItem::onTransformChanged);
 
     emit transformModelChanged();
     update();
@@ -125,6 +125,12 @@ void DrillDocumentPreviewQuickItem::mouseReleaseEvent(QMouseEvent *e)
 void DrillDocumentPreviewQuickItem::wheelEvent(QWheelEvent *e)
 {
     interaction_.wheel(e->angleDelta().y());
+    update();
+}
+
+void DrillDocumentPreviewQuickItem::onTransformChanged()
+{
+    interaction_.initSnap();
     update();
 }
 

@@ -3,14 +3,6 @@
 #include "ViewportTransform.h"
 #include "DrillTransformModel.h"
 
-QPointF InteractionController::snapDelta() const
-{
-    if (!transformModel_)
-        return {0, 0};
-
-    return snapPreviewWorld_ - transformModel_->offset();
-}
-
 void InteractionController::mousePress(const QPointF &pos, Qt::MouseButton button)
 {
     lastPos_ = pos;
@@ -79,4 +71,18 @@ void InteractionController::wheel(double delta)
 
     double z = viewport_->zoom();
     viewport_->setZoom(z * (delta > 0 ? 1.1 : 0.9));
+}
+
+
+QPointF InteractionController::snapDelta() const
+{
+    if (!transformModel_)
+        return {0, 0};
+
+    return snapPreviewWorld_ - transformModel_->offset();
+}
+
+void InteractionController::initSnap()
+{
+    snapPreviewWorld_ = transformModel_->offset();
 }
