@@ -14,14 +14,8 @@ TreeViewDelegate {
     required property int childCount
     required property int checkState
 
-    readonly property point offset: transformModel
-                                    ? Qt.point(transformModel.offset.x, transformModel.offset.y)
-                                    : Qt.point(0, 0)
-
     readonly property point position: Qt.point(posX, posY)
-    readonly property point absolutePosition: Qt.point(position.x + offset.x, position.y + offset.y)
     readonly property string positionText: formatPosition(position.x, position.y)
-    readonly property string absolutePositionText: formatPosition(absolutePosition.x, absolutePosition.y)
 
     function formatPosition(x: real, y: real) : string {
         return `(${x.toFixed(3)}, ${y.toFixed(3)})`

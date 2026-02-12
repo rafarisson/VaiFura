@@ -28,7 +28,7 @@ PageLayout {
         delegate: DrillTreeViewDelegate {
             text: type == DrillTreeModel.ToolType
                   ? `Tool ${diameter}mm [${childCount}]`
-                  : `Drill ${absolutePositionText}`
+                  : `Drill ${positionText}`
         }
 
         ScrollBar.vertical: ScrollBar {

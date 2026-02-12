@@ -44,6 +44,8 @@ public:
 
 private:
     void onDocumentModelContentChanged();
+    void onTransformChanged();
+    void notifyPosition(const DrillNode *item);
     const DrillNode *itemAt(const QModelIndex &index) const;
 
 protected:

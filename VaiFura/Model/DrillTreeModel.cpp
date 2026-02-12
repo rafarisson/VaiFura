@@ -15,6 +15,8 @@ void DrillTreeModel::setModel(DrillDocumentModel *doc, DrillTransformModel *tran
 
     if (documentModel_)
         disconnect(documentModel_, nullptr, this, nullptr);
+    if (transformModel_)
+        disconnect(transformModel_, nullptr, this, nullptr);
 
     beginResetModel();
     documentModel_ = doc;
@@ -25,12 +27,37 @@ void DrillTreeModel::setModel(DrillDocumentModel *doc, DrillTransformModel *tran
 
     if (documentModel_)
         connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &DrillTreeModel::onDocumentModelContentChanged);
+    if (transformModel_)
+        connect(transformModel_, &DrillTransformModel::transformChanged, this, &DrillTreeModel::onTransformChanged);
 }
 
 void DrillTreeModel::onDocumentModelContentChanged()
 {
     beginResetModel();
     endResetModel();
+}
+
+void DrillTreeModel::onTransformChanged()
+{
+    if (!rowCount() || !transformModel_)
+        return;
+
+    notifyPosition(itemAt({}));
+}
+
+void DrillTreeModel::notifyPosition(const DrillNode *item)
+{
+    if (!item || !item->childCount())
+        return;
+
+    QModelIndex parentIndex = DrillTreeModel::index(item->row(), 0, QModelIndex());
+    QModelIndex first = DrillTreeModel::index(0, 0, parentIndex);
+    QModelIndex last = DrillTreeModel::index(item->childCount() - 1, 0, parentIndex);
+
+    emit dataChanged(first, last, { XRole, YRole });
+
+    for (int i = 0; i < item->childCount(); ++i)
+        notifyPosition(item->child(i));
 }
 
 const DrillNode *DrillTreeModel::itemAt(const QModelIndex &index) const
@@ -111,11 +138,14 @@ QVariant DrillTreeModel::data(const QModelIndex &index, int role) const
     }
 
     if (item->type() == DrillNode::Type::IsHole && item->hole()) {
+        QPointF pos(item->hole()->x, item->hole()->y);
+        if (transformModel_)
+            pos = transformModel_->transform()->apply(pos);
         switch (role) {
         case Qt::DisplayRole:
         case ItemTypeRole: return DrillType;
-        case XRole: return item->hole()->x;
-        case YRole: return item->hole()->y;
+        case XRole: return pos.x();
+        case YRole: return pos.y();
         }
     }
 
