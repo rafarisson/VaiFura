@@ -22,6 +22,7 @@ qt_add_qml_module(VaiFuraUi
         Components/SettingsBaseDelegate.qml
         Components/SettingsNumberDelegate.qml
         Components/SettingsBooleanDelegate.qml
+        Components/IconButton.qml
         MaterialIcons/MaterialIcons.qml
         MaterialSymbols/MaterialSymbols.qml
         Preview.qml
