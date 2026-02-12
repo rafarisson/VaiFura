@@ -1,7 +1,8 @@
 #include "DrillDocumentExportPreparer.h"
 #include "DrillDocumentBuilder.h"
+#include "DrillTransform.h"
 
-void DrillDocumentExportPreparer::prepare(const DrillDocument &src, const QPointF &offset)
+void DrillDocumentExportPreparer::prepare(const DrillDocument &src, const DrillTransform &transform)
 {
     DrillDocumentBuilder builder(&doc_);
 
@@ -26,11 +27,14 @@ void DrillDocumentExportPreparer::prepare(const DrillDocument &src, const QPoint
 
             const Hole *hole = holeNode->hole();
 
-            Hole shifted = *hole;
-            shifted.x += offset.x();
-            shifted.y += offset.y();
+            QPointF pos(hole->x, hole->y);
+            pos = transform.apply(pos);
 
-            builder.addHole(shifted);
+            builder.addHole({
+                             pos.x(),
+                             pos.y(),
+                             hole->toolId
+            });
         }
     }
 

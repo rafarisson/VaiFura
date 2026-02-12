@@ -4,11 +4,13 @@
 #include <QPointF>
 #include "DrillDocument.h"
 
+class DrillTransform;
+
 class DrillDocumentExportPreparer
 {
 public:
     const DrillDocument *document() const { return &doc_; }
-    void prepare(const DrillDocument &src, const QPointF &offset);
+    void prepare(const DrillDocument &src, const DrillTransform &transform);
 
 private:
     DrillDocument doc_;

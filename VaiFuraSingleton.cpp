@@ -45,7 +45,7 @@ void VaiFuraSingleton::save(const QString &path)
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
     DrillDocumentExportPreparer exporterDoc;
-    exporterDoc.prepare(*documentModel_->document(), transformModel_->offset());
+    exporterDoc.prepare(*documentModel_->document(), *transformModel_->transform());
 
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }

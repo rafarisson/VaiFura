@@ -7,7 +7,8 @@ QPointF DrillTransform::apply(const QPointF &p) const
 
     if (mirrorX)
         r.setX(-r.x());
-    if (mirrorY) r.setY(-r.y());
+    if (mirrorY)
+        r.setY(-r.y());
 
     if (!qFuzzyIsNull(rotation)) {
         double a = qDegreesToRadians(rotation);
