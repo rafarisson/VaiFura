@@ -93,7 +93,7 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
     buildBackground(clipNode);
 
     grid_.build(clipNode, viewport_, 1.0);
-    origin_.build(clipNode, viewport_);
+    origin_.build(clipNode, transformModel_, viewport_);
 
     if (documentModel_ && documentModel_->document()) {
         drill_.build(clipNode, documentModel_, transformModel_, viewport_);

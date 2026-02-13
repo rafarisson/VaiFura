@@ -1,31 +1,36 @@
-#include <QtMath>
 #include "DrillTransform.h"
 
 QPointF DrillTransform::apply(const QPointF &p) const
 {
-    QPointF r = p;
+    return toTransform().map(p);
 
-    if (mirrorX)
-        r.setX(-r.x());
-    if (mirrorY)
-        r.setY(-r.y());
+    // QPointF r = p - pivot;
 
-    if (!qFuzzyIsNull(rotation)) {
-        double a = qDegreesToRadians(rotation);
-        double cs = std::cos(a);
-        double sn = std::sin(a);
-        r = {
-            r.x() * cs - r.y() * sn,
-            r.x() * sn + r.y() * cs
-        };
-    }
+    // if (mirrorX)
+    //     r.setX(-r.x());
+    // if (mirrorY)
+    //     r.setY(-r.y());
 
-    r += offset;
-    return r;
+    // if (!qFuzzyIsNull(rotation)) {
+    //     double a = qDegreesToRadians(rotation);
+    //     double cs = std::cos(a);
+    //     double sn = std::sin(a);
+    //     r = {
+    //         r.x() * cs - r.y() * sn,
+    //         r.x() * sn + r.y() * cs
+    //     };
+    // }
+
+    // r += pivot;
+    // r += offset;
+
+    // return r;
 }
 
-// QPointF DrillTransform::applyInverse(const QPointF &p) const
-// {
+QPointF DrillTransform::applyInverse(const QPointF &p) const
+{
+    return toTransform().inverted().map(p);
+
 //     QPointF r = p - offset;
 
 //     if (!qFuzzyIsNull(rotation)) {
@@ -44,7 +49,7 @@ QPointF DrillTransform::apply(const QPointF &p) const
 //         r.setY(-r.y());
 
 //     return r;
-// }
+}
 
 void DrillTransform::clear()
 {
@@ -52,4 +57,17 @@ void DrillTransform::clear()
     rotation = 0;
     mirrorX = false;
     mirrorY = false;
+}
+
+QTransform DrillTransform::toTransform() const
+{
+    QTransform t;
+    t.translate(-origin.x(), -origin.y());
+    t.translate(pivot.x(), pivot.y());
+    t.rotate(rotation);
+    t.scale(mirrorX ? -1 : 1, mirrorY ? -1 : 1);
+    t.translate(-pivot.x(), -pivot.y());
+    t.translate(origin.x(), origin.y());
+    t.translate(offset.x(), offset.y());
+    return t;
 }

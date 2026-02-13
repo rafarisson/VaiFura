@@ -4,10 +4,25 @@ DrillTransformModel::DrillTransformModel(QObject *parent)
     : QObject{parent}
     , transform_{new DrillTransform}
 {
+    connect(this, &DrillTransformModel::originChanged, this, &DrillTransformModel::transformChanged);
+    connect(this, &DrillTransformModel::pivotChanged, this, &DrillTransformModel::transformChanged);
     connect(this, &DrillTransformModel::offsetChanged, this, &DrillTransformModel::transformChanged);
     connect(this, &DrillTransformModel::rotationChanged, this, &DrillTransformModel::transformChanged);
     connect(this, &DrillTransformModel::mirrorXChanged, this, &DrillTransformModel::transformChanged);
     connect(this, &DrillTransformModel::mirrorYChanged, this, &DrillTransformModel::transformChanged);
+}
+
+void DrillTransformModel::setOrigin(const QPointF &p)
+{
+    if (transform_->origin == p)
+        return;
+
+    QPointF delta = p - transform_->origin;
+
+    transform_->origin = p;
+    emit originChanged();
+
+    setPivot(transform_->pivot - delta);
 }
 
 void DrillTransformModel::setPivot(const QPointF &p)

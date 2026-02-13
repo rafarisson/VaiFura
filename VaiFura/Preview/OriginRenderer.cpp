@@ -1,11 +1,12 @@
 #include "OriginRenderer.h"
+#include "DrillTransformModel.h"
 #include "ViewportTransform.h"
 #include <QSGGeometryNode>
 #include <QSGFlatColorMaterial>
 
-void OriginRenderer::build(QSGNode *root, const ViewportTransform &vp)
+void OriginRenderer::build(QSGNode *root, const DrillTransformModel *transform, const ViewportTransform &vp)
 {
-    QPointF o = vp.toScreen({0, 0});
+    QPointF o = vp.toScreen(transform ? transform->origin() : QPointF{0, 0});
 
     auto *geom = new QSGGeometry(
         QSGGeometry::defaultAttributes_Point2D(), 4);

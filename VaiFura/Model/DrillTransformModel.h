@@ -11,6 +11,7 @@ class DrillTransformModel : public QObject
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(QPointF origin READ origin WRITE setOrigin NOTIFY originChanged)
     Q_PROPERTY(QPointF pivot READ pivot WRITE setPivot NOTIFY pivotChanged)
     Q_PROPERTY(QPointF offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(qreal rotation READ rotation WRITE setRotation NOTIFY rotationChanged)
@@ -21,6 +22,9 @@ public:
     explicit DrillTransformModel(QObject *parent = nullptr);
 
     const DrillTransform *transform() const { return transform_; }
+
+    QPointF origin() const { return transform_->origin; }
+    void setOrigin(const QPointF &p);
 
     QPointF pivot() const { return transform_->pivot; }
     void setPivot(const QPointF &p);
@@ -39,6 +43,7 @@ public:
 
 signals:
     void transformChanged();
+    void originChanged();
     void pivotChanged();
     void offsetChanged();
     void rotationChanged();
