@@ -24,17 +24,21 @@ Item {
         transformModel: root.transformModel
     }
 
-    RoundButton {
+    Column {
         anchors {
             right: parent.right
             bottom: parent.bottom
             margins: 12
         }
 
-        text: MaterialSymbols.zoom_in_map
-        font.family: MaterialSymbols.fontFamily
-        font.pointSize: 16
-        onClicked: root.fit()
+        spacing: 6
+
+        RoundButton {
+            text: MaterialSymbols.zoom_in_map
+            font.family: MaterialSymbols.fontFamily
+            font.pointSize: 16
+            onClicked: root.fit()
+        }
     }
 
     Component.onCompleted: Qt.callLater(fit)
