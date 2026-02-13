@@ -15,42 +15,24 @@ PageLayout {
     description: qsTr("Adjust position, rotation and mirror")
 
     ColumnLayout {
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("X Offset")
-            }
+        SettingsItem {
+            label: qsTr("X Offset")
             NumberTextField {
                 unit: "mm"
                 text: root.transformModel.offset.x
                 onValueChanged: (v) => root.transformModel.offset.x = v
             }
         }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Y Offset")
-            }
+        SettingsItem {
+            label: qsTr("Y Offset")
             NumberTextField {
                 unit: "mm"
                 text: root.transformModel.offset.y
                 onValueChanged: (v) => root.transformModel.offset.y = v
             }
         }
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            Label {
-                Layout.fillWidth: true
-                text: qsTr("Rotate")
-            }
-
+        SettingsItem {
+            label: qsTr("Rotate")
             NumberTextField {
                 unit: "°"
                 text: root.transformModel.rotation
@@ -65,14 +47,14 @@ PageLayout {
                 property real current: root.transformModel.rotation
 
                 iconText: MaterialSymbols.rotate_right
-                onClicked: root.transformModel.rotation = current + root.rotateInc
+                onClicked: root.transformModel.rotation = current - root.rotateInc
             }
 
             IconButton {
                 property real current: root.transformModel.rotation
 
                 iconText: MaterialSymbols.rotate_left
-                onClicked: root.transformModel.rotation = current - root.rotateInc
+                onClicked: root.transformModel.rotation = current + root.rotateInc
             }
 
             IconButton {
