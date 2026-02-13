@@ -44,32 +44,28 @@ PageLayout {
             Layout.alignment: Qt.AlignHCenter
 
             IconButton {
-                property real current: root.transformModel.rotation
-
                 iconText: MaterialSymbols.rotate_right
-                onClicked: root.transformModel.rotation = current - root.rotateInc
+                onClicked: root.transformModel.rotation -= root.rotateInc
             }
 
             IconButton {
-                property real current: root.transformModel.rotation
-
                 iconText: MaterialSymbols.rotate_left
-                onClicked: root.transformModel.rotation = current + root.rotateInc
+                onClicked: root.transformModel.rotation += root.rotateInc
             }
 
             IconButton {
-                property bool current: root.transformModel.mirrorX
-
                 iconText: MaterialSymbols.flip
-                onClicked: root.transformModel.mirrorX = !current
+                checkable: true
+                checked: root.transformModel.mirrorX
+                onCheckedChanged: root.transformModel.mirrorX = checked
             }
 
             IconButton {
-                property bool current: root.transformModel.mirrorY
-
                 iconText: MaterialSymbols.flip
                 iconRotation: 90
-                onClicked: root.transformModel.mirrorY = !current
+                checkable: true
+                checked: root.transformModel.mirrorY
+                onCheckedChanged: root.transformModel.mirrorY = checked
             }
         }
     }
