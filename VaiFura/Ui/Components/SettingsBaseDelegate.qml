@@ -4,7 +4,6 @@ Item {
     id: control
 
     default property alias editor: item.editor
-    property alias columnEditor: item.columnEditor
 
     required property var model
     required property string label

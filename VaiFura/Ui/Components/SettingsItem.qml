@@ -6,40 +6,31 @@ Item {
     id: control
 
     default property alias editor: contentWrapper.data
-    property alias columnEditor: columnEditorWrapper.data
 
     property string label: ""
     property string description: ""
 
-    width: itemColumn.implicitWidth
-    implicitHeight: itemColumn.implicitHeight
+    width: itemLayout.implicitWidth
+    implicitHeight: itemLayout.implicitHeight
 
-    ColumnLayout {
-        id: itemColumn
+    Layout.fillWidth: true
+
+    RowLayout {
+        id: itemLayout
         anchors.fill: parent
+        Layout.fillWidth: true
 
-        spacing: 0
-
-        RowLayout {
-            Layout.fillWidth: true
-
-            HelpToolTip {
-                help: control.description
-            }
-            Label {
-                Layout.fillWidth: true
-                text: control.label
-            }
-            Item {
-                id: contentWrapper
-                implicitWidth: childrenRect.width
-                implicitHeight: childrenRect.height
-            }
+        Label {
+            Layout.fillWidth: !helpToolTip.enabled
+            text: control.label
         }
-
+        HelpToolTip {
+            id: helpToolTip
+            Layout.fillWidth: enabled
+            help: control.description
+        }
         Item {
-            id: columnEditorWrapper
-            Layout.fillWidth: true
+            id: contentWrapper
             implicitWidth: childrenRect.width
             implicitHeight: childrenRect.height
         }
