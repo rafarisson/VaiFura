@@ -1,4 +1,4 @@
-find_package(Qt6 REQUIRED COMPONENTS Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui)
 
 qt_add_library(VaiFuraCore STATIC
     DrillHelper.h
@@ -25,6 +25,7 @@ qt_add_library(VaiFuraCore STATIC
 target_link_libraries(VaiFuraCore
     PRIVATE
         Qt6::Core
+        Qt6::Gui
 )
 
 target_include_directories(VaiFuraCore INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
