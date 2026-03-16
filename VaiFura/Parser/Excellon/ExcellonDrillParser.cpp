@@ -14,10 +14,10 @@ bool ExcellonDrillParser::parse(QTextStream &in, DrillDocumentBuilder &builder)
 
         switch (token.type) {
         case ExcellonTokenType::UnitsMetric:
-            unit_ = DrillUnits::MM;
+            unit_ = Units::MM;
             break;
         case ExcellonTokenType::UnitsInch:
-            unit_ = DrillUnits::INCH;
+            unit_ = Units::INCH;
             break;
         case ExcellonTokenType::G90:
             absolute_ = true;
@@ -45,7 +45,7 @@ bool ExcellonDrillParser::parse(QTextStream &in, DrillDocumentBuilder &builder)
 void ExcellonDrillParser::reset()
 {
     tool_ = -1;
-    unit_ = DrillUnits::MM;
+    unit_ = Units::MM;
     absolute_ = true;
 
     coordScale_ = 1000.0;
@@ -81,7 +81,7 @@ double ExcellonDrillParser::normalizeCoord(double value) const
 {
     double v = value / coordScale_;
 
-    if (unit_ == DrillUnits::INCH)
+    if (unit_ == Units::INCH)
         v *= 25.4;
 
     return v;

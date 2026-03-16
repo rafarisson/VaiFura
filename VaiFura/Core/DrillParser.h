@@ -5,11 +5,6 @@
 
 class DrillDocumentBuilder;
 
-enum class DrillUnits {
-    MM,
-    INCH
-};
-
 class DrillParser
 {
 public:

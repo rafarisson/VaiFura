@@ -2,6 +2,7 @@
 #define EXCELLONDRILLPARSER_H
 
 #include <QPointF>
+#include "Units.h"
 #include "DrillParser.h"
 #include "ExcellonLexer.h"
 
@@ -18,7 +19,7 @@ private:
 private:
     ExcellonLexer lexer_;
     int tool_;
-    DrillUnits unit_;
+    Units unit_;
     bool absolute_;
 
     double coordScale_;
