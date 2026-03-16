@@ -14,16 +14,18 @@ inline static constexpr auto XY_MOVE_FEED   = "XY_MOVE_FEED";
 inline static constexpr auto Z_DRILL_OFFSET = "Z_DRILL_OFFSET";
 inline static constexpr auto Z_DRILL_FEED   = "Z_DRILL_FEED";
 inline static constexpr auto Z_RETRACT_FEED = "Z_RETRACT_FEED";
+inline static constexpr auto STARTUP_DELAY = "STARTUP_DELAY";
 inline static constexpr auto FILE_PER_TOOL  = "FILE_PER_TOOL";
 }
 
 namespace GCodeDefault {
 inline static constexpr double Z_TOOL_CHANGE    = 20.0;
-inline static constexpr double Z_MOVE           = 5.0;
+inline static constexpr double Z_MOVE           = 1.0;
 inline static constexpr double XY_MOVE_FEED     = 3000.0;
 inline static constexpr double Z_DRILL_OFFSET   = -2.0;
 inline static constexpr double Z_DRILL_FEED     = 60.0;
 inline static constexpr double Z_RETRACT_FEED   = 800.0;
+inline static constexpr double STARTUP_DELAY    = 3.0;
 inline static constexpr bool   FILE_PER_TOOL    = true;
 }
 
@@ -42,6 +44,7 @@ private:
     void exportIniti();
     void exportTool(const DrillNode *toolNode);
     void exportHole(const DrillNode *holeNode, const QPointF &pos);
+    void exportToolChange();
 
 private:
     const DrillDocument *document_ = nullptr;
@@ -58,6 +61,7 @@ private:
         double zDrillOffset;
         double zDrillFeed;
         double zRetractFeed;
+        double startupDelay;
         bool filePerTool;
 
         static GCodeSettings from(const QVector<Settings> &settings);
