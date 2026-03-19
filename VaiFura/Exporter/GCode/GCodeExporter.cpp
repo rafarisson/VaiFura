@@ -154,9 +154,16 @@ void GCodeExporter::exportIniti()
     out_ << "\n";
     out_ << "G21" << " ; Metric units\n";
     out_ << "G90" << " ; Absolute positioning\n";
+
+    gcodeSetHotEnd(0);
+    gcodeFanOff();
+
     out_ << "G28" << " ; Home\n";
     out_ << "G0 Z" << (settings_.zMove * 2) << " F" << settings_.zRetractFeed << " ; Safe Z\n";
     out_ << "G4 S" << settings_.startupDelay << " ; Startup delay\n";
+
+    gcodeFanOn();
+    gcodeSetHotEnd(160);
 }
 
 void GCodeExporter::exportTool(const DrillNode *toolNode)
@@ -176,7 +183,7 @@ void GCodeExporter::exportHole(const DrillNode *holeNode, const QPointF &pos)
         return;
 
     out_ << "\n";
-    out_ << "; Hole " << "\n";
+    out_ << "; Hole\n";
     out_ << "G0 X" << pos.x() << " Y" << pos.y() << " F" << settings_.xyMoveFeed << "\n";
     out_ << "G1 Z" << settings_.zDrillOffset << " F" << settings_.zDrillFeed << "\n";
     out_ << "G0 Z" << settings_.zMove << " F" << settings_.zRetractFeed << "\n";
@@ -187,8 +194,25 @@ void GCodeExporter::exportToolChange()
     out_ << "\n";
     out_ << "; Tool change\n";
     out_ << "\n";
+    gcodeSetHotEnd(0);
     gcodeFanOff();
     out_ << "G0 Z" << settings_.zToolChange << " F" << settings_.zRetractFeed << "\n";
+}
+
+void GCodeExporter::gcodeFanOn()
+{
+    out_ << "M106 S255 ; Fan speed (on)\n";
+}
+
+void GCodeExporter::gcodeFanOff()
+{
+    out_ << "M107 ; Fan off\n";
+    out_ << "M106 S0 ; Fan speed (off)\n";
+}
+
+void GCodeExporter::gcodeSetHotEnd(uint value)
+{
+    out_ << "M104 S" << value << "\n";
 }
 
 GCodeExporter::GCodeSettings GCodeExporter::GCodeSettings::from(const QVector<Settings> &settings)

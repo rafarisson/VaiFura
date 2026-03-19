@@ -45,6 +45,9 @@ private:
     void exportTool(const DrillNode *toolNode);
     void exportHole(const DrillNode *holeNode, const QPointF &pos);
     void exportToolChange();
+    void gcodeFanOn();
+    void gcodeFanOff();
+    void gcodeSetHotEnd(uint value);
 
 private:
     const DrillDocument *document_ = nullptr;
