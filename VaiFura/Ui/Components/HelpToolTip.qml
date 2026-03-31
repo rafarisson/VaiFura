@@ -5,17 +5,17 @@ Label {
     id: control
 
     property string help: ""
-    readonly property bool enabled: help !== ""
+    readonly property bool __enabled: help !== ""
 
     text: MaterialSymbols.help
     font.family: MaterialSymbols.fontFamily
     font.pointSize: 12
     color: "gray"
-    visible: enabled
+    visible: __enabled
 
     HoverHandler {
         id: hover
-        enabled: control.enabled
+        enabled: control.__enabled
     }
 
     ToolTip.text: help
