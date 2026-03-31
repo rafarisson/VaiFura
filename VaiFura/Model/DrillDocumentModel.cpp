@@ -6,15 +6,19 @@
 #include "DrillDocumentBuilder.h"
 #include "DrillNode.h"
 #include "DrillParser.h"
+#include "BoardProfile.h"
+#include "BoardProfileParser.h"
+#include "BoardProfileBuilder.h"
 
 DrillDocumentModel::DrillDocumentModel(QObject *parent)
     : QObject{parent}
     , doc_{new DrillDocument()}
+    , profile_{new BoardProfile()}
 {
     connect(this, &DrillDocumentModel::drillCheckeStateChanged, this, &DrillDocumentModel::updateSelectedHoleCount);
 }
 
-void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &parser)
+void DrillDocumentModel::loadDrill(const QString &filePath, DrillParser &parser)
 {
     DrillDocumentBuilder builder(doc_);
 
@@ -31,6 +35,22 @@ void DrillDocumentModel::loadFromFile(const QString &filePath, DrillParser &pars
     updateSelectedHoleCount();
 
     emit documentContentChanged();
+}
+
+void DrillDocumentModel::loadProfile(const QString &filePath, BoardProfileParser &parser)
+{
+    BoardProfileBuilder builder(profile_);
+
+    if (!filePath.isEmpty()) {
+        QFile f(filePath);
+        if (f.open(QIODevice::ReadOnly)) {
+            QTextStream in(&f);
+            parser.parse(in, builder);
+            f.close();
+        }
+    }
+
+    emit profileChanged();
 }
 
 bool DrillDocumentModel::setCheckState(const DrillNode *node, Qt::CheckState newState)

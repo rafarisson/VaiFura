@@ -7,30 +7,50 @@ import QtCore
 PageLayout {
     id: root
 
-    required property string fileName
+    required property string drillFileName
+    required property string profileFileName
+    property var _targetProperty
 
-    signal fileSelected(fn: string)
+    signal drillFileSelected(fn: string)
+    signal profileFileSelected(fn: string)
 
     icon: MaterialSymbols.upload
-    title: qsTr("Excellon file")
-    description: qsTr("Select drill file (.xln, .drl or .txt)")
+    title: qsTr("Upload files")
+    description: qsTr("Select drill file (.xln, .drl or .txt) and board profile (.gbr)")
 
     RowLayout {
         Button {
-            text: qsTr("Select file")
-            onClicked: fileDialog.open()
+            text: qsTr("Dill")
+            onClicked: drillFileDialog.open()
         }
         TextField {
             Layout.fillWidth: true
-            text: root.fileName
-            onTextChanged: if (text != root.fileName) root.fileSelected(text)
+            text: root.drillFileName
+            onTextChanged: if (text != root.drillFileName) root.drillFileSelected(text)
+        }
+    }
+    RowLayout {
+        Button {
+            text: qsTr("Profile")
+            onClicked: profileFileDialog.open()
+        }
+        TextField {
+            Layout.fillWidth: true
+            text: root.profileFileName
+            onTextChanged: if (text != root.profileFileName) root.profileFileSelected(text)
         }
     }
 
     FileDialog {
-        id: fileDialog
+        id: drillFileDialog
         nameFilters: ["Excellon files (*.xln)", "Drill files (*.drl)", "All files (*.*)"]
         currentFolder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
-        onAccepted: root.fileSelected(currentFile)
+        onAccepted: root.drillFileSelected(currentFile)
+    }
+    FileDialog {
+        id: profileFileDialog
+        nameFilters: ["Profile files (*.gbr)", "All files (*.*)"]
+        currentFolder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
+        onAccepted: root.profileFileSelected(currentFile)
     }
 }

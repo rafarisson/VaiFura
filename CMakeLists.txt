@@ -13,6 +13,7 @@ add_subdirectory(VaiFura/Model)
 add_subdirectory(VaiFura/Preview)
 add_subdirectory(VaiFura/Ui)
 add_subdirectory(VaiFura/Parser/Excellon)
+add_subdirectory(VaiFura/Parser/Gerber)
 add_subdirectory(VaiFura/Exporter/GCode)
 
 qt_add_executable(appVaiFura
@@ -59,6 +60,7 @@ target_link_libraries(appVaiFura
         VaiFuraPreview
         VaiFuraUi
         VaiFuraParserExcellon
+        VaiFuraParserGerber
         VaiFuraExporterGCode
 )
 

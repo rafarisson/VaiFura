@@ -2,6 +2,7 @@
 #include <QDir>
 #include "VaiFuraSingleton.h"
 #include "ExcellonDrillParser.h"
+#include "DimensionOutline.h"
 #include "SettingsRepository.h"
 #include "DrillDocumentExportPreparer.h"
 
@@ -24,16 +25,28 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     settingsModel_->setSettings(exporterSettings);
 }
 
-void VaiFuraSingleton::setDocumentFileName(const QString &path)
+void VaiFuraSingleton::setDrillDocumentFileName(const QString &path)
 {
-    if (documentFileName_ == path)
+    if (drillDocumentFileName_ == path)
         return;
 
-    documentFileName_ = QUrl::fromUserInput(path).toLocalFile();
-    emit documentFileNameChanged();
+    drillDocumentFileName_ = QUrl::fromUserInput(path).toLocalFile();
+    emit drillDocumentFileNameChanged();
 
     ExcellonDrillParser parser;
-    documentModel_->loadFromFile(documentFileName_, parser);
+    documentModel_->loadDrill(drillDocumentFileName_, parser);
+}
+
+void VaiFuraSingleton::setProfileDocumentFileName(const QString &path)
+{
+    if (profileDocumentFileName_ == path)
+        return;
+
+    profileDocumentFileName_ = QUrl::fromUserInput(path).toLocalFile();
+    emit profileDocumentFileNameChanged();
+
+    DimensionOutline parser;
+    documentModel_->loadProfile(profileDocumentFileName_, parser);
 }
 
 void VaiFuraSingleton::save(const QString &path)
@@ -41,7 +54,7 @@ void VaiFuraSingleton::save(const QString &path)
     if (settingsModel_->isModified())
         SettingsRepository::save(resolvePath(exporter_->settingsFile()), settingsModel_->settings());
 
-    QString fn = QFileInfo(documentFileName_).fileName();
+    QString fn = QFileInfo(drillDocumentFileName_).fileName();
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
     DrillDocumentExportPreparer exporterDoc;

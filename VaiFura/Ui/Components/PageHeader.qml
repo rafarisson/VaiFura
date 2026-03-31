@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Layouts
 
 Item {
     id: control
@@ -28,7 +29,7 @@ Item {
         color: "gray"
     }
 
-    Column {
+    ColumnLayout {
         id: contentColumn
         spacing: 4
 
@@ -41,11 +42,15 @@ Item {
         }
 
         Label {
+            Layout.fillWidth: true
+
             id: titleLabel
             font.bold: true
         }
 
         Label {
+            Layout.fillWidth: true
+
             id: descriptionLabel
             textFormat: Text.PlainText
             wrapMode: Text.WordWrap

@@ -18,7 +18,8 @@ class VaiFuraSingleton : public QObject
     QML_SINGLETON
     QML_NAMED_ELEMENT(VaiFura)
 
-    Q_PROPERTY(QString documentFileName READ documentFileName WRITE setDocumentFileName NOTIFY documentFileNameChanged)
+    Q_PROPERTY(QString drillDocumentFileName READ drillDocumentFileName WRITE setDrillDocumentFileName NOTIFY drillDocumentFileNameChanged)
+    Q_PROPERTY(QString profileDocumentFileName READ profileDocumentFileName WRITE setProfileDocumentFileName NOTIFY profileDocumentFileNameChanged)
 
     Q_PROPERTY(DrillDocumentModel* model READ model CONSTANT FINAL)
     Q_PROPERTY(ToolListModel* toolsModel READ toolsModel CONSTANT FINAL)
@@ -30,8 +31,11 @@ class VaiFuraSingleton : public QObject
 public:
     explicit VaiFuraSingleton(QObject *parent = nullptr);
 
-    QString documentFileName() const { return documentFileName_; }
-    void setDocumentFileName(const QString &path);
+    QString drillDocumentFileName() const { return drillDocumentFileName_; }
+    void setDrillDocumentFileName(const QString &path);
+
+    QString profileDocumentFileName() const { return profileDocumentFileName_; }
+    void setProfileDocumentFileName(const QString &path);
 
     DrillDocumentModel *model() const { return documentModel_; }
     ToolListModel *toolsModel() const { return toolsModel_; }
@@ -46,10 +50,12 @@ private:
     QString resolvePath(const QString &fileName) const;
 
 signals:
-    void documentFileNameChanged();
+    void drillDocumentFileNameChanged();
+    void profileDocumentFileNameChanged();
 
 private:
-    QString documentFileName_;
+    QString drillDocumentFileName_;
+    QString profileDocumentFileName_;
 
     DrillDocumentModel *documentModel_ = nullptr;
     ToolListModel *toolsModel_ = nullptr;

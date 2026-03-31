@@ -26,6 +26,7 @@ void DrillDocumentPreviewQuickItem::setModel(DrillDocumentModel *newModel)
 
     if (documentModel_) {
         connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(documentModel_, &DrillDocumentModel::profileChanged, this, &DrillDocumentPreviewQuickItem::update);
         connect(documentModel_, &DrillDocumentModel::drillCheckeStateChanged, this, &DrillDocumentPreviewQuickItem::update);
     }
 
@@ -95,10 +96,15 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
     grid_.build(clipNode, viewport_, 1.0);
     origin_.build(clipNode, transformModel_, viewport_);
 
-    if (documentModel_ && documentModel_->document()) {
-        drill_.build(clipNode, documentModel_, transformModel_, viewport_);
-        if (interaction_.snapActive())
-            snapPreview_.build(clipNode, documentModel_, transformModel_, viewport_, interaction_.snapDelta());
+    if (documentModel_) {
+        if (documentModel_->document()) {
+            drill_.build(clipNode, documentModel_, transformModel_, viewport_);
+            if (interaction_.snapActive())
+                snapPreview_.build(clipNode, documentModel_, transformModel_, viewport_, interaction_.snapDelta());
+        }
+        if (documentModel_->profile()) {
+            profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, interaction_.snapDelta());
+        }
     }
 
     return root;

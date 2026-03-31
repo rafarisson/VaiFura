@@ -21,6 +21,11 @@ qt_add_library(VaiFuraCore STATIC
     SettingsReader.h
     AbstractExporter.h
     AbstractExporter.cpp
+    BoardProfile.h
+    BoardProfile.cpp
+    BoardProfileBuilder.h
+    BoardProfileBuilder.cpp
+    BoardProfileParser.h
 )
 
 target_link_libraries(VaiFuraCore

@@ -14,6 +14,7 @@
 #include "GridRenderer.h"
 #include "OriginRenderer.h"
 #include "DrillRenderer.h"
+#include "ProfileRenderer.h"
 
 class DrillDocumentPreviewQuickItem : public QQuickItem
 {
@@ -62,6 +63,7 @@ private:
     GridRenderer grid_;
     OriginRenderer origin_;
     DrillRenderer drill_;
+    ProfileRenderer profile_;
 
     bool snapPreviewActive_ = false;
     QPointF snapDeltaWorld_;
