@@ -21,7 +21,7 @@ Item {
         Layout.fillWidth: true
 
         Label {
-            Layout.fillWidth: true // !helpToolTip.enabled
+            Layout.fillWidth: !helpToolTip.visible
             text: control.label
         }
         HelpToolTip {
