@@ -36,8 +36,16 @@ void InteractionController::mouseMove(const QPointF &pos)
 
     if (movingDrills_ && transformModel_ && viewport_) {
         QPointF currentWorld = viewport_->toWorld(pos);
-        QPointF deltaWorld = currentWorld - moveStartWorld_;
-        QPointF candidate = moveStartOffset_ + deltaWorld;
+        QPointF startLocal = transformModel_->transform()->applyInverse(moveStartWorld_);
+        QPointF currentLocal = transformModel_->transform()->applyInverse(currentWorld);
+        QPointF deltaLocal = currentLocal - startLocal;
+
+        if (transformModel_->mirrorX())
+            deltaLocal.setX(-deltaLocal.x());
+        if (transformModel_->mirrorY())
+            deltaLocal.setY(-deltaLocal.y());
+
+        QPointF candidate = moveStartOffset_ + deltaLocal;
 
         if (snap_)
             snapPreviewWorld_ = snap_->snap(candidate);
