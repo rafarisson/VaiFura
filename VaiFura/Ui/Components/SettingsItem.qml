@@ -26,7 +26,7 @@ Item {
         }
         HelpToolTip {
             id: helpToolTip
-            Layout.fillWidth: enabled
+            Layout.fillWidth: control.description
             help: control.description
         }
         Item {
