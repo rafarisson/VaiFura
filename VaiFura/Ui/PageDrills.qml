@@ -14,11 +14,20 @@ PageLayout {
     title: qsTr("Tools and Holes")
     description: qsTr("Total holes selected: %1").arg(root.documentModel.selectedHoleCount)
 
+    Label {
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
+
+        text: qsTr("No holes available")
+        visible: !root.documentModel.holeCount
+        opacity: 0.6
+    }
+
     TreeView {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        Layout.preferredHeight: 200
+        Layout.preferredHeight: Math.min(contentHeight, 300)
 
+        visible: root.documentModel.holeCount
         boundsBehavior: Flickable.StopAtBounds
         clip: true
         reuseItems: false
