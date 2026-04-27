@@ -19,53 +19,11 @@ PageLayout {
     title: qsTr("G-Code file")
     description: qsTr("Configure G-code parameters")
 
-    Repeater {
-        Layout.fillWidth: true
+    visible: settingsModel.size
 
-        clip: true
-        model: root.settingsModel
-        visible: root.settingsModel.size
-
-        delegate: DelegateChooser {
-            role: "type"
-            DelegateChoice {
-                roleValue: SettingsListModel.Number
-                SettingsNumberDelegate {
-                    Layout.fillWidth: true
-                }
-            }
-            DelegateChoice {
-                roleValue: SettingsListModel.Boolean
-                SettingsBooleanDelegate {
-                    Layout.fillWidth: true
-                }
-            }
-        }
+    SettingsRepeater {
+        settingsModel: root.settingsModel
     }
-
-    // ListView {
-    //     Layout.fillWidth: true
-    //     Layout.fillHeight: true
-    //     Layout.preferredWidth: 300
-    //     Layout.preferredHeight: 200
-
-    //     boundsBehavior: Flickable.StopAtBounds
-    //     clip: true
-    //     model: root.settingsModel
-    //     visible: root.settingsModel.size
-
-    //     delegate: DelegateChooser {
-    //         role: "type"
-    //         DelegateChoice {
-    //             roleValue: SettingsListModel.Number
-    //             SettingsNumberDelegate {}
-    //         }
-    //         DelegateChoice {
-    //             roleValue: SettingsListModel.Boolean
-    //             SettingsBooleanDelegate {}
-    //         }
-    //     }
-    // }
 
     Button {
         Layout.fillWidth: true
