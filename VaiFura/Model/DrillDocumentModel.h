@@ -18,6 +18,7 @@ class DrillDocumentModel : public QObject
     QML_ELEMENT
     QML_UNCREATABLE("")
 
+    Q_PROPERTY(int holeCount READ holeCount NOTIFY holeCountChanged)
     Q_PROPERTY(int selectedHoleCount READ selectedHoleCount NOTIFY selectedHoleCountChanged)
 
 public:
@@ -29,6 +30,7 @@ public:
     void loadDrill(const QString &filePath, DrillParser &parser);
     void loadProfile(const QString &filePath, BoardProfileParser &parser);
 
+    int holeCount() const;
     int selectedHoleCount() const { return selectedHoleCount_; }
 
     bool setCheckState(const DrillNode *node, Qt::CheckState newState);
@@ -40,6 +42,7 @@ signals:
     void documentContentChanged();
     void profileChanged();
     void drillCheckeStateChanged();
+    void holeCountChanged();
     void selectedHoleCountChanged();
 
 private:

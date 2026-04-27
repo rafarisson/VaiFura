@@ -26,9 +26,17 @@ ApplicationWindow {
             }
 
             PageDrills {
-                Layout.fillHeight: true
                 documentModel: VaiFura.model
                 drillModel: VaiFura.drillsModel
+            }
+
+            PageOptimization {
+                documentModel: VaiFura.model
+                drillModel: VaiFura.drillsModel
+            }
+
+            Item {
+                Layout.fillHeight: true
             }
         }
 

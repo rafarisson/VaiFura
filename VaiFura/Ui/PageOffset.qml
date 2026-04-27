@@ -14,7 +14,6 @@ PageLayout {
     title: qsTr("Positioning")
     description: qsTr("Adjust position, rotation and mirror")
 
-    ColumnLayout {
         SettingsItem {
             label: qsTr("X Offset")
             NumberTextField {
@@ -69,4 +68,3 @@ PageLayout {
             }
         }
     }
-}

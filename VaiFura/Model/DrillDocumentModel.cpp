@@ -35,6 +35,7 @@ void DrillDocumentModel::loadDrill(const QString &filePath, DrillParser &parser)
     updateSelectedHoleCount();
 
     emit documentContentChanged();
+    emit holeCountChanged();
 }
 
 void DrillDocumentModel::loadProfile(const QString &filePath, BoardProfileParser &parser)
@@ -51,6 +52,11 @@ void DrillDocumentModel::loadProfile(const QString &filePath, BoardProfileParser
     }
 
     emit profileChanged();
+}
+
+int DrillDocumentModel::holeCount() const
+{
+    return doc_->root()->checkedHoleCount();
 }
 
 bool DrillDocumentModel::setCheckState(const DrillNode *node, Qt::CheckState newState)
