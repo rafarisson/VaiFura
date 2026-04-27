@@ -55,6 +55,10 @@ ApplicationWindow {
                 transformModel: VaiFura.transformModel
             }
 
+            PageMachine {
+                settingsModel: VaiFura.machineSettingsModel
+            }
+
             PageExport {
                 documentModel: VaiFura.model
                 settingsModel: VaiFura.settingsModel

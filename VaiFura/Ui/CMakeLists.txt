@@ -31,6 +31,7 @@ qt_add_qml_module(VaiFuraUi
         PageDrills.qml
         PageOptimization.qml
         PageOffset.qml
+        PageMachine.qml
         PageExport.qml
     DEPENDENCIES
         TARGET VaiFuraModel

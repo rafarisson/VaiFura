@@ -13,12 +13,16 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
     , transformModel_{new DrillTransformModel(this)}
+    , machineSettingsModel_{new SettingsListModel(this)}
     , settingsModel_{new SettingsListModel(this)}
     , exporter_{new GCodeExporter}
 {
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_, transformModel_);
+
+    QVector<Settings> machineSettings;
+    machineSettingsModel_->setSettings(machineSettings);
 
     QVector<Settings> exporterSettings = exporter_->defaultSettings();
     SettingsRepository::load(resolvePath(exporter_->settingsFile()), exporterSettings);
