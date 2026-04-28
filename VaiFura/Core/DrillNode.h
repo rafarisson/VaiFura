@@ -36,7 +36,6 @@ public:
 
 private:
     friend class DrillDocumentBuilder;
-    friend class DrillTreeDocumentBuilder;
 
     void updateParent();
     int checkedHoleCountRecursive() const;

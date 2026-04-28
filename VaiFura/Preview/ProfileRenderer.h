@@ -14,8 +14,8 @@ public:
     void build(QSGNode *root,
                const BoardProfile *profile,
                const DrillTransformModel *transform,
-               const ViewportTransform &vp,
-               const QPointF &delta);
+               const ViewportTransform &vp, const QColor &color,
+               const QPointF &delta = QPointF());
 
 private:
     QSGGeometryNode *createGeometryForPath(const BoardPath &path,

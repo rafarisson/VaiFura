@@ -17,8 +17,6 @@ qt_add_qml_module(VaiFuraPreview
         OriginRenderer.h
         OriginRenderer.cpp
         DrillRendererHelper.h
-        DrillRendererBase.h
-        DrillRendererBase.cpp
         DrillRenderer.h
         DrillRenderer.cpp
         ProfileRenderer.h ProfileRenderer.cpp

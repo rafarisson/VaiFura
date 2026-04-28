@@ -121,12 +121,21 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
 
     if (documentModel_) {
         if (documentModel_->document()) {
-            drill_.build(clipNode, documentModel_, transformModel_, viewport_);
-            if (interaction_.snapActive())
-                snapPreview_.build(clipNode, documentModel_, transformModel_, viewport_, interaction_.snapDelta());
+            QColor color(Qt::cyan);
+            drill_.build(clipNode, documentModel_, transformModel_, viewport_, color);
+            if (interaction_.snapActive()) {
+                color.setAlpha(128);
+                drill_.build(clipNode, documentModel_, transformModel_, viewport_, color, interaction_.snapDelta());
         }
+        }
+
         if (documentModel_->profile()) {
-            profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, interaction_.snapDelta());
+            QColor color(Qt::yellow);
+            profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color);
+            if (interaction_.snapActive()) {
+                color.setAlpha(128);
+                profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color, interaction_.snapDelta());
+        }
         }
     }
 

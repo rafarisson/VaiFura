@@ -10,6 +10,7 @@ void ProfileRenderer::build(QSGNode *root,
                             const BoardProfile *profile,
                             const DrillTransformModel *transform,
                             const ViewportTransform &vp,
+                            const QColor &color,
                             const QPointF &delta)
 {
     if (!profile || profile->paths().isEmpty())
@@ -18,7 +19,7 @@ void ProfileRenderer::build(QSGNode *root,
     for (const BoardPath &path : profile->paths())
     {
         root->appendChildNode(
-            createGeometryForPath(path, transform, vp, delta, 2.0, Qt::yellow)
+            createGeometryForPath(path, transform, vp, delta, 2.0, color)
             );
     }
 }
