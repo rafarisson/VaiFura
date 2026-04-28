@@ -33,6 +33,7 @@ qt_add_qml_module(appVaiFura
     QML_FILES
         Main.qml
     SOURCES
+        Machine.h Machine.cpp
         VaiFuraSingleton.h VaiFuraSingleton.cpp
     DEPENDENCIES
         TARGET VaiFuraModel

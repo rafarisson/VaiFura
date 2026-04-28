@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include "VaiFuraSingleton.h"
+#include "Machine.h"
 #include "ExcellonDrillParser.h"
 #include "DimensionOutline.h"
 #include "SettingsRepository.h"
@@ -21,7 +22,8 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_, transformModel_);
 
-    QVector<Settings> machineSettings;
+    QVector<Settings> machineSettings = Machine::defaultSettings();
+    SettingsRepository::load(resolvePath(Machine::settingsFile()), machineSettings);
     machineSettingsModel_->setSettings(machineSettings);
 
     QVector<Settings> exporterSettings = exporter_->defaultSettings();
@@ -55,14 +57,19 @@ void VaiFuraSingleton::setProfileDocumentFileName(const QString &path)
 
 void VaiFuraSingleton::save(const QString &path)
 {
+    if (machineSettingsModel_->isModified())
+        SettingsRepository::save(resolvePath(Machine::settingsFile()), machineSettingsModel_->settings());
+
     if (settingsModel_->isModified())
         SettingsRepository::save(resolvePath(exporter_->settingsFile()), settingsModel_->settings());
 
     QString fn = QFileInfo(drillDocumentFileName_).fileName();
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
+    auto realTransform = Machine::fixTransform(transformModel_->transform(), machineSettingsModel_->settings());
+
     DrillDocumentExportPreparer exporterDoc;
-    exporterDoc.prepare(*documentModel_->document(), *transformModel_->transform());
+    exporterDoc.prepare(*documentModel_->document(), realTransform);
 
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }
