@@ -14,7 +14,7 @@ ApplicationWindow {
         anchors.fill: parent
         orientation: Qt.Horizontal
 
-        ColumnLayout {
+        ScrollableColumnLayout {
             SplitView.fillHeight: true
             SplitView.preferredWidth: 300
 
@@ -34,20 +34,17 @@ ApplicationWindow {
                 documentModel: VaiFura.model
                 drillModel: VaiFura.drillsModel
             }
-
-            Item {
-                Layout.fillHeight: true
-            }
         }
 
         Preview {
             SplitView.fillWidth: true
             SplitView.fillHeight: true
+
             documentModel: VaiFura.model
             transformModel: VaiFura.transformModel
         }
 
-        ColumnLayout {
+        ScrollableColumnLayout {
             SplitView.fillHeight: true
             SplitView.preferredWidth: 300
 
@@ -63,10 +60,6 @@ ApplicationWindow {
                 documentModel: VaiFura.model
                 settingsModel: VaiFura.settingsModel
                 onSaveRequest: (path) => VaiFura.save(path)
-            }
-
-            Item {
-                Layout.fillHeight: true
             }
         }
     }
