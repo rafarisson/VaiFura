@@ -7,14 +7,15 @@
 
 #include "DrillDocumentModel.h"
 #include "DrillTransformModel.h"
+#include "OptimizationModel.h"
 #include "InteractionController.h"
 #include "SnapEngine.h"
-#include "SnapPreviewRenderer.h"
 #include "ViewportTransform.h"
 #include "GridRenderer.h"
 #include "OriginRenderer.h"
 #include "DrillRenderer.h"
 #include "ProfileRenderer.h"
+#include "OptimizationRenderer.h"
 
 class DrillDocumentPreviewQuickItem : public QQuickItem
 {
@@ -23,6 +24,7 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
 
     Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(DrillTransformModel* transformModel READ transformModel WRITE setTransformModel NOTIFY transformModelChanged)
+    Q_PROPERTY(OptimizationModel* optimizationModel READ optimizationModel WRITE setOptimizationModel NOTIFY optimizationModelChanged)
 
 public:
     explicit DrillDocumentPreviewQuickItem(QQuickItem *parent = nullptr);
@@ -32,6 +34,9 @@ public:
 
     DrillTransformModel* transformModel() const { return transformModel_; }
     void setTransformModel(DrillTransformModel *newModel);
+
+    OptimizationModel* optimizationModel() const { return optimizationModel_; }
+    void setOptimizationModel(OptimizationModel *newModel);
 
     Q_INVOKABLE void fitToContent(double marginPx = 40.0);
 
@@ -51,10 +56,12 @@ private:
 signals:
     void modelChanged();
     void transformModelChanged();
+    void optimizationModelChanged();
 
 private:
     DrillDocumentModel *documentModel_ = nullptr;
     DrillTransformModel *transformModel_ = nullptr;
+    OptimizationModel *optimizationModel_ = nullptr;
 
     ViewportTransform viewport_;
     SnapEngine snap_;
@@ -64,10 +71,10 @@ private:
     OriginRenderer origin_;
     DrillRenderer drill_;
     ProfileRenderer profile_;
+    OptimizationRenderer optimization_;
 
     bool snapPreviewActive_ = false;
     QPointF snapDeltaWorld_;
-    SnapPreviewRenderer snapPreview_;
 };
 
 #endif // DRILLDOCUMENTPREVIEWQUICKITEM_H

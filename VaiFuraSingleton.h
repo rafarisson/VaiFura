@@ -9,6 +9,7 @@
 #include "HoleListModel.h"
 #include "DrillTreeModel.h"
 #include "DrillTransformModel.h"
+#include "OptimizationModel.h"
 #include "SettingsListModel.h"
 #include "GCodeExporter.h"
 
@@ -26,6 +27,7 @@ class VaiFuraSingleton : public QObject
     Q_PROPERTY(HoleListModel* holesModel READ holesModel CONSTANT FINAL)
     Q_PROPERTY(DrillTreeModel* drillsModel READ drillsModel CONSTANT FINAL)
     Q_PROPERTY(DrillTransformModel* transformModel READ transformModel CONSTANT FINAL)
+    Q_PROPERTY(OptimizationModel* optimizationModel READ optimizationModel CONSTANT FINAL)
 
     Q_PROPERTY(SettingsListModel* machineSettingsModel READ machineSettingsModel CONSTANT FINAL)
     Q_PROPERTY(SettingsListModel* settingsModel READ settingsModel CONSTANT FINAL)
@@ -44,10 +46,14 @@ public:
     HoleListModel *holesModel() const { return holesModel_; }
     DrillTreeModel *drillsModel() const { return drillTreeModel_; }
     DrillTransformModel *transformModel() const { return transformModel_; }
+    OptimizationModel* optimizationModel() const { return optimizationModel_; }
     SettingsListModel *machineSettingsModel() const { return machineSettingsModel_; }
     SettingsListModel *settingsModel() const { return settingsModel_; }
 
     Q_INVOKABLE void save(const QString &path);
+
+private slots:
+    void updateOptimizationPlan();
 
 private:
     QString resolvePath(const QString &fileName) const;
@@ -65,6 +71,7 @@ private:
     HoleListModel *holesModel_ = nullptr;
     DrillTreeModel *drillTreeModel_ = nullptr;
     DrillTransformModel *transformModel_ = nullptr;
+    OptimizationModel *optimizationModel_ = nullptr;
 
     SettingsListModel *machineSettingsModel_ = nullptr;
     SettingsListModel *settingsModel_ = nullptr;

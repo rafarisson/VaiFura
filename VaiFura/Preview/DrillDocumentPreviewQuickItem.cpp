@@ -53,6 +53,23 @@ void DrillDocumentPreviewQuickItem::setTransformModel(DrillTransformModel *newMo
     update();
 }
 
+void DrillDocumentPreviewQuickItem::setOptimizationModel(OptimizationModel *newModel)
+{
+    if (optimizationModel_ == newModel)
+        return;
+
+    if (optimizationModel_)
+        disconnect(optimizationModel_, nullptr, this, nullptr);
+
+    optimizationModel_ = newModel;
+
+    if (optimizationModel_)
+        connect(optimizationModel_, &OptimizationModel::optimizationPlanChanged, this, &DrillDocumentPreviewQuickItem::update);
+
+    emit optimizationModelChanged();
+    update();
+}
+
 void DrillDocumentPreviewQuickItem::fitToContent(double marginPx)
 {
     if (!documentModel_)
@@ -126,7 +143,7 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
             if (interaction_.snapActive()) {
                 color.setAlpha(128);
                 drill_.build(clipNode, documentModel_, transformModel_, viewport_, color, interaction_.snapDelta());
-        }
+            }
         }
 
         if (documentModel_->profile()) {
@@ -135,8 +152,11 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
             if (interaction_.snapActive()) {
                 color.setAlpha(128);
                 profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color, interaction_.snapDelta());
+            }
         }
-        }
+
+        if (!interaction_.snapActive())
+            optimization_.build(clipNode, optimizationModel_, transformModel_, viewport_, QColor(202, 119, 20));
     }
 
     return root;

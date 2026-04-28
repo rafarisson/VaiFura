@@ -18,6 +18,8 @@ qt_add_qml_module(VaiFuraModel
         DrillTransformModel.cpp
         SettingsListModel.h
         SettingsListModel.cpp
+        OptimizationModel.h
+        OptimizationModel.cpp
 )
 
 target_link_libraries(VaiFuraModel

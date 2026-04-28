@@ -24,7 +24,6 @@ PageLayout {
 
             model: [
                 "Nearest Neighbor (fast)",
-                "Nearest Neighbor + 2-opt",
                 "Original order (no optimization)"
             ]
         }

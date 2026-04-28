@@ -19,7 +19,10 @@ qt_add_qml_module(VaiFuraPreview
         DrillRendererHelper.h
         DrillRenderer.h
         DrillRenderer.cpp
-        ProfileRenderer.h ProfileRenderer.cpp
+        ProfileRenderer.h
+        ProfileRenderer.cpp
+        OptimizationRenderer.h
+        OptimizationRenderer.cpp
         DrillDocumentPreviewQuickItem.h
         DrillDocumentPreviewQuickItem.cpp
     DEPENDENCIES

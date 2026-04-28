@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 
 import VaiFura
 import VaiFura.Ui
@@ -30,9 +29,8 @@ ApplicationWindow {
                 drillModel: VaiFura.drillsModel
             }
 
-            PageOptimization {
-                documentModel: VaiFura.model
-                drillModel: VaiFura.drillsModel
+            PageOffset {
+                transformModel: VaiFura.transformModel
             }
         }
 
@@ -42,18 +40,20 @@ ApplicationWindow {
 
             documentModel: VaiFura.model
             transformModel: VaiFura.transformModel
+            optimizationModel: VaiFura.optimizationModel
         }
 
         ScrollableColumnLayout {
             SplitView.fillHeight: true
             SplitView.preferredWidth: 300
 
-            PageOffset {
-                transformModel: VaiFura.transformModel
-            }
-
             PageMachine {
                 settingsModel: VaiFura.machineSettingsModel
+            }
+
+            PageOptimization {
+                documentModel: VaiFura.model
+                drillModel: VaiFura.drillsModel
             }
 
             PageExport {

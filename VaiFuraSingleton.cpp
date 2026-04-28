@@ -6,6 +6,7 @@
 #include "DimensionOutline.h"
 #include "SettingsRepository.h"
 #include "DrillDocumentExportPreparer.h"
+#include "NearestNeighborOptimization.h"
 
 VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     : QObject{parent}
@@ -14,13 +15,20 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     , holesModel_{new HoleListModel(this)}
     , drillTreeModel_{new DrillTreeModel(this)}
     , transformModel_{new DrillTransformModel(this)}
+    , optimizationModel_{new OptimizationModel(this)}
     , machineSettingsModel_{new SettingsListModel(this)}
     , settingsModel_{new SettingsListModel(this)}
     , exporter_{new GCodeExporter}
 {
+    connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
+    connect(documentModel_, &DrillDocumentModel::drillCheckeStateChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
+    connect(transformModel_, &DrillTransformModel::transformChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
+
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_, transformModel_);
+
+    optimizationModel_->setOptimizationPlan(new NearestNeighborOptimization);
 
     QVector<Settings> machineSettings = Machine::defaultSettings();
     SettingsRepository::load(resolvePath(Machine::settingsFile()), machineSettings);
@@ -66,12 +74,19 @@ void VaiFuraSingleton::save(const QString &path)
     QString fn = QFileInfo(drillDocumentFileName_).fileName();
     QString output = QUrl::fromUserInput(QDir(path).filePath(fn)).toLocalFile();
 
-    auto realTransform = Machine::fixTransform(transformModel_->transform(), machineSettingsModel_->settings());
+    DrillDocument optimizedDoc;
+    optimizationModel_->generateOptimizedDrillDocument(optimizedDoc);
 
+    DrillTransform realTransform = Machine::fixTransform(transformModel_->transform(), machineSettingsModel_->settings());
     DrillDocumentExportPreparer exporterDoc;
-    exporterDoc.prepare(*documentModel_->document(), realTransform);
+    exporterDoc.prepare(optimizedDoc, realTransform);
 
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
+}
+
+void VaiFuraSingleton::updateOptimizationPlan()
+{
+    optimizationModel_->optimize(documentModel_->document()->root());
 }
 
 QString VaiFuraSingleton::resolvePath(const QString &fileName) const

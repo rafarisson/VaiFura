@@ -9,6 +9,7 @@ Item {
 
     required property DrillDocumentModel documentModel
     required property DrillTransformModel transformModel
+    property OptimizationModel optimizationModel
 
     function fit() {
         Qt.callLater(documentPreview.fitToContent)
@@ -22,6 +23,7 @@ Item {
 
         model: root.documentModel
         transformModel: root.transformModel
+        optimizationModel: root.optimizationModel
     }
 
     Column {

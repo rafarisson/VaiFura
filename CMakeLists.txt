@@ -9,6 +9,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Quick)
 qt_standard_project_setup(REQUIRES 6.10)
 
 add_subdirectory(VaiFura/Core)
+add_subdirectory(VaiFura/Optimization)
 add_subdirectory(VaiFura/Model)
 add_subdirectory(VaiFura/Preview)
 add_subdirectory(VaiFura/Ui)
@@ -62,6 +63,7 @@ target_link_libraries(appVaiFura
         VaiFuraUi
         VaiFuraParserExcellon
         VaiFuraParserGerber
+        VaiFuraOptimization
         VaiFuraExporterGCode
 )
 
