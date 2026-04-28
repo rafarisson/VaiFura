@@ -56,6 +56,7 @@ private:
     QString baseName_;
     QFile file_;
     QTextStream out_;
+    int holeCount_;
 
     struct GCodeSettings {
         double zToolChange;

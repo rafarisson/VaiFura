@@ -89,6 +89,7 @@ bool GCodeExporter::save(const QString &fileName, const DrillDocument *document,
 
     document_ = document;
     settings_ = GCodeSettings::from(settings);
+    holeCount_ = 0;
     decodeFileName(fileName);
 
     if (!settings_.filePerTool)
@@ -182,8 +183,10 @@ void GCodeExporter::exportHole(const DrillNode *holeNode, const QPointF &pos)
     if (!file_.isOpen())
         return;
 
+    holeCount_++;
+
     out_ << "\n";
-    out_ << "; Hole\n";
+    out_ << "; Hole " << holeCount_ << "\n";
     out_ << "G0 X" << pos.x() << " Y" << pos.y() << " F" << settings_.xyMoveFeed << "\n";
     out_ << "G1 Z" << settings_.zDrillOffset << " F" << settings_.zDrillFeed << "\n";
     out_ << "G0 Z" << settings_.zMove << " F" << settings_.zRetractFeed << "\n";
