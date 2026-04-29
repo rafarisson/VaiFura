@@ -1,13 +1,15 @@
 find_package(Qt6 REQUIRED COMPONENTS Core Gui)
 
 qt_add_library(VaiFuraOptimization STATIC
-    NearestNeighborOptimization.h
-    NearestNeighborOptimization.cpp
+    NearestNeighborOptimization.h NearestNeighborOptimization.cpp
+    NoneOptimization.h NoneOptimization.cpp
+    NearestNeighbor2OptOptimization.h NearestNeighbor2OptOptimization.cpp
 )
 
 target_link_libraries(VaiFuraOptimization
     PRIVATE
         Qt6::Core
+        Qt6::Gui
         VaiFuraCore
 )
 

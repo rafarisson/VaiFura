@@ -1,7 +1,7 @@
 #include "NearestNeighborOptimization.h"
-#include <qdebug.h>
+#include "DrillTransform.h"
 
-void NearestNeighborOptimization::optimize(const DrillNode *root)
+void NearestNeighborOptimization::optimize(const DrillNode *root, const DrillTransform *transform)
 {
     build(root);
 
@@ -12,7 +12,10 @@ void NearestNeighborOptimization::optimize(const DrillNode *root)
     QVector<bool> visited(n, false);
     order_.reserve(n);
 
-    int current = 0;
+    int current = startIndexFromOrigin(transform);
+    if (current == -1)
+        return;
+
     order_.append(current);
     visited[current] = true;
 
@@ -24,7 +27,15 @@ void NearestNeighborOptimization::optimize(const DrillNode *root)
             if (visited[j])
                 continue;
 
-            double d = distance(holes()[current].pos, holes()[j].pos);
+            QPointF a = holes()[current].pos;
+            QPointF b = holes()[j].pos;
+
+            if (transform) {
+                a = transform->apply(a);
+                b = transform->apply(b);
+            }
+
+            double d = distance(a, b);
             if (d < bestDist) {
                 bestDist = d;
                 nextIndex = j;
@@ -35,4 +46,29 @@ void NearestNeighborOptimization::optimize(const DrillNode *root)
         visited[current] = true;
         order_.append(current);
     }
+}
+
+int NearestNeighborOptimization::startIndexFromOrigin(const DrillTransform *transform) const
+{
+    const int n = holes().size();
+
+    int closestIndex = -1;
+    double bestDist = std::numeric_limits<double>::max();
+    QPointF origin(0, 0);
+
+    for (int i = 0; i < n; ++i) {
+        QPointF p = holes()[i].pos;
+
+        if (transform) {
+            p = transform->apply(p);
+        }
+
+        double d = distance(origin, p);
+        if (d < bestDist) {
+            bestDist = d;
+            closestIndex = i;
+        }
+    }
+
+    return closestIndex;
 }

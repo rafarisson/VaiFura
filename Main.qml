@@ -41,6 +41,9 @@ ApplicationWindow {
             documentModel: VaiFura.model
             transformModel: VaiFura.transformModel
             optimizationModel: VaiFura.optimizationModel
+
+            showOptimizationPath: optimizationPage.showPath
+            showOptimizationOrder: optimizationPage.showOrder
         }
 
         ScrollableColumnLayout {
@@ -52,8 +55,8 @@ ApplicationWindow {
             }
 
             PageOptimization {
-                documentModel: VaiFura.model
-                drillModel: VaiFura.drillsModel
+                id: optimizationPage
+                optimizationModel: VaiFura.optimizationModel
             }
 
             PageExport {

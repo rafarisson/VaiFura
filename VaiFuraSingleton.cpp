@@ -6,7 +6,9 @@
 #include "DimensionOutline.h"
 #include "SettingsRepository.h"
 #include "DrillDocumentExportPreparer.h"
+#include "NoneOptimization.h"
 #include "NearestNeighborOptimization.h"
+#include "NearestNeighbor2OptOptimization.h"
 
 VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     : QObject{parent}
@@ -23,12 +25,15 @@ VaiFuraSingleton::VaiFuraSingleton(QObject *parent)
     connect(documentModel_, &DrillDocumentModel::documentContentChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
     connect(documentModel_, &DrillDocumentModel::drillCheckeStateChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
     connect(transformModel_, &DrillTransformModel::transformChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
+    connect(optimizationModel_, &OptimizationModel::currentPanChanged, this, &VaiFuraSingleton::updateOptimizationPlan);
 
     toolsModel_->setModel(documentModel_);
     holesModel_->setModel(documentModel_);
     drillTreeModel_->setModel(documentModel_, transformModel_);
 
-    optimizationModel_->setOptimizationPlan(new NearestNeighborOptimization);
+    optimizationModel_->addPlan(new NoneOptimization);
+    optimizationModel_->addPlan(new NearestNeighborOptimization);
+    optimizationModel_->addPlan(new NearestNeighbor2OptOptimization);
 
     QVector<Settings> machineSettings = Machine::defaultSettings();
     SettingsRepository::load(resolvePath(Machine::settingsFile()), machineSettings);
@@ -86,7 +91,7 @@ void VaiFuraSingleton::save(const QString &path)
 
 void VaiFuraSingleton::updateOptimizationPlan()
 {
-    optimizationModel_->optimize(documentModel_->document()->root());
+    optimizationModel_->optimize(documentModel_->document()->root(), transformModel_);
 }
 
 QString VaiFuraSingleton::resolvePath(const QString &fileName) const

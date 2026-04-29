@@ -9,7 +9,10 @@ Item {
 
     required property DrillDocumentModel documentModel
     required property DrillTransformModel transformModel
+
     property OptimizationModel optimizationModel
+    property alias showOptimizationPath: documentPreview.showOptimizationPath
+    property alias showOptimizationOrder: documentPreview.showOptimizationOrder
 
     function fit() {
         Qt.callLater(documentPreview.fitToContent)
@@ -19,6 +22,7 @@ Item {
 
     DrillDocumentPreview {
         id: documentPreview
+
         anchors.fill: parent
 
         model: root.documentModel

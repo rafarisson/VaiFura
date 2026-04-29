@@ -1,21 +1,37 @@
 #include <QColor>
+#include <QFont>
+#include <QFontMetrics>
+#include <QPainter>
 #include <QSGFlatColorMaterial>
 #include "OptimizationRenderer.h"
 #include "DrillTransformModel.h"
 #include "OptimizationModel.h"
 #include "ViewportTransform.h"
 
+void OptimizationRenderer::setShowPath(bool enabled)
+{
+    showPath_ = enabled;
+}
+
+void OptimizationRenderer::setShowOrder(bool enabled)
+{
+    showOrder_ = enabled;
+}
+
 void OptimizationRenderer::build(QSGNode *root,
                                  const OptimizationModel *model,
                                  const DrillTransformModel *transform,
                                  const ViewportTransform &vp,
-                                 const QColor &color)
+                                 const QColor &color,
+                                 QQuickWindow *window)
 {
-    if (!root || !model || !model->optimizationPlan())
+    if (!root || !model || !model->currentPlan())
+        return;
+    if (!showPath_ && !showOrder_)
         return;
 
-    const auto &holes = model->optimizationPlan()->holes();
-    const auto &order = model->optimizationPlan()->order();
+    const auto &holes = model->currentPlan()->holes();
+    const auto &order = model->currentPlan()->order();
 
     for (int i = 1; i < order.size(); ++i) {
         QPointF a = holes[order[i - 1]].pos;
@@ -29,9 +45,14 @@ void OptimizationRenderer::build(QSGNode *root,
         a = vp.toScreen(a);
         b = vp.toScreen(b);
 
-        root->appendChildNode(
-            createLine(a, b, color, 1.5f)
-            );
+        if (showPath_)
+            root->appendChildNode(createLine(a, b, color, 1.5f));
+
+        if (showOrder_) {
+            root->appendChildNode(createText(a, QString::number(i), color, window));
+            if (i == order.size() - 1)
+                root->appendChildNode(createText(b, QString::number(i + 1), color, window));
+        }
     }
 }
 
@@ -54,6 +75,36 @@ QSGGeometryNode *OptimizationRenderer::createLine(const QPointF &a, const QPoint
 
     node->setMaterial(material);
     node->setFlag(QSGNode::OwnsMaterial);
+
+    return node;
+}
+
+QSGSimpleTextureNode *OptimizationRenderer::createText(const QPointF &pos, const QString &text, const QColor &color, QQuickWindow *window)
+{
+    QFont font;
+    font.setPointSize(10);
+
+    QFontMetrics fm(font);
+    QSize size = fm.size(Qt::TextSingleLine, text);
+
+    QImage image(size, QImage::Format_ARGB32_Premultiplied);
+    image.fill(Qt::transparent);
+
+    QPainter painter(&image);
+    painter.setFont(font);
+    // Sombra
+    painter.setPen(Qt::black);
+    painter.drawText(1, fm.ascent() + 1, text);
+    // Texto
+    painter.setPen(color);
+    painter.drawText(0, fm.ascent(), text);
+    painter.end();
+
+    auto *texture = window->createTextureFromImage(image);
+
+    auto *node = new QSGSimpleTextureNode();
+    node->setTexture(texture);
+    node->setRect(pos.x(), pos.y(), size.width(), size.height());
 
     return node;
 }

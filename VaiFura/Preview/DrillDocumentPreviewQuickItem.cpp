@@ -64,9 +64,27 @@ void DrillDocumentPreviewQuickItem::setOptimizationModel(OptimizationModel *newM
     optimizationModel_ = newModel;
 
     if (optimizationModel_)
-        connect(optimizationModel_, &OptimizationModel::optimizationPlanChanged, this, &DrillDocumentPreviewQuickItem::update);
+        connect(optimizationModel_, &OptimizationModel::optimized, this, &DrillDocumentPreviewQuickItem::update);
 
     emit optimizationModelChanged();
+    update();
+}
+
+void DrillDocumentPreviewQuickItem::setShowOptimizationPath(bool enabled)
+{
+    if (optimizationRenderer_.showPath() == enabled)
+        return;
+    optimizationRenderer_.setShowPath(enabled);
+    emit showOptimizationPathChanged();
+    update();
+}
+
+void DrillDocumentPreviewQuickItem::setShowOptimizationOrder(bool enabled)
+{
+    if (optimizationRenderer_.showOrder() == enabled)
+        return;
+    optimizationRenderer_.setShowOrder(enabled);
+    emit showOptimizationPathChanged();
     update();
 }
 
@@ -133,30 +151,31 @@ QSGNode *DrillDocumentPreviewQuickItem::updatePaintNode(QSGNode *old, UpdatePain
 
     buildBackground(clipNode);
 
-    grid_.build(clipNode, viewport_, 1.0);
-    origin_.build(clipNode, transformModel_, viewport_);
+    gridRenderer_.build(clipNode, viewport_, 1.0);
+    originRenderer_.build(clipNode, transformModel_, viewport_);
 
     if (documentModel_) {
         if (documentModel_->document()) {
             QColor color(Qt::cyan);
-            drill_.build(clipNode, documentModel_, transformModel_, viewport_, color);
+            drillRenderer_.build(clipNode, documentModel_, transformModel_, viewport_, color);
             if (interaction_.snapActive()) {
                 color.setAlpha(128);
-                drill_.build(clipNode, documentModel_, transformModel_, viewport_, color, interaction_.snapDelta());
+                drillRenderer_.build(clipNode, documentModel_, transformModel_, viewport_, color, interaction_.snapDelta());
             }
         }
 
         if (documentModel_->profile()) {
             QColor color(Qt::yellow);
-            profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color);
+            profileRenderer_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color);
             if (interaction_.snapActive()) {
                 color.setAlpha(128);
-                profile_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color, interaction_.snapDelta());
+                profileRenderer_.build(clipNode, documentModel_->profile(), transformModel_, viewport_, color, interaction_.snapDelta());
             }
         }
 
-        if (!interaction_.snapActive())
-            optimization_.build(clipNode, optimizationModel_, transformModel_, viewport_, QColor(202, 119, 20));
+        if (!interaction_.snapActive()) {
+            optimizationRenderer_.build(clipNode, optimizationModel_, transformModel_, viewport_, QColor(202, 119, 20), window());
+        }
     }
 
     return root;

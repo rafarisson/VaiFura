@@ -47,6 +47,7 @@ public:
     DrillTreeModel *drillsModel() const { return drillTreeModel_; }
     DrillTransformModel *transformModel() const { return transformModel_; }
     OptimizationModel* optimizationModel() const { return optimizationModel_; }
+
     SettingsListModel *machineSettingsModel() const { return machineSettingsModel_; }
     SettingsListModel *settingsModel() const { return settingsModel_; }
 

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QQmlEngine>
+#include <QScopedPointer>
 
 #include "AbstractOptimizationPlan.h"
 
@@ -14,20 +15,33 @@ class OptimizationModel : public QObject
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(QStringList availablePlans READ availablePlans NOTIFY availablePlansChanged)
+    Q_PROPERTY(int currentPlanIndex READ currentPlanIndex WRITE setCurrentPlanIndex NOTIFY currentPlanIndexChanged)
+
 public:
     explicit OptimizationModel(QObject *parent = nullptr);
+    ~OptimizationModel();
 
-    const AbstractOptimizationPlan *optimizationPlan() const { return plan_; }
-    void setOptimizationPlan(AbstractOptimizationPlan *plan);
+    QStringList availablePlans() const;
+
+    int currentPlanIndex() const { return currentIndex_; }
+    void setCurrentPlanIndex(int index);
+
+    void addPlan(AbstractOptimizationPlan *plan);
+    AbstractOptimizationPlan *currentPlan() const;
 
     void optimize(const DrillNode* root, const DrillTransformModel *transformModel = nullptr);
     void generateOptimizedDrillDocument(DrillDocument &out) const;
 
 signals:
-    void optimizationPlanChanged();
+    void availablePlansChanged();
+    void currentPlanIndexChanged();
+    void currentPanChanged();
+    void optimized();
 
 private:
-    AbstractOptimizationPlan *plan_ = nullptr;
+    QVector<AbstractOptimizationPlan *> plans_;
+    int currentIndex_;
 };
 
 #endif // OPTIMIZATIONMODEL_H

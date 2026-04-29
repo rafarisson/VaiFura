@@ -5,24 +5,55 @@
 
 OptimizationModel::OptimizationModel(QObject *parent)
     : QObject{parent}
+    , currentIndex_{-1}
 {}
 
-void OptimizationModel::setOptimizationPlan(AbstractOptimizationPlan *plan)
+OptimizationModel::~OptimizationModel()
 {
-    if (plan_ == plan)
+    qDeleteAll(plans_);
+    plans_.clear();
+}
+
+QStringList OptimizationModel::availablePlans() const
+{
+    QStringList list;
+    for (const auto &p : plans_)
+        list << p->name();
+    return list;
+}
+
+void OptimizationModel::setCurrentPlanIndex(int index)
+{
+    if (currentIndex_ == index)
         return;
-    plan_ = plan;
-    emit optimizationPlanChanged();
+    currentIndex_ = index;
+    emit currentPlanIndexChanged();
+    emit currentPanChanged();
+}
+
+void OptimizationModel::addPlan(AbstractOptimizationPlan *plan)
+{
+    plans_.append(plan);
+
+    if (currentIndex_ == -1)
+        setCurrentPlanIndex(0);
+
+    emit availablePlansChanged();
+}
+
+AbstractOptimizationPlan *OptimizationModel::currentPlan() const
+{
+    return currentIndex_ >= 0 && currentIndex_ < plans_.size() ? plans_[currentIndex_] : nullptr;
 }
 
 void OptimizationModel::optimize(const DrillNode* root, const DrillTransformModel *transformModel)
 {
-    if (!plan_)
+    auto plan = currentPlan();
+    if (!plan)
         return;
 
-    plan_->optimize(root);
-
-    emit optimizationPlanChanged();
+    plan->optimize(root, transformModel ? transformModel->transform() : nullptr);
+    emit optimized();
 }
 
 void OptimizationModel::generateOptimizedDrillDocument(DrillDocument &out) const
@@ -30,10 +61,11 @@ void OptimizationModel::generateOptimizedDrillDocument(DrillDocument &out) const
     DrillDocumentBuilder builder(&out);
     builder.clear();
 
-    if (!plan_ || plan_->isEmpty())
+    auto plan = currentPlan();
+    if (!plan || plan->isEmpty())
         return;
 
-    if (plan_->holes().isEmpty() || plan_->order().isEmpty()) {
+    if (plan->holes().isEmpty() || plan->order().isEmpty()) {
         builder.build();
         return;
     }
@@ -62,11 +94,11 @@ void OptimizationModel::generateOptimizedDrillDocument(DrillDocument &out) const
 
     builder.addTool(Tool{1, 1});
 
-    for (int idx : plan_->order()) {
-        if (idx < 0 || idx >= plan_->holes().size())
+    for (int idx : plan->order()) {
+        if (idx < 0 || idx >= plan->holes().size())
             continue;
 
-        const auto& ref = plan_->holes()[idx];
+        const auto& ref = plan->holes()[idx];
         const DrillNode* holeNode = ref.node;
         if (!holeNode)
             continue;

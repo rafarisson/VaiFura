@@ -6,7 +6,10 @@
 class NearestNeighborOptimization : public AbstractOptimizationPlan
 {
 public:
-    void optimize(const DrillNode* root) override;
+    QString name() const override { return "Nearest Neighbor"; }
+    void optimize(const DrillNode *root, const DrillTransform *transform) override;
+private:
+    int startIndexFromOrigin(const DrillTransform *transform) const;
 };
 
 #endif // NEARESTNEIGHBOROPTIMIZATION_H

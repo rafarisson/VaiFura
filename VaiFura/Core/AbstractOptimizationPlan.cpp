@@ -2,7 +2,7 @@
 #include "AbstractOptimizationPlan.h"
 #include "DrillHelper.h"
 
-double AbstractOptimizationPlan::distance(const QPointF &a, const QPointF &b)
+double AbstractOptimizationPlan::distance(const QPointF &a, const QPointF &b) const
 {
     double dx = a.x() - b.x();
     double dy = a.y() - b.y();

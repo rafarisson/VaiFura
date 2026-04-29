@@ -22,9 +22,11 @@ class DrillDocumentPreviewQuickItem : public QQuickItem
     Q_OBJECT
     QML_NAMED_ELEMENT(DrillDocumentPreview)
 
-    Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged)
-    Q_PROPERTY(DrillTransformModel* transformModel READ transformModel WRITE setTransformModel NOTIFY transformModelChanged)
-    Q_PROPERTY(OptimizationModel* optimizationModel READ optimizationModel WRITE setOptimizationModel NOTIFY optimizationModelChanged)
+    Q_PROPERTY(DrillDocumentModel* model READ model WRITE setModel NOTIFY modelChanged FINAL)
+    Q_PROPERTY(DrillTransformModel* transformModel READ transformModel WRITE setTransformModel NOTIFY transformModelChanged FINAL)
+    Q_PROPERTY(OptimizationModel* optimizationModel READ optimizationModel WRITE setOptimizationModel NOTIFY optimizationModelChanged FINAL)
+    Q_PROPERTY(bool showOptimizationPath READ showOptimizationPath WRITE setShowOptimizationPath NOTIFY showOptimizationPathChanged FINAL)
+    Q_PROPERTY(bool showOptimizationOrder READ showOptimizationOrder WRITE setShowOptimizationOrder NOTIFY showOptimizationOrderChanged FINAL)
 
 public:
     explicit DrillDocumentPreviewQuickItem(QQuickItem *parent = nullptr);
@@ -37,6 +39,12 @@ public:
 
     OptimizationModel* optimizationModel() const { return optimizationModel_; }
     void setOptimizationModel(OptimizationModel *newModel);
+
+    bool showOptimizationPath() const { return optimizationRenderer_.showPath(); }
+    void setShowOptimizationPath(bool enabled);
+
+    bool showOptimizationOrder() const { return optimizationRenderer_.showOrder(); }
+    void setShowOptimizationOrder(bool enabled);
 
     Q_INVOKABLE void fitToContent(double marginPx = 40.0);
 
@@ -55,6 +63,8 @@ private:
 
 signals:
     void modelChanged();
+    void showOptimizationPathChanged();
+    void showOptimizationOrderChanged();
     void transformModelChanged();
     void optimizationModelChanged();
 
@@ -67,11 +77,11 @@ private:
     SnapEngine snap_;
     InteractionController interaction_;
 
-    GridRenderer grid_;
-    OriginRenderer origin_;
-    DrillRenderer drill_;
-    ProfileRenderer profile_;
-    OptimizationRenderer optimization_;
+    GridRenderer gridRenderer_;
+    OriginRenderer originRenderer_;
+    DrillRenderer drillRenderer_;
+    ProfileRenderer profileRenderer_;
+    OptimizationRenderer optimizationRenderer_;
 
     bool snapPreviewActive_ = false;
     QPointF snapDeltaWorld_;
