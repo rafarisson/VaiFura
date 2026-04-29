@@ -5,6 +5,7 @@
 #include "ExcellonDrillParser.h"
 #include "DimensionOutline.h"
 #include "SettingsRepository.h"
+#include "SettingsReader.h"
 #include "DrillDocumentExportPreparer.h"
 #include "NoneOptimization.h"
 #include "NearestNeighborOptimization.h"
@@ -86,6 +87,12 @@ void VaiFuraSingleton::save(const QString &path)
     DrillDocumentExportPreparer exporterDoc;
     exporterDoc.prepare(optimizedDoc, realTransform);
 
+    SettingsReader setts(machineSettingsModel_->settings());
+    exporter_->setUserStartupCode(QStringList() <<
+                                  QString("G0 X%1 Y%2 ; Machine offset")
+                                                       .arg(setts.number(MachineKeys::X_OFFSET, MachineDefault::X_OFFSET))
+                                                       .arg(setts.number(MachineKeys::X_OFFSET, MachineDefault::X_OFFSET))
+                                  );
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }
 

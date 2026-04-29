@@ -15,7 +15,6 @@ inline static constexpr auto Z_DRILL_OFFSET = "Z_DRILL_OFFSET";
 inline static constexpr auto Z_DRILL_FEED   = "Z_DRILL_FEED";
 inline static constexpr auto Z_RETRACT_FEED = "Z_RETRACT_FEED";
 inline static constexpr auto STARTUP_DELAY = "STARTUP_DELAY";
-inline static constexpr auto FILE_PER_TOOL  = "FILE_PER_TOOL";
 }
 
 namespace GCodeDefault {
@@ -26,7 +25,6 @@ inline static constexpr double Z_DRILL_OFFSET   = -2.0;
 inline static constexpr double Z_DRILL_FEED     = 60.0;
 inline static constexpr double Z_RETRACT_FEED   = 800.0;
 inline static constexpr double STARTUP_DELAY    = 3.0;
-inline static constexpr bool   FILE_PER_TOOL    = true;
 }
 
 class GCodeExporter : public AbstractExporter
@@ -34,6 +32,10 @@ class GCodeExporter : public AbstractExporter
 public:
     QString settingsFile() const override;
     QVector<Settings> defaultSettings() const override;
+
+    void setUserStartupCode(const QStringList &commands);
+    void setUserEndCode(const QStringList &commands);
+
     bool save(const QString &fileName, const DrillDocument *document, const QVector<Settings> &settings) override;
 
 private:
@@ -48,9 +50,12 @@ private:
     void gcodeFanOn();
     void gcodeFanOff();
     void gcodeSetHotEnd(uint value);
+    void gcodeUser(const QStringList &commands);
 
 private:
     const DrillDocument *document_ = nullptr;
+    QStringList userStartupCode_;
+    QStringList userEndCode_;
 
     QString basePath_;
     QString baseName_;

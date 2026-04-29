@@ -68,16 +68,18 @@ QVector<Settings> GCodeExporter::defaultSettings() const
             "sec",
             GCodeDefault::STARTUP_DELAY,
             Settings::Number
-        },
-        Settings{
-            GCodeKeys::FILE_PER_TOOL,
-            "Generate File Per Tool",
-            "When enabled, a separate output file is generated for each tool instead of combining all tools into a single file.",
-            "",
-            GCodeDefault::FILE_PER_TOOL,
-            Settings::Boolean
         }
     };
+}
+
+void GCodeExporter::setUserStartupCode(const QStringList &commands)
+{
+    userStartupCode_ = commands;
+}
+
+void GCodeExporter::setUserEndCode(const QStringList &commands)
+{
+    userEndCode_ = commands;
 }
 
 bool GCodeExporter::save(const QString &fileName, const DrillDocument *document, const QVector<Settings> &settings)
@@ -161,6 +163,7 @@ void GCodeExporter::exportIniti()
 
     out_ << "G28" << " ; Home\n";
     out_ << "G0 Z" << (settings_.zMove * 2) << " F" << settings_.zRetractFeed << " ; Safe Z\n";
+    gcodeUser(userStartupCode_);
     out_ << "G4 S" << settings_.startupDelay << " ; Startup delay\n";
 
     gcodeFanOn();
@@ -200,6 +203,7 @@ void GCodeExporter::exportToolChange()
     gcodeSetHotEnd(0);
     gcodeFanOff();
     out_ << "G0 Z" << settings_.zToolChange << " F" << settings_.zRetractFeed << "\n";
+    gcodeUser(userEndCode_);
 }
 
 void GCodeExporter::gcodeFanOn()
@@ -218,6 +222,14 @@ void GCodeExporter::gcodeSetHotEnd(uint value)
     out_ << "M104 S" << value << "\n";
 }
 
+void GCodeExporter::gcodeUser(const QStringList &commands)
+{
+    out_ << "\n" << "; Start user code \n";
+    for (const auto &cmd : commands)
+        out_ << cmd << "\n";
+    out_ << "; End user code \n\n";
+}
+
 GCodeExporter::GCodeSettings GCodeExporter::GCodeSettings::from(const QVector<Settings> &settings)
 {
     SettingsReader setts(settings);
@@ -228,8 +240,7 @@ GCodeExporter::GCodeSettings GCodeExporter::GCodeSettings::from(const QVector<Se
         setts.number(GCodeKeys::Z_DRILL_OFFSET, GCodeDefault::Z_DRILL_OFFSET),
         setts.number(GCodeKeys::Z_DRILL_FEED,   GCodeDefault::Z_DRILL_FEED),
         setts.number(GCodeKeys::Z_RETRACT_FEED, GCodeDefault::Z_RETRACT_FEED),
-        setts.number(GCodeKeys::STARTUP_DELAY,  GCodeDefault::STARTUP_DELAY),
-        setts.boolean(GCodeKeys::FILE_PER_TOOL, GCodeDefault::FILE_PER_TOOL)
+        false
     };
 }
 
