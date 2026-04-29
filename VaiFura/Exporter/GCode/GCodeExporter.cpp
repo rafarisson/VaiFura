@@ -162,7 +162,7 @@ void GCodeExporter::exportIniti()
     gcodeFanOff();
 
     out_ << "G28" << " ; Home\n";
-    out_ << "G0 Z" << (settings_.zMove * 2) << " F" << settings_.zRetractFeed << " ; Safe Z\n";
+    out_ << "G0 Z" << (settings_.zMove * 4) << " F" << settings_.zRetractFeed << " ; Safe Z\n";
     gcodeUser(userStartupCode_);
     out_ << "G4 S" << settings_.startupDelay << " ; Startup delay\n";
 

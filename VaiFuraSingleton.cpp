@@ -91,7 +91,7 @@ void VaiFuraSingleton::save(const QString &path)
     exporter_->setUserStartupCode(QStringList() <<
                                   QString("G0 X%1 Y%2 ; Machine offset")
                                                        .arg(setts.number(MachineKeys::X_OFFSET, MachineDefault::X_OFFSET))
-                                                       .arg(setts.number(MachineKeys::X_OFFSET, MachineDefault::X_OFFSET))
+                                                       .arg(setts.number(MachineKeys::Y_OFFSET, MachineDefault::Y_OFFSET))
                                   );
     exporter_->save(output, exporterDoc.document(), settingsModel_->settings());
 }
