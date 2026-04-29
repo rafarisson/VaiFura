@@ -18,6 +18,8 @@ ApplicationWindow {
             SplitView.preferredWidth: 300
 
             PageUpload {
+                id: uploadPage
+
                 drillFileName: VaiFura.drillDocumentFileName
                 profileFileName: VaiFura.profileDocumentFileName
                 onDrillFileSelected: (fn) => VaiFura.drillDocumentFileName = fn
@@ -62,6 +64,7 @@ ApplicationWindow {
             PageExport {
                 documentModel: VaiFura.model
                 settingsModel: VaiFura.settingsModel
+                currentPath: uploadPage.currentPath
                 onSaveRequest: (path) => VaiFura.save(path)
             }
         }

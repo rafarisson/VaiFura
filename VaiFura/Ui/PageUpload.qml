@@ -9,10 +9,18 @@ PageLayout {
 
     required property string drillFileName
     required property string profileFileName
-    property var _targetProperty
+
+    property string currentPath: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
 
     signal drillFileSelected(fn: string)
     signal profileFileSelected(fn: string)
+
+    function selectFile(url: string, callback) {
+        if (url != currentPath)
+            currentPath = url
+        if (callback)
+            callback(url)
+    }
 
     icon: MaterialSymbols.upload
     title: qsTr("Upload files")
@@ -44,13 +52,13 @@ PageLayout {
     FileDialog {
         id: drillFileDialog
         nameFilters: ["Excellon files (*.xln)", "Drill files (*.drl)", "All files (*.*)"]
-        currentFolder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
-        onAccepted: root.drillFileSelected(currentFile)
+        currentFolder: root.currentPath
+        onAccepted: root.selectFile(currentFile, root.drillFileSelected)
     }
     FileDialog {
         id: profileFileDialog
         nameFilters: ["Profile files (*.gbr)", "All files (*.*)"]
-        currentFolder: StandardPaths.standardLocations(StandardPaths.DesktopLocation)[0]
-        onAccepted: root.profileFileSelected(currentFile)
+        currentFolder: root.currentPath
+        onAccepted: root.selectFile(currentFile, root.profileFileSelected)
     }
 }
